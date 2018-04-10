@@ -8,26 +8,62 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.insurance.insuranceapp.R;
+import com.insurance.insuranceapp.Utilities.InsApp;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
-    private Button signin;
+    Button log;
+    EditText uname,pass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        signin = (Button)findViewById(R.id.signin);
-        signin.setOnClickListener(new View.OnClickListener() {
+
+        setTitle("Login");
+
+        log = findViewById(R.id.log_btn);
+        uname = findViewById(R.id.edt_user_name);
+        pass = findViewById(R.id.edt_pass);
+
+        log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
+                String u_name = uname.getText().toString();
+                String p_ass = pass.getText().toString();
+
+                if (!isValidEmail(u_name)){
+                    uname.setError("Enter Valid Email");
+                    return;
+                }
+
+                InsApp app = (InsApp) LoginActivity.this.getApplication();
+
+                if(app.isNetworkStatus()){
+                    Intent nav = new Intent(LoginActivity.this,MainActivity.class);
+                    startActivity(nav);
+                    finish();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Check Your Internet Connection",Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
     }
+
+    protected boolean isValidEmail(String email) {
+        String EMAILPATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(EMAILPATTERN);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
 
 }
