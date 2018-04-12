@@ -38,7 +38,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="7dp"
             android:layout_marginStart="7dp"
-            app:srcCompat="@drawable/user" />
+            app:srcCompat="@drawable/ic_account_circle_white_24dp" />
 
         <TextView
             android:id="@+id/name"

@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +118,8 @@ public class MainActivity extends AppCompatActivity
         userprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            Intent in = new Intent(MainActivity.this,ProfileActivity.class);
+            startActivity(in);
 
             }
         });
