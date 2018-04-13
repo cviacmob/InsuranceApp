@@ -150,6 +150,12 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
+
+                if(groupPosition == 2 && childPosition == 0)
+                {
+                    Intent intent = new Intent(MainActivity.this, PendingCasesActivity.class);
+                    startActivity(intent);
+                }
 /*
                 if(groupPosition == 2 && childPosition == 5)
                 {

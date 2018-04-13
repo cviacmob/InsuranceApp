@@ -3,14 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".Activites.LoginActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLayout"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/verdana"
+        android:gravity="center"
+        android:text="Login"
+        android:textSize="30dp" />
 
     <RelativeLayout
         android:layout_centerVertical="true"
         android:padding="10dp"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/user_name"
@@ -24,6 +36,7 @@
                 android:padding="10dp"
                 android:layout_width="match_parent"
                 android:hint="Enter User Name"
+                android:fontFamily="@font/verdana"
                 android:inputType="textWebEmailAddress"
                 android:layout_height="wrap_content" />
 
@@ -41,6 +54,7 @@
                 android:drawableLeft="@mipmap/ic_lock_black_24dp"
                 android:padding="10dp"
                 android:hint="Enter Password"
+                android:fontFamily="@font/verdana"
                 android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
