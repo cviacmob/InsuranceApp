@@ -155,19 +155,20 @@ public class MainActivity extends AppCompatActivity
                 {
                     Intent intent = new Intent(MainActivity.this, PendingCasesActivity.class);
                     startActivity(intent);
-                }
-/*
-                if(groupPosition == 2 && childPosition == 5)
+                }else if(groupPosition == 1 && childPosition == 0)
                 {
-                    Intent intent = new Intent(HomeActivity.this, HistoryOfPresentillness.class);
+                    Intent intent = new Intent(MainActivity.this, ReservedPaymentsActivity.class);
+                    intent.putExtra("Payments",1);
                     startActivity(intent);
                 }
-                else if(groupPosition == 4 && childPosition == 0)
+                else if(groupPosition == 1 && childPosition == 1)
                 {
-                    Intent intent = new Intent(HomeActivity.this, HealthActivity.class);
+                    Intent intent = new Intent(MainActivity.this, ReservedPaymentsActivity.class);
+                    intent.putExtra("Payments",2);
                     startActivity(intent);
-                } else if(groupPosition == 3 && childPosition == 0)
-                {
+                }
+              /*  else if(groupPosition == 3 && childPosition == 0)*/
+               /* {
                     Intent intent = new Intent(HomeActivity.this, BalanceActivity.class);
                     startActivity(intent);
                 }*/

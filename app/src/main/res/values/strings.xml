@@ -10,4 +10,5 @@
     <string name="action_logout">Logout</string>
     <string name="action_home">Home</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_reserved_payments">ReservedPaymentsActivity</string>
 </resources>
