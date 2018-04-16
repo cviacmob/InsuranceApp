@@ -1,6 +1,12 @@
 package com.insurance.insuranceapp.Activites;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,27 +14,43 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class PendingCasesActivity extends AppCompatActivity {
     private ListView listView;
+    private Button btn;
     private PendingCasesAdapter pendingcaseAdapter;
     private List<PendingInfo> pendingInfoList;
     private PendingInfo pendingInfo;
+    String AudioSavePathInDevice = null;
+    MediaRecorder mediaRecorder ;
+    Random random ;
+    String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
+    public static final int RequestPermissionCode = 1;
+    MediaPlayer mediaPlayer ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending_cases);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Pending Cases");
-        listView = (ListView)findViewById(R.id.lab_list);
+        listView = findViewById(R.id.lab_list);
+        btn = findViewById(R.id.btn_media);
         pendingInfoList =  getList();
         pendingcaseAdapter = new PendingCasesAdapter(pendingInfoList,this.getApplication());
         listView.setDivider(null);
@@ -39,22 +61,40 @@ public class PendingCasesActivity extends AppCompatActivity {
                 final PendingInfo pendingInfo= (PendingInfo) parent.getAdapter().getItem(position);
                 String Block_Name = pendingInfo.getBlock_name();
                 if(Block_Name!=null) {
-                    if (Block_Name.equalsIgnoreCase("Hospital Block")) {
+                    /*if (Block_Name.equalsIgnoreCase("Hospital Block")) {
                         Intent in = new Intent(PendingCasesActivity.this, HospitalBlockActivity.class);
                         startActivity(in);
+                    }*/
+                    random = new Random();
+                    if(checkPermission()) {
+                        AudioSavePathInDevice = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CreateRandomAudioFileName(5) + "AudioRecording.3gp";
+                        MediaRecorderReady();
+                        try {
+                            mediaRecorder.prepare();
+                            mediaRecorder.start();
+                        } catch (IllegalStateException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        Toast.makeText(PendingCasesActivity.this, "Recording started", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        requestPermission();
                     }
                 }
-
-                //audio to be added;
-
-
-
-
             }
         });
-
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaRecorder.stop();
+                Toast.makeText(PendingCasesActivity.this,"Recording Works",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-
 
     private List<PendingInfo> getList(){
 
@@ -101,5 +141,29 @@ public class PendingCasesActivity extends AppCompatActivity {
         }
         onBackPressed();
         return true;
+    }
+    public boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+    }
+    public String CreateRandomAudioFileName(int string){
+        StringBuilder stringBuilder = new StringBuilder( string );
+        int i = 0 ;
+        while(i < string ) {
+            stringBuilder.append(RandomAudioFileName.charAt(random.nextInt(RandomAudioFileName.length())));
+            i++ ;
+        }
+        return stringBuilder.toString();
+    }
+    public void MediaRecorderReady(){
+        mediaRecorder=new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        mediaRecorder.setOutputFile(AudioSavePathInDevice);
+    }
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(PendingCasesActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
     }
 }

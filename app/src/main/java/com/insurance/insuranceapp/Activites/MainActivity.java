@@ -26,6 +26,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.insurance.insuranceapp.Adapters.ExpandableListAdapter;
 import com.insurance.insuranceapp.Fragments.DashBoardFragment;
@@ -36,13 +37,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity {
 
     private TextView mtitle,tvuser;
-
     private ImageButton logout;
-
     private boolean shouldLoadHomeFragOnBackPress = true;
     private Handler mHandler;
     private NavigationView navigationView;
@@ -51,24 +49,17 @@ public class MainActivity extends AppCompatActivity
     private ImageView userprofile;
     private Toolbar toolbar;
     private FloatingActionButton fab;
-
     boolean doubleBackToExitPressedOnce = false;
     // index to identify current nav menu item
     public static int navItemIndex = 0;
     // tags used to attach the fragments
     private static final String TAG_DASHBOARD = "DashBoard";
-
     public static String CURRENT_TAG = TAG_DASHBOARD;
     private ExpandableListView expandableListView;
     private ExpandableListAdapter expandableListAdapter;
     private List<String> expandableListTitle;
     private HashMap<String, List<String>> expandableListDetail;
     private String domainurl,patientid,companyid;
-
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +93,7 @@ public class MainActivity extends AppCompatActivity
         }
         expandableListDetail = ExpandableListDataPump.getData();
         expandableListTitle = new ArrayList<String>(expandableListDetail.keySet());
-
         // prepareListData();
-
         expandableListAdapter = new ExpandableListAdapter(this, expandableListTitle, expandableListDetail);
         // initializing navigation menu
         setUpNavigationView();
@@ -113,8 +102,6 @@ public class MainActivity extends AppCompatActivity
             CURRENT_TAG = TAG_DASHBOARD;
             loadHomeFragment();
         }
-
-
         userprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,28 +159,19 @@ public class MainActivity extends AppCompatActivity
                     Intent intent = new Intent(HomeActivity.this, BalanceActivity.class);
                     startActivity(intent);
                 }*/
-
-
                 return true;
-
             }
         });
         expandableListView.setAdapter(expandableListAdapter);
     }
 
-
     private void loadHomeFragment() {
         // selecting appropriate nav menu item
-
-
         // set toolbar title
-
-
         // if user select the current navigation menu again, don't do anything
         // just close the navigation drawer
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
-
             // show or hide the fab button
             // toggleFab();
             return;
@@ -239,9 +217,6 @@ public class MainActivity extends AppCompatActivity
                 DashBoardFragment dashboardFragment = new DashBoardFragment();
                 return dashboardFragment;
 
-
-
-
             default:
                 return new DashBoardFragment();
         }
@@ -254,8 +229,6 @@ public class MainActivity extends AppCompatActivity
             // This method will trigger on item Click of navigation menu
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-
                 //Check to see which item was being clicked and perform appropriate actio
                 //Checking if the item is in checked state or not, if not make it in checked state
                 if (menuItem.isChecked()) {
@@ -290,8 +263,6 @@ public class MainActivity extends AppCompatActivity
 
         //Setting the actionbarToggle to drawer layout
         drawer.setDrawerListener(actionBarDrawerToggle);
-
-
         //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
     }
@@ -334,8 +305,6 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
         }
-
-
         //super.onBackPressed();
     }
 
@@ -357,20 +326,12 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-
        if(id == R.id.action_logout){
-
             exit();
         }
-
-
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
     private void setupDrawerContent(NavigationView navigationView) {
         //revision: this don't works, use setOnChildClickListener() and setOnGroupClickListener() above instead
@@ -385,9 +346,6 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
-
-
-
     private void exit(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Exit Application?");
@@ -401,19 +359,14 @@ public class MainActivity extends AppCompatActivity
                                 MainActivity.this.finish();
                                 android.os.Process.killProcess(android.os.Process.myPid());
                                 System.exit(1);
-
                             }
                         })
-
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
                         dialog.cancel();
                     }
                 });
-
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
 }
