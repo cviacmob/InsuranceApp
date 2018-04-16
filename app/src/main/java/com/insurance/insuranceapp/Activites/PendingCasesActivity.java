@@ -5,7 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
@@ -31,7 +33,18 @@ public class PendingCasesActivity extends AppCompatActivity {
         pendingcaseAdapter = new PendingCasesAdapter(pendingInfoList,this.getApplication());
         listView.setDivider(null);
         listView.setAdapter(pendingcaseAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+
+                //audio to be added;
+
+
+
+
+            }
+        });
 
     }
 
