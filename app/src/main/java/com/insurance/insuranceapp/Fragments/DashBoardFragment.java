@@ -19,13 +19,11 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class DashBoardFragment extends Fragment {
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_fragments, container, false);
         setHasOptionsMenu(true);
-
 
         return view;
     }

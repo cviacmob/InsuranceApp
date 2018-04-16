@@ -20,8 +20,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
-        android:background="@color/Gray"
-     >
+        android:background="@color/Gray">
 
         <ExpandableListView
             android:id="@+id/navigationmenu"
@@ -29,14 +28,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="192dp"
             android:background="@color/Gray"
-            android:listSelector="@color/FRESH"
-
-            >
-
-        </ExpandableListView>
-
-
-
+            android:listSelector="@color/FRESH"/>
 
     </android.support.design.widget.NavigationView>
 

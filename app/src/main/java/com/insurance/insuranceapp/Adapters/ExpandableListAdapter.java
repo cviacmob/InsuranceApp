@@ -47,7 +47,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                              boolean isLastChild, View convertView, ViewGroup parent) {
         final String expandedListText = (String) getChild(listPosition, expandedListPosition);
 
-
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -56,8 +55,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView expandedListTextView = (TextView) convertView
                 .findViewById(R.id.expandedListItem);
         expandedListTextView.setText(expandedListText);
-
-
 
         return convertView;
     }
@@ -110,12 +107,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             listTitleTextView.setText("Cases") ;
             icon.setImageResource(R.drawable.docu);
         }
-
-
-
-
-
-
 
         return convertView;
     }

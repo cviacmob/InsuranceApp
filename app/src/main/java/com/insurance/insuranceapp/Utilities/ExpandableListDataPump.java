@@ -20,12 +20,10 @@ public class ExpandableListDataPump {
         payments.add("Reserved Payment");
         payments.add("Confirmed Payments");
 
-
         List<String> cases = new ArrayList<String>();
         cases.add("Pending Cases");
         cases.add("Submitted Cases");
         cases.add("Save Cases");
-
 
         Collections.sort(payments);
         Collections.sort(cases);
@@ -34,10 +32,6 @@ public class ExpandableListDataPump {
         expandableListDetail.put("Payments", payments);
         expandableListDetail.put("Cases", dashboard);
 
-
-
-
         return expandableListDetail;
     }
-
 }
