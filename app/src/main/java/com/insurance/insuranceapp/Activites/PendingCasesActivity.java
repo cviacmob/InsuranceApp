@@ -36,7 +36,14 @@ public class PendingCasesActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                final PendingInfo pendingInfo= (PendingInfo) parent.getAdapter().getItem(position);
+                String Block_Name = pendingInfo.getBlock_name();
+                if(Block_Name!=null) {
+                    if (Block_Name.equalsIgnoreCase("Hospital Block")) {
+                        Intent in = new Intent(PendingCasesActivity.this, HospitalBlockActivity.class);
+                        startActivity(in);
+                    }
+                }
 
                 //audio to be added;
 
