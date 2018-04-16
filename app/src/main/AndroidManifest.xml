@@ -45,9 +45,8 @@
             android:label="@string/title_activity_login" />
         <activity android:name=".Activites.ProfileActivity" />
         <activity android:name=".Activites.PendingCasesActivity" />
-        <activity
-            android:name=".Activites.ReservedPaymentsActivity"
-            ></activity>
+        <activity android:name=".Activites.ReservedPaymentsActivity" />
+        <activity android:name=".Activites.HospitalBlockActivity"></activity>
     </application>
 
 </manifest>
