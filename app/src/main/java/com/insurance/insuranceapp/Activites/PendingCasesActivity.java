@@ -61,11 +61,11 @@ public class PendingCasesActivity extends AppCompatActivity {
                 final PendingInfo pendingInfo= (PendingInfo) parent.getAdapter().getItem(position);
                 String Block_Name = pendingInfo.getBlock_name();
                 if(Block_Name!=null) {
-                    /*if (Block_Name.equalsIgnoreCase("Hospital Block")) {
+                    if (Block_Name.equalsIgnoreCase("Hospital Block")) {
                         Intent in = new Intent(PendingCasesActivity.this, HospitalBlockActivity.class);
                         startActivity(in);
-                    }*/
-                    random = new Random();
+                    }
+                   /* random = new Random();
                     if(checkPermission()) {
                         AudioSavePathInDevice = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CreateRandomAudioFileName(5) + "AudioRecording.3gp";
                         MediaRecorderReady();
@@ -83,7 +83,7 @@ public class PendingCasesActivity extends AppCompatActivity {
                     }
                     else {
                         requestPermission();
-                    }
+                    }*/
                 }
             }
         });
