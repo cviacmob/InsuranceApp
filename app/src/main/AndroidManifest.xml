@@ -36,7 +36,9 @@
             android:value="1" />
         <activity
             android:name=".Activites.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login" >
+
+        </activity>
         <activity android:name=".Activites.ProfileActivity" />
         <activity android:name=".Activites.PendingCasesActivity" />
         <activity android:name=".Activites.ReservedPaymentsActivity" />
