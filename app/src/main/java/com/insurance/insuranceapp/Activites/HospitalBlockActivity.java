@@ -1,16 +1,28 @@
 package com.insurance.insuranceapp.Activites;
 
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
@@ -47,25 +59,30 @@ public class HospitalBlockActivity extends AppCompatActivity {
     private String string8 = "Final Bill";
     private String string9 = "Previous OP and IP records";
     private String string10 = "<font color='#000000'>Field Investigation report </font>" + "<font color='#FF0000'>*</font>";
+
     private String string11= "Hospital Snaps";
     private String string12= "Others";
     private String string13= "Medical Records Bill (if any)";
     private String string14= "Evidence for Trigger";
     private String string19= "Conveyance File(s)";
+    private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
     private ListView triggerlist;
     private Button bt_next;
     private Button save,submit,back;
     private PendingCasesAdapter pendingcaseAdapter;
     private List<PendingInfo> pendingInfoList;
+    private RelativeLayout relativeLayout;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hospital_block);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Hospital Part Block");
-        viewFlipper = (ViewFlipper) findViewById(R.id.ViewFlipper01);
-        bt_next = (Button) findViewById(R.id.care_next);
-      //  triggerlist = (ListView)findViewById(R.id.triggerlist);
+
+      //  bt_next = (Button) findViewById(R.id.care_next);
+
+      // triggerlist = (ListView)findViewById(R.id.triggerlist);
         save = (Button)findViewById(R.id.care_save);
         submit = (Button)findViewById(R.id.bt_submit);
         back = (Button)findViewById(R.id.bt_back);
@@ -100,28 +117,92 @@ public class HospitalBlockActivity extends AppCompatActivity {
         title19 = (TextView)findViewById(R.id.title19);
         title19.setText(Html.fromHtml(string19));
 
-
+/*
         bt_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 viewFlipper.showNext();
             }
-        });
+        });*/
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-               viewFlipper.showPrevious();
+
             }
         });
 
-      /*  pendingInfoList =  getList();
+        createEditTextView();
+
+
+   /*     pendingInfoList =  getList();
         pendingcaseAdapter = new PendingCasesAdapter(pendingInfoList,this.getApplication());
-        triggerlist.setDivider(null);
-        triggerlist.setAdapter(pendingcaseAdapter);
-*/
+
+        triggerlist.setAdapter(pendingcaseAdapter);*/
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    protected void createEditTextView() {
+        LinearLayout linearLayout= (LinearLayout)findViewById(R.id.linear);      //find the linear layout
+        linearLayout.removeAllViews();
+        relativeLayout = (RelativeLayout)findViewById(R.id.realdynmo);
+        pendingInfoList =  getList();
+
+        for(int i=1;i<=pendingInfoList.size();i++) {
+
+            EditText edittext = new EditText(this);
+            TextView title = new TextView(this);
+            TextView button = new TextView(this);
+            TextView filename = new TextView(this);
+            title.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            title.setText("sf" + i);
+            edittext.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 160));
+            button.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            filename.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            params.setMargins(10, 10, 10, 10);
+            Typeface face = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                face = getResources().getFont(R.font.verdana);
+            }
+            edittext.setTypeface(face);
+            title.setTypeface(face);
+            button.setTypeface(face);
+            filename.setTypeface(face);
+            title.setLayoutParams(params);
+            button.setLayoutParams(params);
+            button.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
+            edittext.setInputType(10);
+            title.setTextColor(getResources().getColor(R.color.Black));
+            edittext.setTextColor(getResources().getColor(R.color.Black));
+            button.setTextColor(getResources().getColor(R.color.Black));
+            filename.setTextColor(getResources().getColor(R.color.Black));
+            edittext.setGravity(Gravity.BOTTOM | Gravity.LEFT);
+            edittext.setPadding(5, 5, 5, 5);
+            button.setPadding(5, 5, 5, 5);
+            filename.setPadding(5, 5, 5, 5);
+            edittext.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
+            button.setText("Choose File");
+            edittext.setTextSize(15f);
+            filename.setTextSize(15f);
+            edittext.setHint(Html.fromHtml(triggerreply));
+            filename.setText("adfd");
+            button.setTextSize(17f);
+            title.setTextSize(15f);
+            linearLayout.addView(title);
+            linearLayout.addView(edittext);
+            linearLayout.addView(button);
+            linearLayout.addView(filename);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(),"asf",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        }
     private List<PendingInfo> getList(){
 
         pendingInfoList = new ArrayList<>();

@@ -8,4 +8,12 @@
         android:fontStyle="italic"
         android:fontWeight="400"
         android:font="@font/camphor_std_bold" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/verdana" />
+    <font
+        android:fontStyle="italic"
+        android:fontWeight="400"
+        android:font="@font/verdana_bold" />
 </font-family>
