@@ -64,6 +64,9 @@ public class PendingCasesActivity extends AppCompatActivity {
                     if (Block_Name.equalsIgnoreCase("Hospital Block")) {
                         Intent in = new Intent(PendingCasesActivity.this, HospitalBlockActivity.class);
                         startActivity(in);
+                    }else if(Block_Name.equalsIgnoreCase("Patient Part")){
+                        Intent in = new Intent(PendingCasesActivity.this, PatientBlockActivity.class);
+                        startActivity(in);
                     }
                    /* random = new Random();
                     if(checkPermission()) {
@@ -116,10 +119,10 @@ public class PendingCasesActivity extends AppCompatActivity {
         PendingInfo pendingInfo1 = new PendingInfo();
         pendingInfo1.setClaim_no("5461236");
         pendingInfo1.setPatientName("Varun");
-        pendingInfo1.setBlock_name("Hospital Block");
+        pendingInfo1.setBlock_name("Patient Part");
         pendingInfo1.setPolicy_no("54322579");
         pendingInfo1.setInsurance_company("LIC");
-        pendingInfo1.setCase_name("Hospital Part");
+        pendingInfo1.setCase_name("Patient Part");
         pendingInfo1.setAssigned_to("Vijila");
         pendingInfo1.setCase_assigned_on("06-04-2018");
         pendingInfo1.setStatus("pending");

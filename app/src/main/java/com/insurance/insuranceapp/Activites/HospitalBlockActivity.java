@@ -1,10 +1,12 @@
 package com.insurance.insuranceapp.Activites;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,7 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -29,7 +33,9 @@ import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class HospitalBlockActivity extends AppCompatActivity {
@@ -72,6 +78,17 @@ public class HospitalBlockActivity extends AppCompatActivity {
     private PendingCasesAdapter pendingcaseAdapter;
     private List<PendingInfo> pendingInfoList;
     private RelativeLayout relativeLayout;
+    private EditText ed_comments,ed_date,ed_convoy,ed_mrd;
+    private String Comments = "",Submitted_date = "",temp = "",conveyance = "",MRD = "";
+    private ImageView calendar;
+    private DatePickerDialog datePickerDialog;
+    final Calendar c = Calendar.getInstance();
+    int mYear = c.get(Calendar.YEAR); // current year
+    int mMonth = c.get(Calendar.MONTH); // current month
+    int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+    private TextInputLayout textInputLayout;
+    private Button button;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +96,13 @@ public class HospitalBlockActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hospital_block);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Hospital Part Block");
-
-      //  bt_next = (Button) findViewById(R.id.care_next);
-
-      // triggerlist = (ListView)findViewById(R.id.triggerlist);
+        textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
+        calendar = (ImageView)findViewById(R.id.ig_calender);
+        ed_convoy = (EditText)findViewById(R.id.famildoc);
+        ed_mrd = (EditText)findViewById(R.id.famildoc1);
         save = (Button)findViewById(R.id.care_save);
         submit = (Button)findViewById(R.id.bt_submit);
+
         back = (Button)findViewById(R.id.bt_back);
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
@@ -116,20 +134,32 @@ public class HospitalBlockActivity extends AppCompatActivity {
         title14.setText(Html.fromHtml(string14));
         title19 = (TextView)findViewById(R.id.title19);
         title19.setText(Html.fromHtml(string19));
+        ed_comments = (EditText)findViewById(R.id.ed_family);
+        ed_date = (EditText)findViewById(R.id.edit_consult);
 
-/*
-        bt_next.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+        calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                datepicker();
 
-                viewFlipper.showNext();
             }
-        });*/
-        back.setOnClickListener(new View.OnClickListener() {
+        });
+
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                Comments = ed_comments.getText().toString();
+                MRD = ed_mrd.getText().toString();
+                conveyance = ed_convoy.getText().toString();
+                if(Submitted_date!=null && !Submitted_date.isEmpty()){
+                    Submitted_date = ed_date.getText().toString();
+                }else{
+                    textInputLayout.setError("Cannot be empty");
+                }
             }
         });
 
@@ -140,6 +170,25 @@ public class HospitalBlockActivity extends AppCompatActivity {
         pendingcaseAdapter = new PendingCasesAdapter(pendingInfoList,this.getApplication());
 
         triggerlist.setAdapter(pendingcaseAdapter);*/
+    }
+    public void datepicker(){
+        datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        // set day of month , month and year value in the edit text
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(year, monthOfYear, dayOfMonth);
+                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                         temp = sdf.format(calendar.getTime());
+                        ed_date.setText(temp);
+
+
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
