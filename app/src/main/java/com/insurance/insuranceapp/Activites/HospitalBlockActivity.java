@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,7 +38,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class HospitalBlockActivity extends AppCompatActivity {
-    private ViewFlipper viewFlipper;
+
     private TextView title1,file1,filename1;
     private TextView title2,file2,filename2;
     private TextView title3,file3,filename3;
@@ -152,11 +151,12 @@ public class HospitalBlockActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Comments = ed_comments.getText().toString();
+                Submitted_date = ed_date.getText().toString();
+                if(Submitted_date!=null && !Submitted_date.isEmpty()){
+                    Comments = ed_comments.getText().toString();
                 MRD = ed_mrd.getText().toString();
                 conveyance = ed_convoy.getText().toString();
-                if(Submitted_date!=null && !Submitted_date.isEmpty()){
-                    Submitted_date = ed_date.getText().toString();
+
                 }else{
                     textInputLayout.setError("Cannot be empty");
                 }
