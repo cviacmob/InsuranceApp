@@ -2,25 +2,36 @@ package com.insurance.insuranceapp.Activites;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.Image;
+import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class PatientBlockActivity extends AppCompatActivity {
     private TextView title1,file1,filename1;
@@ -43,6 +54,7 @@ public class PatientBlockActivity extends AppCompatActivity {
     private String string7 = "Query Reply";
     private String string8 = "Others";
     private String string9 = "Evidence for Trigger";
+    private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
     private EditText ed_trigger_finding,ed_comments,ed_date,ed_convance;
     private String triggers = "",comments ="",date = "",convance = "",temp ="";
     private ImageView calendar;
@@ -53,12 +65,16 @@ public class PatientBlockActivity extends AppCompatActivity {
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
     private TextInputLayout textInputLayout;
     private Button submit;
+    private List<PendingInfo> pendingInfoList;
+    private RelativeLayout relativeLayout;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_block);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Patient Part");
+        createEditTextView();
         ed_trigger_finding =(EditText)findViewById(R.id.ed_triggerfinding);
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
         ed_comments = (EditText)findViewById(R.id.ed_comments);
@@ -108,7 +124,99 @@ public class PatientBlockActivity extends AppCompatActivity {
 
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    protected void createEditTextView() {
+        LinearLayout linearLayout= (LinearLayout)findViewById(R.id.linear);      //find the linear layout
+        linearLayout.removeAllViews();
+        relativeLayout = (RelativeLayout)findViewById(R.id.realdynmo);
+        pendingInfoList =  getList();
 
+        for(int i=1;i<=pendingInfoList.size();i++) {
+
+            EditText edittext = new EditText(this);
+            TextView title = new TextView(this);
+            TextView button = new TextView(this);
+            TextView filename = new TextView(this);
+            title.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            title.setText("sf" + i);
+            edittext.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 160));
+            button.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            filename.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            params.setMargins(10, 10, 10, 10);
+            Typeface face = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                face = getResources().getFont(R.font.verdana);
+            }
+            edittext.setTypeface(face);
+            title.setTypeface(face);
+            button.setTypeface(face);
+            filename.setTypeface(face);
+            title.setLayoutParams(params);
+            button.setLayoutParams(params);
+            button.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
+            edittext.setInputType(10);
+            title.setTextColor(getResources().getColor(R.color.Black));
+            edittext.setTextColor(getResources().getColor(R.color.Black));
+            button.setTextColor(getResources().getColor(R.color.Black));
+            filename.setTextColor(getResources().getColor(R.color.Black));
+            edittext.setGravity(Gravity.BOTTOM | Gravity.LEFT);
+            edittext.setPadding(5, 5, 5, 5);
+            button.setPadding(5, 5, 5, 5);
+            filename.setPadding(5, 5, 5, 5);
+            edittext.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
+            button.setText("Choose File");
+            edittext.setTextSize(15f);
+            filename.setTextSize(15f);
+            edittext.setHint(Html.fromHtml("hi"));
+            filename.setText(triggerreply);
+            button.setTextSize(17f);
+            title.setTextSize(15f);
+            linearLayout.addView(title);
+            linearLayout.addView(edittext);
+            linearLayout.addView(button);
+            linearLayout.addView(filename);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(),"asf",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+
+    private List<PendingInfo> getList(){
+
+        pendingInfoList = new ArrayList<>();
+
+        PendingInfo pendingInfo = new PendingInfo();
+        pendingInfo.setClaim_no("5461235");
+        pendingInfo.setPatientName("Arun");
+        pendingInfo.setBlock_name("Hospital Block");
+        pendingInfo.setPolicy_no("54322578");
+        pendingInfo.setInsurance_company("LIC");
+        pendingInfo.setCase_name("Hospital Part");
+        pendingInfo.setAssigned_to("Vijila ");
+        pendingInfo.setCase_assigned_on("05-04-2018");
+        pendingInfo.setStatus("pending");
+
+        pendingInfoList.add(pendingInfo);
+
+        PendingInfo pendingInfo1 = new PendingInfo();
+        pendingInfo1.setClaim_no("5461236");
+        pendingInfo1.setPatientName("Varun");
+        pendingInfo1.setBlock_name("Hospital Block");
+        pendingInfo1.setPolicy_no("54322579");
+        pendingInfo1.setInsurance_company("LIC");
+        pendingInfo1.setCase_name("Hospital Part");
+        pendingInfo1.setAssigned_to("Vijila");
+        pendingInfo1.setCase_assigned_on("06-04-2018");
+        pendingInfo1.setStatus("pending");
+        pendingInfoList.add(pendingInfo1);
+        return pendingInfoList;
+    }
     public void datepicker(){
         datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {

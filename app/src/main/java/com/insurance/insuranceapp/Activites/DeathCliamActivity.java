@@ -9,9 +9,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,13 +19,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
-import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.R;
 
@@ -37,8 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class HospitalBlockActivity extends AppCompatActivity {
-
+public class DeathCliamActivity extends AppCompatActivity {
     private TextView title1,file1,filename1;
     private TextView title2,file2,filename2;
     private TextView title3,file3,filename3;
@@ -53,56 +46,77 @@ public class HospitalBlockActivity extends AppCompatActivity {
     private TextView title12,file12,filename12;
     private TextView title13,file13,filename13;
     private TextView title14,file14,filename14;
+    private TextView title15,file15,filename15;
+    private TextView title16,file16,filename16;
+    private TextView title17,file17,filename17;
+    private TextView title18,file18,filename18;
     private TextView title19,file19,filename19;
-    private String string1= "<font color='#000000'>Company Authorization Letter towards the hospital </font>" + "<font color='#FF0000'>*</font>";
-    private String string2= "<font color='#000000'>Investigation report form </font>" + "<font color='#FF0000'>*</font>";
-    private String string3= "<font color='#000000'>Treating doctor Questionnaire </font>" + "<font color='#FF0000'>*</font>";
-    private String string4= "<font color='#000000'>Case sheet </font>" + "<font color='#FF0000'>*</font>";
-    private String string5= "<font color='#000000'>Doctor Questionnaire </font>" + "<font color='#FF0000'>*</font>";
-    private String string6 = "IP register";
-    private String string7 = "Lab Register";
-    private String string8 = "Final Bill";
-    private String string9 = "Previous OP and IP records";
-    private String string10 = "<font color='#000000'>Field Investigation report </font>" + "<font color='#FF0000'>*</font>";
-
-    private String string11= "Hospital Snaps";
-    private String string12= "Others";
-    private String string13= "Medical Records Bill (if any)";
-    private String string14= "Evidence for Trigger";
-    private String string19= "Conveyance File(s)";
-    private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
-    private ListView triggerlist;
-    private Button bt_next;
-    private Button save,submit,back;
-
-    private List<PendingInfo> pendingInfoList;
-    private RelativeLayout relativeLayout;
-    private EditText ed_comments,ed_date,ed_convoy,ed_mrd;
-    private String Comments = "",Submitted_date = "",temp = "",conveyance = "",MRD = "";
+    private TextView title20,file20,filename20;
+    private TextView title21,file21,filename21;
+    private TextView title22,file22,filename22;
+    private TextView title23,file23,filename23;
+    private TextView title24,file24,filename24;
+    private TextView title25,file25,filename25;
+    private TextView title26,file26,filename26;
+    private EditText ed_triggerfinding;
+    private EditText ed_comments;
+    private EditText ed_date,ed_convance;
     private ImageView calendar;
     private DatePickerDialog datePickerDialog;
     final Calendar c = Calendar.getInstance();
     int mYear = c.get(Calendar.YEAR); // current year
     int mMonth = c.get(Calendar.MONTH); // current month
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-    private TextInputLayout textInputLayout;
-    private Button button;
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+
+
+    private String string1= "<font color='#000000'>Company Authorization Letter towards the hospital </font>" + "<font color='#FF0000'>*</font>";
+    private String string2= "<font color='#000000'>Check List </font>" + "<font color='#FF0000'>*</font>";
+    private String string3= "<font color='#000000'>Claimant Questionnaire Form </font>" + "<font color='#FF0000'>*</font>";
+    private String string4= "<font color='#000000'>Claimant Questionaire </font>" + "<font color='#FF0000'>*</font>";
+    private String string5= "<font color='#000000'>Narration Letter </font>" + "<font color='#FF0000'>*</font>";
+    private String string6 = "<font color='#000000'>FIR Copy </font>" + "<font color='#FF0000'>*</font>";
+    private String string7 = "Inquest report";
+    private String string8 = "Spot Photos";
+    private String string9 = "<font color='#000000'>Death Certificate  </font>" + "<font color='#FF0000'>*</font>";
+    private String string10 = "<font color='#000000'>Family Photo  </font>" + "<font color='#FF0000'>*</font>";
+    private String string11= "<font color='#000000'>Death Person Photo </font>" + "<font color='#FF0000'>*</font>";
+    private String string12= "<font color='#000000'>Claimant Photo </font>" + "<font color='#FF0000'>*</font>";
+    private String string13= "<font color='#000000'>Income Proof of the Insured  </font>" + "<font color='#FF0000'>*</font>";
+    private String string14= "<font color='#000000'>Bank details(Cancelled Cheaque or passbook first sheet)  </font>" + "<font color='#FF0000'>*</font>";
+    private String string15= "<font color='#000000'>Witness Letter 1 with ID proof </font>" + "<font color='#FF0000'>*</font>";
+    private String string16 = "<font color='#000000'>Witness Letter 2 with ID proof </font>" + "<font color='#FF0000'>*</font>";
+    private String string17 = "<font color='#000000'>Witness Letter 3 with ID proof </font>" + "<font color='#FF0000'>*</font>";
+    private String string18 = "<font color='#000000'>ID proof of Death Person </font>" + "<font color='#FF0000'>*</font>";
+    private String string19 = "<font color='#000000'>ID proof of claimant  </font>" + "<font color='#FF0000'>*</font>";
+    private String string20 = "Driving License of Death Person";
+    private String string21= "Legal Hair certificate";
+    private String string22= "<font color='#000000'>Cerimination Ground Certificate </font>" + "<font color='#FF0000'>*</font>";
+    private String string23= "Hospital records";
+    private String string24= "RC Book of the vehicle";
+    private String string25= "Others";
+    private String string26 = "Evidence for Trigger";
+    private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
+    private Button submit;
+    private String submitted_date ="",triggerfinding = "",comments ="",Convanceamt = "",temp ="";
+    private TextInputLayout textInputLayout;
+    private List<PendingInfo> pendingInfoList;
+    private RelativeLayout relativeLayout;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hospital_block);
+        setContentView(R.layout.activity_death_cliam);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Hospital Part Block");
+        setTitle("Death Claim Block");
+        ed_triggerfinding = (EditText)findViewById(R.id.ed_triggers);
+        ed_comments = (EditText)findViewById(R.id.ed_comments);
+        ed_date = (EditText)findViewById(R.id.edit_date);
+        ed_convance = (EditText)findViewById(R.id.ed_convence);
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
         calendar = (ImageView)findViewById(R.id.ig_calender);
-        ed_convoy = (EditText)findViewById(R.id.famildoc);
-        ed_mrd = (EditText)findViewById(R.id.famildoc1);
-        save = (Button)findViewById(R.id.care_save);
         submit = (Button)findViewById(R.id.bt_submit);
-
-        back = (Button)findViewById(R.id.bt_back);
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
         title2 = (TextView)findViewById(R.id.title2);
@@ -116,9 +130,9 @@ public class HospitalBlockActivity extends AppCompatActivity {
         title6 = (TextView)findViewById(R.id.title6);
         title6.setText(Html.fromHtml(string6));
         title7 = (TextView)findViewById(R.id.title7);
-        title7.setText(Html.fromHtml(string7));
+        title7.setText(string7);
         title8 = (TextView)findViewById(R.id.title8);
-        title8.setText(Html.fromHtml(string8));
+        title8.setText(string8);
         title9 = (TextView)findViewById(R.id.title9);
         title9.setText(Html.fromHtml(string9));
         title10 = (TextView)findViewById(R.id.title10);
@@ -131,15 +145,45 @@ public class HospitalBlockActivity extends AppCompatActivity {
         title13.setText(Html.fromHtml(string13));
         title14 = (TextView)findViewById(R.id.title14);
         title14.setText(Html.fromHtml(string14));
+        title15 = (TextView)findViewById(R.id.title15);
+        title15.setText(Html.fromHtml(string15));
+        title16 = (TextView)findViewById(R.id.title16);
+        title16.setText(Html.fromHtml(string16));
+        title17 = (TextView)findViewById(R.id.title17);
+        title17.setText(Html.fromHtml(string17));
+        title18 = (TextView)findViewById(R.id.title18);
+        title18.setText(Html.fromHtml(string18));
         title19 = (TextView)findViewById(R.id.title19);
         title19.setText(Html.fromHtml(string19));
-        ed_comments = (EditText)findViewById(R.id.ed_family);
-        ed_date = (EditText)findViewById(R.id.edit_consult);
+        title20 = (TextView)findViewById(R.id.title20);
+        title20.setText(string20);
+        title21 = (TextView)findViewById(R.id.title21);
+        title21.setText(string21);
+        title22 = (TextView)findViewById(R.id.title22);
+        title22.setText(Html.fromHtml(string22));
+        title23 = (TextView)findViewById(R.id.title23);
+        title23.setText(string23);
+        title24 = (TextView)findViewById(R.id.title24);
+        title24.setText(string24);
+        title25 = (TextView)findViewById(R.id.title25);
+        title25.setText(string25);
+        title26 = (TextView)findViewById(R.id.title26);
+        title26.setText(string26);
 
-
-
-
-
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               submitted_date =  ed_date.getText().toString();
+               if(submitted_date!=null && !submitted_date.isEmpty())
+               {
+                   comments = ed_comments.getText().toString();
+                   triggerfinding = ed_triggerfinding.getText().toString();
+                   Convanceamt = ed_convance.getText().toString();
+               }else{
+                   textInputLayout.setError("Cannot be empty");
+               }
+            }
+        });
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,49 +192,11 @@ public class HospitalBlockActivity extends AppCompatActivity {
             }
         });
 
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Submitted_date = ed_date.getText().toString();
-                if(Submitted_date!=null && !Submitted_date.isEmpty()){
-                    Comments = ed_comments.getText().toString();
-                MRD = ed_mrd.getText().toString();
-                conveyance = ed_convoy.getText().toString();
-
-                }else{
-                    textInputLayout.setError("Cannot be empty");
-                }
-            }
-        });
-
         createEditTextView();
 
 
-   /*     pendingInfoList =  getList();
-        pendingcaseAdapter = new PendingCasesAdapter(pendingInfoList,this.getApplication());
 
-        triggerlist.setAdapter(pendingcaseAdapter);*/
     }
-    public void datepicker(){
-        datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // set day of month , month and year value in the edit text
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                         temp = sdf.format(calendar.getTime());
-                        ed_date.setText(temp);
-
-
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     protected void createEditTextView() {
         LinearLayout linearLayout= (LinearLayout)findViewById(R.id.linear);      //find the linear layout
@@ -251,7 +257,8 @@ public class HospitalBlockActivity extends AppCompatActivity {
                 }
             });
         }
-        }
+    }
+
     private List<PendingInfo> getList(){
 
         pendingInfoList = new ArrayList<>();
@@ -282,6 +289,25 @@ public class HospitalBlockActivity extends AppCompatActivity {
         pendingInfoList.add(pendingInfo1);
         return pendingInfoList;
     }
+    public void datepicker(){
+        datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        // set day of month , month and year value in the edit text
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(year, monthOfYear, dayOfMonth);
+                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+                        temp = sdf.format(calendar.getTime());
+                        ed_date.setText(temp);
+
+
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -291,11 +317,12 @@ public class HospitalBlockActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_home) {
-            Intent in = new Intent(HospitalBlockActivity.this,MainActivity.class);
+            Intent in = new Intent(DeathCliamActivity.this,MainActivity.class);
             startActivity(in);
             return true;
         }
         onBackPressed();
         return true;
     }
+
 }

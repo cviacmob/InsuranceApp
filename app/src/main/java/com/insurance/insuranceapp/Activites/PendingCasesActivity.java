@@ -67,6 +67,13 @@ public class PendingCasesActivity extends AppCompatActivity {
                     }else if(Block_Name.equalsIgnoreCase("Patient Part")){
                         Intent in = new Intent(PendingCasesActivity.this, PatientBlockActivity.class);
                         startActivity(in);
+                    } else if(Block_Name.equalsIgnoreCase("SME")){
+                       // Intent in = new Intent(PendingCasesActivity.this, DeathCliamActivity.class);
+                       // startActivity(in);
+                    }
+                    else if(Block_Name.equalsIgnoreCase("Death Claim")){
+                        Intent in = new Intent(PendingCasesActivity.this, DeathCliamActivity.class);
+                        startActivity(in);
                     }
                    /* random = new Random();
                     if(checkPermission()) {
@@ -127,6 +134,31 @@ public class PendingCasesActivity extends AppCompatActivity {
         pendingInfo1.setCase_assigned_on("06-04-2018");
         pendingInfo1.setStatus("pending");
         pendingInfoList.add(pendingInfo1);
+
+        PendingInfo pendingInfo2 = new PendingInfo();
+        pendingInfo2.setClaim_no("5461236");
+        pendingInfo2.setPatientName("Varun");
+        pendingInfo2.setBlock_name("SME");
+        pendingInfo2.setPolicy_no("54322579");
+        pendingInfo2.setInsurance_company("LIC");
+        pendingInfo2.setCase_name("SME");
+        pendingInfo2.setAssigned_to("Vijila");
+        pendingInfo2.setCase_assigned_on("06-04-2018");
+        pendingInfo2.setStatus("pending");
+        pendingInfoList.add(pendingInfo2);
+
+
+        PendingInfo pendingInfo3 = new PendingInfo();
+        pendingInfo3.setClaim_no("5461236");
+        pendingInfo3.setPatientName("Varun");
+        pendingInfo3.setBlock_name("Death Claim");
+        pendingInfo3.setPolicy_no("54322579");
+        pendingInfo3.setInsurance_company("LIC");
+        pendingInfo3.setCase_name("Death Claim");
+        pendingInfo3.setAssigned_to("Vijila");
+        pendingInfo3.setCase_assigned_on("06-04-2018");
+        pendingInfo3.setStatus("pending");
+        pendingInfoList.add(pendingInfo3);
         return pendingInfoList;
     }
     @Override
