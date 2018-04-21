@@ -18,11 +18,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -64,7 +66,8 @@ public class HospitalBlockActivity extends AppCompatActivity {
     private static final int MY_PERMISSION_EXTERNAL_STORAGE = 11;
     private int REQUEST_CAMERA = 2, SELECT_FILE = 1;
     private String userChoosenTask;
-
+    public static final int PERMISSIONS_REQUEST_CODE = 0;
+    public static final int FILE_PICKER_REQUEST_CODE = 1;
     private TextView title1,file1,filename1;
     private TextView title2,file2,filename2;
     private TextView title3,file3,filename3;
@@ -391,6 +394,7 @@ public class HospitalBlockActivity extends AppCompatActivity {
             }
             break;
             case MY_PERMISSION_EXTERNAL_STORAGE: {
+
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         return;
@@ -406,6 +410,15 @@ public class HospitalBlockActivity extends AppCompatActivity {
                 // Start the Intent
                 startActivityForResult(galleryIntent, SELECT_FILE);
             }
+            break;
+            case PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openFilePicker();
+                } else {
+                    showError();
+                }
+            }
 
         }
     }
@@ -414,12 +427,35 @@ public class HospitalBlockActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
+
             if (requestCode == SELECT_FILE)
                 onSelectFromGalleryResult(data);
             else if (requestCode == REQUEST_CAMERA)
                 onCaptureImageResult(data);
         }
-    }
+
+      //  if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+           /* String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+
+            if (path != null) {
+                Log.d("Path: ", path);
+
+                upload = path.substring(path.lastIndexOf('/') + 1);
+//                String[] trimmed = path.split(dir);
+//                String sdcardPath = trimmed[0];
+                if(i==1 && filename!=null){
+                    filename.setText(upload);
+                }else if(tv_filename !=null) {
+                    tv_filename.setText(upload);
+                }*/
+
+                // upload = uploadfile(dir);
+
+
+                //Toast.makeText(this, "Picked file: " + sdcardPath, Toast.LENGTH_LONG).show();
+            //}
+        }
+
     private void onCaptureImageResult(Intent data) {
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -528,4 +564,36 @@ public class HospitalBlockActivity extends AppCompatActivity {
         return new File(mediaStorageDir.getPath() + File.separator +
                 "IMG_" + timeStamp + ".jpg");
     }
+
+    private void checkPermissionsAndOpenFilePicker() {
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                showError();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSIONS_REQUEST_CODE);
+            }
+        } else {
+            openFilePicker();
+        }
+    }
+    private void showError() {
+        Toast.makeText(this, "Allow external storage reading", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void openFilePicker() {
+        new MaterialFilePicker()
+                .withActivity(this)
+                .withRequestCode(FILE_PICKER_REQUEST_CODE)
+                .withHiddenFiles(true)
+                .withTitle("Select a file")
+                .start();
+    }
+
+
+
+
+
 }
