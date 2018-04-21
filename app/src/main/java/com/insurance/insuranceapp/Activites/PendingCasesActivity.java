@@ -68,11 +68,40 @@ public class PendingCasesActivity extends AppCompatActivity {
                         Intent in = new Intent(PendingCasesActivity.this, PatientBlockActivity.class);
                         startActivity(in);
                     } else if(Block_Name.equalsIgnoreCase("SME")){
-                       // Intent in = new Intent(PendingCasesActivity.this, DeathCliamActivity.class);
-                       // startActivity(in);
+                        Intent in = new Intent(PendingCasesActivity.this, SMEActivity.class);
+                        startActivity(in);
                     }
                     else if(Block_Name.equalsIgnoreCase("Death Claim")){
                         Intent in = new Intent(PendingCasesActivity.this, DeathCliamActivity.class);
+                        startActivity(in);
+                    }else if(Block_Name.equalsIgnoreCase("Disability")){
+                        Intent in = new Intent(PendingCasesActivity.this, DisabilityActivity.class);
+                        startActivity(in);
+                    }else if(Block_Name.equalsIgnoreCase("PersonalAccident")){
+                        Intent in = new Intent(PendingCasesActivity.this, PersonalAccidentActivity.class);
+                        startActivity(in);
+                    }
+                    else if(Block_Name.equalsIgnoreCase("Bill Verification Hospital")){
+                        Intent in = new Intent(PendingCasesActivity.this, BillVerificationHospital.class);
+                        startActivity(in);
+                    }
+                    else if(Block_Name.equalsIgnoreCase("Bill Verification Pharmacy")){
+                        Intent in = new Intent(PendingCasesActivity.this, BillVerificationPharmacy.class);
+                        startActivity(in);
+                    }
+                    else if(Block_Name.equalsIgnoreCase("Documents Verification")){
+                        Intent in = new Intent(PendingCasesActivity.this, DocumentsVerification.class);
+                        startActivity(in);
+                    }
+                    else if(Block_Name.equalsIgnoreCase("Cashless")){
+                        Intent in = new Intent(PendingCasesActivity.this, Cashless.class);
+                        startActivity(in);
+                    }
+                    else if(Block_Name.equalsIgnoreCase("Intimation Case")){
+                        Intent in = new Intent(PendingCasesActivity.this, IntimationCase.class);
+                        startActivity(in);
+                    }else if(Block_Name.equalsIgnoreCase("Others")){
+                        Intent in = new Intent(PendingCasesActivity.this, DynamicActivity.class);
                         startActivity(in);
                     }
                    /* random = new Random();
@@ -159,6 +188,104 @@ public class PendingCasesActivity extends AppCompatActivity {
         pendingInfo3.setCase_assigned_on("06-04-2018");
         pendingInfo3.setStatus("pending");
         pendingInfoList.add(pendingInfo3);
+
+        PendingInfo pendingInfo4 = new PendingInfo();
+        pendingInfo4.setClaim_no("5461236");
+        pendingInfo4.setPatientName("Varun");
+        pendingInfo4.setBlock_name("Disability");
+        pendingInfo4.setPolicy_no("54322579");
+        pendingInfo4.setInsurance_company("LIC");
+        pendingInfo4.setCase_name("Disability");
+        pendingInfo4.setAssigned_to("Vijila");
+        pendingInfo4.setCase_assigned_on("06-04-2018");
+        pendingInfo4.setStatus("pending");
+        pendingInfoList.add(pendingInfo4);
+
+        PendingInfo pendingInfo5 = new PendingInfo();
+        pendingInfo5.setClaim_no("5461236");
+        pendingInfo5.setPatientName("Varun");
+        pendingInfo5.setBlock_name("PersonalAccident");
+        pendingInfo5.setPolicy_no("54322579");
+        pendingInfo5.setInsurance_company("LIC");
+        pendingInfo5.setCase_name("PersonalAccident");
+        pendingInfo5.setAssigned_to("Vijila");
+        pendingInfo5.setCase_assigned_on("06-04-2018");
+        pendingInfo5.setStatus("pending");
+        pendingInfoList.add(pendingInfo5);
+
+        PendingInfo pendingInfo6 = new PendingInfo();
+        pendingInfo6.setClaim_no("5461236");
+        pendingInfo6.setPatientName("Varun");
+        pendingInfo6.setBlock_name("Bill Verification Hospital");
+        pendingInfo6.setPolicy_no("54322579");
+        pendingInfo6.setInsurance_company("LIC");
+        pendingInfo6.setCase_name("Bill Verification Hospital");
+        pendingInfo6.setAssigned_to("Vijila");
+        pendingInfo6.setCase_assigned_on("06-04-2018");
+        pendingInfo6.setStatus("pending");
+        pendingInfoList.add(pendingInfo6);
+
+        PendingInfo pendingInfo7 = new PendingInfo();
+        pendingInfo7.setClaim_no("5461236");
+        pendingInfo7.setPatientName("Varun");
+        pendingInfo7.setBlock_name("Bill Verification Pharmacy");
+        pendingInfo7.setPolicy_no("54322579");
+        pendingInfo7.setInsurance_company("LIC");
+        pendingInfo7.setCase_name("Bill Verification Pharmacy");
+        pendingInfo7.setAssigned_to("Vijila");
+        pendingInfo7.setCase_assigned_on("06-04-2018");
+        pendingInfo7.setStatus("pending");
+        pendingInfoList.add(pendingInfo7);
+
+        PendingInfo pendingInfo8 = new PendingInfo();
+        pendingInfo8.setClaim_no("5461236");
+        pendingInfo8.setPatientName("Varun");
+        pendingInfo8.setBlock_name("Documents Verification");
+        pendingInfo8.setPolicy_no("54322579");
+        pendingInfo8.setInsurance_company("LIC");
+        pendingInfo8.setCase_name("Documents Verification");
+        pendingInfo8.setAssigned_to("Vijila");
+        pendingInfo8.setCase_assigned_on("06-04-2018");
+        pendingInfo8.setStatus("pending");
+        pendingInfoList.add(pendingInfo8);
+
+
+        PendingInfo pendingInfo9 = new PendingInfo();
+        pendingInfo9.setClaim_no("5461236");
+        pendingInfo9.setPatientName("Varun");
+        pendingInfo9.setBlock_name("Cashless");
+        pendingInfo9.setPolicy_no("54322579");
+        pendingInfo9.setInsurance_company("LIC");
+        pendingInfo9.setCase_name("Cashless");
+        pendingInfo9.setAssigned_to("Vijila");
+        pendingInfo9.setCase_assigned_on("06-04-2018");
+        pendingInfo9.setStatus("pending");
+        pendingInfoList.add(pendingInfo9);
+
+        PendingInfo pendingInfo10 = new PendingInfo();
+        pendingInfo10.setClaim_no("5461236");
+        pendingInfo10.setPatientName("Varun");
+        pendingInfo10.setBlock_name("Intimation Case");
+        pendingInfo10.setPolicy_no("54322579");
+        pendingInfo10.setInsurance_company("LIC");
+        pendingInfo10.setCase_name("Intimation Case");
+        pendingInfo10.setAssigned_to("Vijila");
+        pendingInfo10.setCase_assigned_on("06-04-2018");
+        pendingInfo10.setStatus("pending");
+        pendingInfoList.add(pendingInfo10);
+
+        PendingInfo pendingInfo11 = new PendingInfo();
+        pendingInfo11.setClaim_no("5461236");
+        pendingInfo11.setPatientName("Varun");
+        pendingInfo11.setBlock_name("Others");
+        pendingInfo11.setPolicy_no("54322579");
+        pendingInfo11.setInsurance_company("LIC");
+        pendingInfo11.setCase_name("Intimation Case");
+        pendingInfo11.setAssigned_to("Others");
+        pendingInfo11.setCase_assigned_on("06-04-2018");
+        pendingInfo11.setStatus("pending");
+        pendingInfoList.add(pendingInfo11);
+
         return pendingInfoList;
     }
     @Override
