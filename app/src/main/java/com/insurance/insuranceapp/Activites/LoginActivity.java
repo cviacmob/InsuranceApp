@@ -1,31 +1,39 @@
 package com.insurance.insuranceapp.Activites;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.insurance.insuranceapp.Datamodel.ProfileInfo;
+import com.insurance.insuranceapp.Datamodel.RegistrationInfo;
 import com.insurance.insuranceapp.R;
+import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
+import com.insurance.insuranceapp.RestAPI.ResponseJson;
 import com.insurance.insuranceapp.Utilities.InsApp;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.Manifest.permission.RECORD_AUDIO;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import retrofit.GsonConverterFactory;
+
 
 public class LoginActivity extends AppCompatActivity {
     Button log;
     EditText uname,pass;
+    ProgressDialog progressDialog;
+    InsApp api;
+    InsuranceAPI insuranceAPI;
+    private String username;
+    private String password;
+    private  List<ProfileInfo> profileInfoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +48,10 @@ public class LoginActivity extends AppCompatActivity {
         log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String u_name = uname.getText().toString();
-                String p_ass = pass.getText().toString();
+                 username = uname.getText().toString();
+                password = pass.getText().toString();
 
-                if (!isValidEmail(u_name)){
+                if (!isValidEmail(username)){
                     uname.setError("Enter Valid Email");
                     return;
                 }
@@ -51,9 +59,19 @@ public class LoginActivity extends AppCompatActivity {
                 InsApp app = (InsApp) LoginActivity.this.getApplication();
 
                 if(app.isNetworkStatus()){
-                    Intent nav = new Intent(LoginActivity.this,MainActivity.class);
-                    startActivity(nav);
-                    finish();
+                    if(username!=null && !username.isEmpty() ){
+                        if(password!=null && !password.isEmpty()){
+                            getLogin();
+                        }
+                        else{
+                            pass.setError("Cannot be empty");
+                        }
+                    }else{
+                        uname.setError("Cannot be empty");
+
+                    }
+
+
                 }
                 else {
                     Toast.makeText(getApplicationContext(),"Check Your Internet Connection",Toast.LENGTH_SHORT).show();
@@ -70,4 +88,69 @@ public class LoginActivity extends AppCompatActivity {
         return matcher.matches();
     }
 
-}
+
+        private void getLogin() {
+
+
+            progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+            okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+            okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+            retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
+                    .baseUrl("http://vevelanbus.com")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClient)
+                    .build();
+            insuranceAPI = retrofit.create(InsuranceAPI.class);
+            RegistrationInfo reg =new RegistrationInfo();
+            reg.setUsername(username);
+            reg.setPassword(password);
+
+
+            final retrofit.Call<ProfileInfo> call = insuranceAPI.getlogin(reg);
+            call.enqueue(new retrofit.Callback<ProfileInfo>() {
+                @Override
+                public void onResponse(retrofit.Response<ProfileInfo> response, retrofit.Retrofit retrofit) {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+
+                   response.body();
+                   // profileInfoList = response.body();
+
+                    if (response.code() == 200) {
+
+
+                            Intent nav = new Intent(LoginActivity.this,MainActivity.class);
+                            startActivity(nav);
+                            finish();
+
+
+
+
+                    }
+
+                }
+
+
+                @Override
+                public void onFailure(Throwable t) {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+
+                    Toast.makeText(LoginActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+
+        }
+
+
+
+    }

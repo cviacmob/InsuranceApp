@@ -1,40 +1,57 @@
 package com.insurance.insuranceapp.Datamodel;
 
+import java.util.Date;
+
 /**
  * Created by Balaji on 4/13/2018.
  */
 
 public class ProfileInfo {
-    private String username;
+    private int consultant_id;
+    private String consultant_Name;
     private String agreementNumber;
-    private String email;
-    private String phoneNumber;
-    private String alterPhoneNumber;
-    private String fatherName;
-    private String dob;
-    private String aadharNumber;
-    private String drivinglicenseNumber;
-    private String permanentAddress;
-    private String presentAddress;
-    private String city;
+    private String consultant_email;
+    private String primary_phone_no;
+    private String secondary_phone_no;
+    private String father_name;
+    private Date date_of_birth;
+    private String aadhar_card_number;
+    private String driving_license_number;
+    private String permanent_address;
+    private String present_address;
+    private int state_id;
+    private int city_id;
     private String pincode;
     private String qualification;
     private String nickname;
-    private String accountName;
-    private String accountNumber;
-    private String bankName;
-    private String branch;
-    private String IFSC;
-    private String registeredDate;
+    private String account_name;
+    private String account_number;
+    private String bank_name;
+    private String branch_location;
+    private String ifsc_code;
     private String status;
-    private String remarks;
 
-    public String getUsername() {
-        return username;
+
+
+
+    public ProfileInfo(){
+
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public int getConsultant_id() {
+        return consultant_id;
+    }
+
+    public void setConsultant_id(int consultant_id) {
+        this.consultant_id = consultant_id;
+    }
+
+    public String getConsultant_Name() {
+        return consultant_Name;
+    }
+
+    public void setConsultant_Name(String consultant_Name) {
+        this.consultant_Name = consultant_Name;
     }
 
     public String getAgreementNumber() {
@@ -45,84 +62,92 @@ public class ProfileInfo {
         this.agreementNumber = agreementNumber;
     }
 
-    public String getEmail() {
-        return email;
+    public String getConsultant_email() {
+        return consultant_email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setConsultant_email(String consultant_email) {
+        this.consultant_email = consultant_email;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPrimary_phone_no() {
+        return primary_phone_no;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPrimary_phone_no(String primary_phone_no) {
+        this.primary_phone_no = primary_phone_no;
     }
 
-    public String getAlterPhoneNumber() {
-        return alterPhoneNumber;
+    public String getSecondary_phone_no() {
+        return secondary_phone_no;
     }
 
-    public void setAlterPhoneNumber(String alterPhoneNumber) {
-        this.alterPhoneNumber = alterPhoneNumber;
+    public void setSecondary_phone_no(String secondary_phone_no) {
+        this.secondary_phone_no = secondary_phone_no;
     }
 
-    public String getFatherName() {
-        return fatherName;
+    public String getFather_name() {
+        return father_name;
     }
 
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
+    public void setFather_name(String father_name) {
+        this.father_name = father_name;
     }
 
-    public String getDob() {
-        return dob;
+    public Date getDate_of_birth() {
+        return date_of_birth;
     }
 
-    public void setDob(String dob) {
-        this.dob = dob;
+    public void setDate_of_birth(Date date_of_birth) {
+        this.date_of_birth = date_of_birth;
     }
 
-    public String getAadharNumber() {
-        return aadharNumber;
+    public String getAadhar_card_number() {
+        return aadhar_card_number;
     }
 
-    public void setAadharNumber(String aadharNumber) {
-        this.aadharNumber = aadharNumber;
+    public void setAadhar_card_number(String aadhar_card_number) {
+        this.aadhar_card_number = aadhar_card_number;
     }
 
-    public String getDrivinglicenseNumber() {
-        return drivinglicenseNumber;
+    public String getDriving_license_number() {
+        return driving_license_number;
     }
 
-    public void setDrivinglicenseNumber(String drivinglicenseNumber) {
-        this.drivinglicenseNumber = drivinglicenseNumber;
+    public void setDriving_license_number(String driving_license_number) {
+        this.driving_license_number = driving_license_number;
     }
 
-    public String getPermanentAddress() {
-        return permanentAddress;
+    public String getPermanent_address() {
+        return permanent_address;
     }
 
-    public void setPermanentAddress(String permanentAddress) {
-        this.permanentAddress = permanentAddress;
+    public void setPermanent_address(String permanent_address) {
+        this.permanent_address = permanent_address;
     }
 
-    public String getPresentAddress() {
-        return presentAddress;
+    public String getPresent_address() {
+        return present_address;
     }
 
-    public void setPresentAddress(String presentAddress) {
-        this.presentAddress = presentAddress;
+    public void setPresent_address(String present_address) {
+        this.present_address = present_address;
     }
 
-    public String getCity() {
-        return city;
+    public int getState_id() {
+        return state_id;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setState_id(int state_id) {
+        this.state_id = state_id;
+    }
+
+    public int getCity_id() {
+        return city_id;
+    }
+
+    public void setCity_id(int city_id) {
+        this.city_id = city_id;
     }
 
     public String getPincode() {
@@ -149,53 +174,47 @@ public class ProfileInfo {
         this.nickname = nickname;
     }
 
-    public String getAccountName() {
-        return accountName;
+    public String getAccount_name() {
+        return account_name;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setAccount_name(String account_name) {
+        this.account_name = account_name;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getAccount_number() {
+        return account_number;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setAccount_number(String account_number) {
+        this.account_number = account_number;
     }
 
-    public String getBankName() {
-        return bankName;
+    public String getBank_name() {
+        return bank_name;
     }
 
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
+    public void setBank_name(String bank_name) {
+        this.bank_name = bank_name;
     }
 
-    public String getBranch() {
-        return branch;
+    public String getBranch_location() {
+        return branch_location;
     }
 
-    public void setBranch(String branch) {
-        this.branch = branch;
+    public void setBranch_location(String branch_location) {
+        this.branch_location = branch_location;
     }
 
-    public String getIFSC() {
-        return IFSC;
+    public String getIfsc_code() {
+        return ifsc_code;
     }
 
-    public void setIFSC(String IFSC) {
-        this.IFSC = IFSC;
+    public void setIfsc_code(String ifsc_code) {
+        this.ifsc_code = ifsc_code;
     }
 
-    public String getRegisteredDate() {
-        return registeredDate;
-    }
 
-    public void setRegisteredDate(String registeredDate) {
-        this.registeredDate = registeredDate;
-    }
 
     public String getStatus() {
         return status;
@@ -205,11 +224,5 @@ public class ProfileInfo {
         this.status = status;
     }
 
-    public String getRemarks() {
-        return remarks;
-    }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
 }

@@ -103,6 +103,7 @@ public class HospitalBlockActivity extends AppCompatActivity {
     private ListView triggerlist;
     private Button bt_next;
     private Button save,submit,back;
+    private TextView filechoose1;
 
     private List<PendingInfo> pendingInfoList;
     private RelativeLayout relativeLayout;
@@ -131,6 +132,7 @@ public class HospitalBlockActivity extends AppCompatActivity {
         ed_mrd = (EditText)findViewById(R.id.famildoc1);
         save = (Button)findViewById(R.id.care_save);
         submit = (Button)findViewById(R.id.bt_submit);
+
 
         back = (Button)findViewById(R.id.bt_back);
         title1 = (TextView)findViewById(R.id.title1);
@@ -175,7 +177,12 @@ public class HospitalBlockActivity extends AppCompatActivity {
 
 
 
-
+        filechoose1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkPermissionsAndOpenFilePicker();
+            }
+        });
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -584,12 +591,12 @@ public class HospitalBlockActivity extends AppCompatActivity {
 
 
     private void openFilePicker() {
-        new MaterialFilePicker()
+      /*  new MaterialFilePicker()
                 .withActivity(this)
                 .withRequestCode(FILE_PICKER_REQUEST_CODE)
                 .withHiddenFiles(true)
                 .withTitle("Select a file")
-                .start();
+                .start();*/
     }
 
 
