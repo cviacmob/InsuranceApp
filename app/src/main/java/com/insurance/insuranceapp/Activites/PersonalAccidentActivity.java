@@ -263,29 +263,19 @@ public class PersonalAccidentActivity extends AppCompatActivity {
         pendingInfoList = new ArrayList<>();
 
         PendingInfo pendingInfo = new PendingInfo();
-        pendingInfo.setClaim_no("5461235");
-        pendingInfo.setPatientName("Arun");
-        pendingInfo.setBlock_name("Hospital Block");
-        pendingInfo.setPolicy_no("54322578");
-        pendingInfo.setInsurance_company("LIC");
-        pendingInfo.setCase_name("Hospital Part");
-        pendingInfo.setAssigned_to("Vijila ");
-        pendingInfo.setCase_assigned_on("05-04-2018");
+        pendingInfo.setCliam_no("5461235");
+        pendingInfo.setPatient_name("Arun");
+        pendingInfo.setCase_type("Hospital Block");
+        pendingInfo.setPolicy_number("54322578");
+        pendingInfo.setCompany_name("LIC");
+
+        pendingInfo.setCase_assigned_on("Vijila ");
+
         pendingInfo.setStatus("pending");
 
         pendingInfoList.add(pendingInfo);
 
-        PendingInfo pendingInfo1 = new PendingInfo();
-        pendingInfo1.setClaim_no("5461236");
-        pendingInfo1.setPatientName("Varun");
-        pendingInfo1.setBlock_name("Hospital Block");
-        pendingInfo1.setPolicy_no("54322579");
-        pendingInfo1.setInsurance_company("LIC");
-        pendingInfo1.setCase_name("Hospital Part");
-        pendingInfo1.setAssigned_to("Vijila");
-        pendingInfo1.setCase_assigned_on("06-04-2018");
-        pendingInfo1.setStatus("pending");
-        pendingInfoList.add(pendingInfo1);
+
         return pendingInfoList;
     }
 

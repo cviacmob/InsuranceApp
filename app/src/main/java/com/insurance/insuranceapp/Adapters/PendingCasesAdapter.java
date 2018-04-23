@@ -9,8 +9,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.R;
+import com.insurance.insuranceapp.RestAPI.PendingCasesInfo;
 
 import java.util.List;
 
@@ -18,16 +20,16 @@ import java.util.List;
  * Created by Balaji on 4/14/2018.
  */
 
-public class PendingCasesAdapter extends ArrayAdapter<PendingInfo> {
+public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
 
-    private List<PendingInfo> pendingInfoList;
+    private List<PendingCaseListInfo> pendingInfoList;
 
 
     private int lastPostion = -1;
 
     Context mContext;
 
-    public PendingCasesAdapter(List<PendingInfo> objects, Context context) {
+    public PendingCasesAdapter(List<PendingCaseListInfo> objects, Context context) {
         super(context, R.layout.layout_pending, objects);
         pendingInfoList = objects;
         mContext = context;
@@ -44,7 +46,7 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingInfo> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PendingInfo all = getItem(position);
+        PendingCaseListInfo all = getItem(position);
         View vw = convertView;
         ViewHolder holder;
 
@@ -82,13 +84,13 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingInfo> {
         }
 
 
-        holder.claim_number.setText(all.getClaim_no());
-        holder.patientname.setText(all.getPatientName());
-        holder.blockname.setText(all.getBlock_name());
-        holder.policy_no.setText(all.getPolicy_no());
-        holder.insurance_compy.setText(all.getInsurance_company());
-        holder.case_name.setText(all.getCase_name());
-        holder.Assigned_to.setText(all.getAssigned_to());
+        holder.claim_number.setText(all.getCliam_no());
+        holder.patientname.setText(all.getPatient_name());
+        holder.blockname.setText(all.getCase_type());
+        holder.policy_no.setText(all.getPolicy_number());
+        holder.insurance_compy.setText(all.getCompany_name());
+        holder.case_name.setText(all.getCase_id());
+        holder.Assigned_to.setText(all.getCase_assigned_on());
         holder.case_assigned_on.setText(all.getCase_assigned_on());
         holder.status.setText(all.getStatus());
 

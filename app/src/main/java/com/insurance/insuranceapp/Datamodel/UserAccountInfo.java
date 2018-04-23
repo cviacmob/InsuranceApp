@@ -87,6 +87,10 @@ public class UserAccountInfo extends Model {
         this.agreementNumber = agreementNumber;
     }
 
+    public String getConsultant_id() {
+        return consultant_id;
+    }
+
     public String getConsultant_email() {
         return consultant_email;
     }

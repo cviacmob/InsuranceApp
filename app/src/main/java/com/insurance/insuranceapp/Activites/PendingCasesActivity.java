@@ -1,10 +1,10 @@
 package com.insurance.insuranceapp.Activites;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -12,29 +12,39 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
+import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
+import com.insurance.insuranceapp.RestAPI.PendingCasesInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
+import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
+import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
+import com.insurance.insuranceapp.Utilities.InsApp;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import retrofit.Call;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class PendingCasesActivity extends AppCompatActivity {
     private ListView listView;
     private Button btn;
     private PendingCasesAdapter pendingcaseAdapter;
-    private List<PendingInfo> pendingInfoList;
+    private List<PendingCaseListInfo> pendingInfoList;
     private PendingInfo pendingInfo;
     String AudioSavePathInDevice = null;
     MediaRecorder mediaRecorder ;
@@ -42,6 +52,10 @@ public class PendingCasesActivity extends AppCompatActivity {
     String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
     public static final int RequestPermissionCode = 1;
     MediaPlayer mediaPlayer ;
+    ProgressDialog progressDialog;
+    InsApp api;
+    InsuranceAPI insuranceAPI;
+    private List<UserAccountInfo> userAccountInfoList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +63,19 @@ public class PendingCasesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pending_cases);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Pending Cases");
+        userAccountInfoList  = getAll();
         listView = findViewById(R.id.lab_list);
         btn = findViewById(R.id.btn_media);
-        pendingInfoList =  getList();
+        getLogin();
         pendingcaseAdapter = new PendingCasesAdapter(pendingInfoList,this.getApplication());
         listView.setDivider(null);
         listView.setAdapter(pendingcaseAdapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final PendingInfo pendingInfo= (PendingInfo) parent.getAdapter().getItem(position);
-                String Block_Name = pendingInfo.getBlock_name();
+                String Block_Name = pendingInfo.getCase_type();
                 if(Block_Name!=null) {
                     if (Block_Name.equalsIgnoreCase("Hospital Block")) {
                         Intent in = new Intent(PendingCasesActivity.this, HospitalBlockActivity.class);
@@ -135,22 +151,25 @@ public class PendingCasesActivity extends AppCompatActivity {
         });
     }
 
-    private List<PendingInfo> getList(){
+   /* private List<PendingInfo> getList(){
 
         pendingInfoList = new ArrayList<>();
 
         PendingInfo pendingInfo = new PendingInfo();
-        pendingInfo.setClaim_no("5461235");
-        pendingInfo.setPatientName("Arun");
-        pendingInfo.setBlock_name("Hospital Block");
-        pendingInfo.setPolicy_no("54322578");
-        pendingInfo.setInsurance_company("LIC");
-        pendingInfo.setCase_name("Hospital Part");
-        pendingInfo.setAssigned_to("Vijila ");
-        pendingInfo.setCase_assigned_on("05-04-2018");
+        pendingInfo.setCliam_no("5461235");
+        pendingInfo.setPatient_name("Arun");
+        pendingInfo.setCase_type("Hospital Block");
+        pendingInfo.setPolicy_number("54322578");
+        pendingInfo.setCompany_name("LIC");
+
+        pendingInfo.setCase_assigned_on("Vijila ");
+
         pendingInfo.setStatus("pending");
 
         pendingInfoList.add(pendingInfo);
+
+
+*//*
 
         PendingInfo pendingInfo1 = new PendingInfo();
         pendingInfo1.setClaim_no("5461236");
@@ -285,9 +304,10 @@ public class PendingCasesActivity extends AppCompatActivity {
         pendingInfo11.setCase_assigned_on("06-04-2018");
         pendingInfo11.setStatus("pending");
         pendingInfoList.add(pendingInfo11);
+*//*
 
         return pendingInfoList;
-    }
+    }*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -327,5 +347,68 @@ public class PendingCasesActivity extends AppCompatActivity {
     }
     private void requestPermission() {
         ActivityCompat.requestPermissions(PendingCasesActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
+    }
+
+
+    private void getLogin() {
+
+String consultantid = "";
+        progressDialog = new ProgressDialog(PendingCasesActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
+                .baseUrl("http://vevelanbus.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        insuranceAPI = retrofit.create(InsuranceAPI.class);
+        PendingCasesInfo reg =new PendingCasesInfo();
+        for(UserAccountInfo user:userAccountInfoList) {
+            reg.setConsultant_id(user.getConsultant_id());
+            consultantid=user.getConsultant_id();
+        }
+        reg.setStatus("pending");
+
+
+      Call<List<PendingCaseListInfo>> call = insuranceAPI.getpendinglist(consultantid , "pending");
+        call.enqueue(new retrofit.Callback<List<PendingCaseListInfo>>() {
+            @Override
+            public void onResponse(Response<List<PendingCaseListInfo>> response, Retrofit retrofit) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                List<PendingCaseListInfo> res =  response.body();
+                // profileInfoList = response.body();
+
+                if (response.code() == 200) {
+
+
+
+
+
+
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                Toast.makeText(PendingCasesActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
     }
 }

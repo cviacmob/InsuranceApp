@@ -1,13 +1,10 @@
 package com.insurance.insuranceapp.Datamodel;
 
-import java.io.Serializable;
-
 /**
- * Created by Balaji on 4/14/2018.
+ * Created by Balaji on 4/23/2018.
  */
 
-public class PendingInfo implements Serializable {
-
+public class PendingCaseListInfo {
     private String case_id;
     private String case_type;
     private String case_assigned_on;
@@ -17,9 +14,7 @@ public class PendingInfo implements Serializable {
     private String policy_number;
     private String company_name;
 
-
-
-    public PendingInfo(){
+    public PendingCaseListInfo(){
 
     }
 
