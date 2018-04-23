@@ -20,7 +20,7 @@
         <android.support.v7.widget.CardView
             android:id="@+id/card_view"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="340dp"
             android:layout_gravity="center"
             android:layout_margin="5dp"
             android:padding="5dp"
@@ -648,39 +648,15 @@
                                 android:textColor="#393534"/>
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="12sp"
                                 android:fontFamily="@font/verdana"
-                                android:width="100px"
+
                                 android:layout_marginLeft="15dp"
                                 android:text=""/>
                         </TableRow>
 
-
-                        <TableRow
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-
-                                android:fontFamily="@font/verdana"
-                                android:text="Registered Date"
-                                android:textStyle="bold"
-                                android:textSize="12sp"
-                                android:textColor="#393534"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:width="200px"
-                                android:textSize="12sp"
-                                android:fontFamily="@font/verdana"
-                                android:layout_marginLeft="15dp"
-                                android:text=""/>
-                        </TableRow>
 
                         <TableRow>
 
@@ -700,28 +676,6 @@
                                 android:width="200px"
                                 android:textSize="12sp"
                                 android:fontFamily="@font/verdana"
-                                android:layout_marginLeft="15dp"
-                                android:text=""/>
-                        </TableRow>
-
-                        <TableRow>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-
-                                android:fontFamily="@font/verdana"
-                                android:text="Remarks"
-                                android:textStyle="bold"
-                                android:textSize="12sp"
-                                android:textColor="#393534"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="12sp"
-                                android:fontFamily="@font/verdana"
-                                android:width="100px"
                                 android:layout_marginLeft="15dp"
                                 android:text=""/>
                         </TableRow>

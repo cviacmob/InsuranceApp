@@ -27,4 +27,7 @@ public class DashBoardFragment extends Fragment {
 
         return view;
     }
+    public DashBoardFragment(){
+
+    }
 }

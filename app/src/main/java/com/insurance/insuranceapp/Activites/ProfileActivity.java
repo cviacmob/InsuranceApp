@@ -13,7 +13,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
+
+import java.util.List;
+
+import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class ProfileActivity extends AppCompatActivity {
     private TableLayout tableLayout,tableLayout_provider;
@@ -22,6 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TableRow acc_name,acc_num,bankname,branch,IFSCcode,registereddate,status,remarks;
     private TextView acc_name_text1,acc_num_text2,bankname_text3,branch_text4,IFSCcode_text5,registereddate_text6,status_text7,
             remarks_text8;
+    private List<UserAccountInfo> userAccountInfoList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +35,9 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         tableLayout = (TableLayout)findViewById(R.id.tableLayout);
        tableLayout_provider = (TableLayout)findViewById(R.id.tableLayout_provider);
-
+        userAccountInfoList = getAll();
        //Account Information Details
         row1 = (TableRow) tableLayout.getChildAt(0);
-
         row2 = (TableRow) tableLayout.getChildAt(1);
         row3 = (TableRow) tableLayout.getChildAt(2);
         row4 = (TableRow) tableLayout.getChildAt(3);
@@ -70,18 +75,48 @@ public class ProfileActivity extends AppCompatActivity {
         bankname = (TableRow) tableLayout_provider.getChildAt(2);
         branch = (TableRow) tableLayout_provider.getChildAt(3);
         IFSCcode = (TableRow) tableLayout_provider.getChildAt(4);
-        registereddate = (TableRow) tableLayout_provider.getChildAt(5);
-        status = (TableRow) tableLayout_provider.getChildAt(6);
-        remarks = (TableRow) tableLayout_provider.getChildAt(7);
+        status = (TableRow) tableLayout_provider.getChildAt(5);
+
 
         acc_name_text1 =(TextView)acc_name.getChildAt(1);
         acc_num_text2 =(TextView)acc_num.getChildAt(1);
         bankname_text3 =(TextView)bankname.getChildAt(1);
         branch_text4 =(TextView)branch.getChildAt(1);
         IFSCcode_text5 =(TextView)IFSCcode.getChildAt(1);
-        registereddate_text6 =(TextView)registereddate.getChildAt(1);
         status_text7 =(TextView)status.getChildAt(1);
-        remarks_text8 =(TextView)remarks.getChildAt(1);
+
+
+        if(userAccountInfoList!=null){
+            for(UserAccountInfo user : userAccountInfoList)
+            {
+                text1.setText(user.getConsultant_Name());
+                text2.setText(user.getAgreementNumber());
+                text3.setText(user.getConsultant_email());
+                text4.setText(user.getPrimary_phone_no());
+                text5.setText(user.getSecondary_phone_no());
+                text6.setText(user.getFather_name());
+                text7.setText((CharSequence) user.getDate_of_birth());
+                text8.setText(user.getAadhar_card_number());
+                text9.setText(user.getDriving_license_number());
+                text10.setText(user.getPresent_address());
+                text11.setText(user.getPermanent_address());
+                text12.setText(user.getCity_id());
+                text13.setText(user.getPincode());
+                text14.setText(user.getQualification());
+                text15.setText(user.getNickname());
+                acc_name_text1.setText(user.getAccount_name());
+                acc_num_text2.setText(user.getAccount_number());
+                bankname_text3.setText(user.getBank_name());
+                branch_text4.setText(user.getBranch_location());
+                IFSCcode_text5.setText(user.getIfsc_code());
+                status_text7.setText(user.getStatus());
+
+            }
+
+        }
+
+
+
     }
 
     @Override

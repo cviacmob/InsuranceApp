@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.insurance.insuranceapp.Datamodel.ProfileInfo;
 import com.insurance.insuranceapp.Datamodel.RegistrationInfo;
+import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.insuranceapp.RestAPI.ResponseJson;
@@ -24,6 +25,8 @@ import java.util.regex.Pattern;
 
 import retrofit.GsonConverterFactory;
 
+import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getdeletecareprovider;
+
 
 public class LoginActivity extends AppCompatActivity {
     Button log;
@@ -34,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private String username;
     private String password;
     private  List<ProfileInfo> profileInfoList;
+    private ProfileInfo profileInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,12 +123,13 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
 
-                   response.body();
+                    profileInfo =  response.body();
                    // profileInfoList = response.body();
 
                     if (response.code() == 200) {
 
-
+                            getdeletecareprovider();
+                            userdetails(profileInfo);
                             Intent nav = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(nav);
                             finish();
@@ -151,6 +156,38 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
+
+        private void userdetails(ProfileInfo profileInfo){
+
+            UserAccountInfo userAccountInfo = new UserAccountInfo();
+            userAccountInfo.setAadhar_card_number(profileInfo.getAadhar_card_number());
+            userAccountInfo.setAccount_name(profileInfo.getAccount_name());
+            userAccountInfo.setAccount_number(profileInfo.getAccount_number());
+            userAccountInfo.setAgreementNumber(profileInfo.getAgreementNumber());
+            userAccountInfo.setBank_name(profileInfo.getBank_name());
+            userAccountInfo.setBranch_location(profileInfo.getBranch_location());
+            userAccountInfo.setCity_id(profileInfo.getCity_id());
+            userAccountInfo.setConsultant_email(profileInfo.getConsultant_email());
+            userAccountInfo.setConsultant_id(profileInfo.getConsultant_id());
+            userAccountInfo.setConsultant_Name(profileInfo.getConsultant_Name());
+            userAccountInfo.setDate_of_birth(profileInfo.getDate_of_birth());
+            userAccountInfo.setDriving_license_number(profileInfo.getDriving_license_number());
+            userAccountInfo.setFather_name(profileInfo.getFather_name());
+            userAccountInfo.setIfsc_code(profileInfo.getIfsc_code());
+            userAccountInfo.setNickname(profileInfo.getNickname());
+            userAccountInfo.setPermanent_address(profileInfo.getPermanent_address());
+            userAccountInfo.setPincode(profileInfo.getPincode());
+            userAccountInfo.setPresent_address(profileInfo.getPresent_address());
+            userAccountInfo.setPrimary_phone_no(profileInfo.getPrimary_phone_no());
+            userAccountInfo.setQualification(profileInfo.getQualification());
+            userAccountInfo.setSecondary_phone_no(profileInfo.getSecondary_phone_no());
+            userAccountInfo.setState_id(profileInfo.getState_id());
+            userAccountInfo.setStatus(profileInfo.getStatus());
+            userAccountInfo.save();
+
+
+
+        }
 
 
     }

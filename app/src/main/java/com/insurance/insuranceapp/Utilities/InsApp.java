@@ -5,6 +5,10 @@ import android.content.ContextWrapper;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Configuration;
+import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
+
 public class InsApp extends MultiDexApplication {
 
     private boolean networkStatus = true;
@@ -18,6 +22,10 @@ public class InsApp extends MultiDexApplication {
                 .setPrefsName(getPackageName())
                 .setUseDefaultSharedPreference(true)
                 .build();
+        Configuration.Builder configurationBuilder = new Configuration.Builder(this);
+        configurationBuilder.addModelClasses(UserAccountInfo.class);
+
+        ActiveAndroid.initialize(this);
     }
 
     @Override

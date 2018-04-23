@@ -10,7 +10,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -29,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.insurance.insuranceapp.Adapters.ExpandableListAdapter;
+import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.Fragments.DashBoardFragment;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.Utilities.ExpandableListDataPump;
@@ -36,6 +40,8 @@ import com.insurance.insuranceapp.Utilities.ExpandableListDataPump;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private List<String> expandableListTitle;
     private HashMap<String, List<String>> expandableListDetail;
     private String domainurl,patientid,companyid;
-
+    private List<UserAccountInfo> userAccountInfoList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +74,11 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         // username = bundle.getString("USER");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ViewPager pager = (ViewPager) findViewById(R.id.viewPager);
+        pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         setSupportActionBar(toolbar);
+        userAccountInfoList = getAll();
+
         // toolbar.setTitle("Patient Portal");
         //setTitle("Patient Portal");
 
@@ -83,7 +93,11 @@ public class MainActivity extends AppCompatActivity {
         userprofile = (ImageView)navHeader.findViewById(R.id.img_user);
         // getting patient details from Local DB
         expandableListView = (ExpandableListView) findViewById(R.id.navigationmenu);
-
+        if(userAccountInfoList!=null){
+            for (UserAccountInfo user : userAccountInfoList){
+                tvuser.setText(user.getConsultant_Name());
+            }
+        }
         mtitle.setText(R.string.app_name);
         //Toast.makeText(HomeActivity.this,pushid, Toast.LENGTH_LONG).show();
         // Navigation view header
@@ -97,11 +111,7 @@ public class MainActivity extends AppCompatActivity {
         expandableListAdapter = new ExpandableListAdapter(this, expandableListTitle, expandableListDetail);
         // initializing navigation menu
         setUpNavigationView();
-        if (savedInstanceState == null) {
-            navItemIndex = 0;
-            CURRENT_TAG = TAG_DASHBOARD;
-            loadHomeFragment();
-        }
+
         userprofile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,41 +177,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadHomeFragment() {
         // selecting appropriate nav menu item
+
+
         // set toolbar title
+
+
         // if user select the current navigation menu again, don't do anything
         // just close the navigation drawer
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
+
             // show or hide the fab button
             // toggleFab();
             return;
         }
 
-        // Sometimes, when fragment has huge data, screen seems hanging
-        // when switching between navigation menus
-        // So using runnable, the fragment is loaded with cross fade effect
-        // This effect can be seen in GMail app
-        Runnable mPendingRunnable = new Runnable() {
-            @Override
-            public void run() {
-                // update the main content by replacing fragments
-                Fragment fragment = getHomeFragment();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
-                fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
-                fragmentTransaction.commitAllowingStateLoss();
-
-            }
-        };
-
-        // If mPendingRunnable is not null, then add to the message queue
-        if (mPendingRunnable != null) {
-            mHandler.postDelayed(mPendingRunnable,50);
-        }
-
-        // show or hide the fab button
-        //toggleFab();
 
         //Closing drawer on item click
         drawer.closeDrawers();
@@ -209,26 +199,18 @@ public class MainActivity extends AppCompatActivity {
         // refresh toolbar menu
         invalidateOptionsMenu();
     }
-    private Fragment getHomeFragment( ) {
 
-        switch (navItemIndex) {
-            case 0:
-                // home
-                DashBoardFragment dashboardFragment = new DashBoardFragment();
-                return dashboardFragment;
-
-            default:
-                return new DashBoardFragment();
-        }
-    }
 
     private void setUpNavigationView() {
+        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             // This method will trigger on item Click of navigation menu
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+
                 //Check to see which item was being clicked and perform appropriate actio
                 //Checking if the item is in checked state or not, if not make it in checked state
                 if (menuItem.isChecked()) {
@@ -238,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 menuItem.setChecked(true);
 
-                loadHomeFragment();
+                //  loadHomeFragment();
 
                 return true;
             }
@@ -263,6 +245,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Setting the actionbarToggle to drawer layout
         drawer.setDrawerListener(actionBarDrawerToggle);
+
+
         //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
     }
@@ -295,16 +279,7 @@ public class MainActivity extends AppCompatActivity {
         // This code loads home fragment when back key is pressed
         // when user is in other fragment than home
 
-        if (shouldLoadHomeFragOnBackPress) {
-            // checking if user is on other navigation menu
-            // rather than home
-            if (navItemIndex != 0) {
-                navItemIndex = 0;
-                CURRENT_TAG = TAG_DASHBOARD;
-                loadHomeFragment();
-                return;
-            }
-        }
+
         //super.onBackPressed();
     }
 
@@ -368,5 +343,27 @@ public class MainActivity extends AppCompatActivity {
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+    private class MyPagerAdapter extends FragmentPagerAdapter {
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            switch(pos) {
+
+                case 0: return new DashBoardFragment();
+                // case 1: return new DashBoardFragment();
+
+                default: return new DashBoardFragment();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
     }
 }

@@ -1,46 +1,75 @@
 package com.insurance.insuranceapp.Datamodel;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Balaji on 4/13/2018.
+ * Created by Balaji on 4/23/2018.
  */
-
-public class ProfileInfo {
+@Table(name = "UserAccountInfo")
+public class UserAccountInfo extends Model {
+    @Column(name = "consultant_id")
     private String consultant_id;
+    @Column(name = "consultant_Name")
     private String consultant_Name;
+    @Column(name = "agreementNumber")
     private String agreementNumber;
+    @Column(name = "consultant_email")
     private String consultant_email;
+    @Column(name = "primary_phone_no")
     private String primary_phone_no;
+    @Column(name = "secondary_phone_no")
     private String secondary_phone_no;
+    @Column(name = "father_name")
     private String father_name;
+    @Column(name = "date_of_birth")
     private String date_of_birth;
+    @Column(name = "aadhar_card_number")
     private String aadhar_card_number;
+    @Column(name = "driving_license_number")
     private String driving_license_number;
+    @Column(name = "permanent_address")
     private String permanent_address;
+    @Column(name = "present_address")
     private String present_address;
+    @Column(name = "state_id")
     private String state_id;
+    @Column(name = "city_id")
     private String city_id;
+    @Column(name = "pincode")
     private String pincode;
+    @Column(name = "qualification")
     private String qualification;
+    @Column(name = "nickname")
     private String nickname;
+    @Column(name = "account_name")
     private String account_name;
+    @Column(name = "account_number")
     private String account_number;
+    @Column(name = "bank_name")
     private String bank_name;
+    @Column(name = "branch_location")
     private String branch_location;
+    @Column(name = "ifsc_code")
     private String ifsc_code;
+    @Column(name = "status")
     private String status;
 
-
-
-
-    public ProfileInfo(){
-
+    public UserAccountInfo(){
+        super();
     }
 
+
+
+    public void setConsultant_id(String consultant_id) {
+        this.consultant_id = consultant_id;
+    }
 
     public String getConsultant_Name() {
         return consultant_Name;
@@ -91,6 +120,7 @@ public class ProfileInfo {
     }
 
 
+
     public String getAadhar_card_number() {
         return aadhar_card_number;
     }
@@ -121,14 +151,6 @@ public class ProfileInfo {
 
     public void setPresent_address(String present_address) {
         this.present_address = present_address;
-    }
-
-    public String getConsultant_id() {
-        return consultant_id;
-    }
-
-    public void setConsultant_id(String consultant_id) {
-        this.consultant_id = consultant_id;
     }
 
     public String getDate_of_birth() {
@@ -219,8 +241,6 @@ public class ProfileInfo {
         this.ifsc_code = ifsc_code;
     }
 
-
-
     public String getStatus() {
         return status;
     }
@@ -229,7 +249,16 @@ public class ProfileInfo {
         this.status = status;
     }
 
+    public static List<UserAccountInfo> getAll(){
 
+        return new Select()
+                .all()
+                .from(UserAccountInfo.class)
+                .execute();
 
+    }
+    public static void getdeletecareprovider( ){
 
+        new Delete().from(UserAccountInfo.class).execute();
+    }
 }
