@@ -45,6 +45,8 @@ import android.widget.ViewFlipper;
 import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.R;
+import com.insurance.materialfilepicker.ui.FilePickerActivity;
+import com.insurance.materialfilepicker.widget.MaterialFilePicker;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -166,8 +168,11 @@ public class HospitalBlockActivity extends AppCompatActivity {
         title19 = (TextView)findViewById(R.id.title19);
         title19.setText(Html.fromHtml(string19));
         file1 = (TextView)findViewById(R.id.file_1);
+        filename1 = (TextView)findViewById(R.id.filename1);
         ed_comments = (EditText)findViewById(R.id.ed_family);
         ed_date = (EditText)findViewById(R.id.edit_consult);
+
+
         file1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,12 +182,7 @@ public class HospitalBlockActivity extends AppCompatActivity {
 
 
 
-        filechoose1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkPermissionsAndOpenFilePicker();
-            }
-        });
+
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -342,7 +342,7 @@ public class HospitalBlockActivity extends AppCompatActivity {
         return true;
     }
     private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library",
+        final CharSequence[] items = {"Take Photo", "Choose from Library","Choose from Files",
                 "Cancel"};
 
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(HospitalBlockActivity.this);
@@ -359,7 +359,10 @@ public class HospitalBlockActivity extends AppCompatActivity {
                     dialog.dismiss();
                     galleryIntent();
 
-                } else if (items[item].equals("Cancel")) {
+                }
+                else if(items[item].equals("Choose from Files")){
+                    checkPermissionsAndOpenFilePicker();
+                } if (items[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
             }
@@ -441,26 +444,29 @@ public class HospitalBlockActivity extends AppCompatActivity {
                 onCaptureImageResult(data);
         }
 
-      //  if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
-           /* String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+            String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+            if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+                String filepath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
 
-            if (path != null) {
-                Log.d("Path: ", path);
+                if (path != null) {
+                    Log.d("Path: ", path);
 
-                upload = path.substring(path.lastIndexOf('/') + 1);
+                    String upload = path.substring(path.lastIndexOf('/') + 1);
 //                String[] trimmed = path.split(dir);
 //                String sdcardPath = trimmed[0];
-                if(i==1 && filename!=null){
-                    filename.setText(upload);
-                }else if(tv_filename !=null) {
-                    tv_filename.setText(upload);
-                }*/
+                    if(filename1!=null && upload!=null){
+                        filename1.setText(upload);
+                    }
 
-                // upload = uploadfile(dir);
+                    // upload = uploadfile(dir);
 
 
-                //Toast.makeText(this, "Picked file: " + sdcardPath, Toast.LENGTH_LONG).show();
-            //}
+                    //Toast.makeText(this, "Picked file: " + sdcardPath, Toast.LENGTH_LONG).show();
+                }
+            }
+
+        }
         }
 
     private void onCaptureImageResult(Intent data) {
@@ -591,12 +597,12 @@ public class HospitalBlockActivity extends AppCompatActivity {
 
 
     private void openFilePicker() {
-      /*  new MaterialFilePicker()
+        new MaterialFilePicker()
                 .withActivity(this)
                 .withRequestCode(FILE_PICKER_REQUEST_CODE)
                 .withHiddenFiles(true)
                 .withTitle("Select a file")
-                .start();*/
+                .start();
     }
 
 
