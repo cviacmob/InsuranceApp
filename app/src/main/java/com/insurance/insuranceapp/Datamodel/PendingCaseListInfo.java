@@ -9,7 +9,7 @@ public class PendingCaseListInfo {
     private String case_type;
     private String case_assigned_on;
     private String patient_name;
-    private String cliam_no;
+    private String claim_no;
     private String status;
     private String policy_number;
     private String company_name;
@@ -50,12 +50,12 @@ public class PendingCaseListInfo {
         this.patient_name = patient_name;
     }
 
-    public String getCliam_no() {
-        return cliam_no;
+    public String getClaim_no() {
+        return claim_no;
     }
 
-    public void setCliam_no(String cliam_no) {
-        this.cliam_no = cliam_no;
+    public void setClaim_no(String claim_no) {
+        this.claim_no = claim_no;
     }
 
     public String getStatus() {

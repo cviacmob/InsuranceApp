@@ -127,15 +127,14 @@ public class LoginActivity extends AppCompatActivity {
                    // profileInfoList = response.body();
 
                     if (response.code() == 200) {
-
+                        if(profileInfo!=null){
                             getdeletecareprovider();
                             userdetails(profileInfo);
                             Intent nav = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(nav);
                             finish();
 
-
-
+                        }
 
                     }
 

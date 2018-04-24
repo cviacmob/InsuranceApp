@@ -84,7 +84,7 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
         }
 
 
-        holder.claim_number.setText(all.getCliam_no());
+        holder.claim_number.setText(all.getClaim_no());
         holder.patientname.setText(all.getPatient_name());
         holder.blockname.setText(all.getCase_type());
         holder.policy_no.setText(all.getPolicy_number());
