@@ -152,6 +152,10 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Intent intent = new Intent(MainActivity.this, PendingCasesActivity.class);
                     startActivity(intent);
+                }if(groupPosition == 2 && childPosition == 2)
+                {
+                    Intent intent = new Intent(MainActivity.this, CompletedCaseActivity.class);
+                    startActivity(intent);
                 }else if(groupPosition == 1 && childPosition == 0)
                 {
                     Intent intent = new Intent(MainActivity.this, ReservedPaymentsActivity.class);

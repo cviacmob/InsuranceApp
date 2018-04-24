@@ -19,16 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-            <meta-data
+        <meta-data
             android:name="AA_MODELS"
             android:value=" com.insurance.insuranceapp.Datamodel.UserAccountInfo" />
+
         <activity
             android:name=".Activites.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data
             android:name="AA_DB_NAME"
@@ -39,7 +37,7 @@
 
         <activity
             android:name=".Activites.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -60,7 +58,8 @@
         <activity android:name=".Activites.DocumentsVerification" />
         <activity android:name=".Activites.Cashless" />
         <activity android:name=".Activites.IntimationCase" />
-        <activity android:name=".Activites.DynamicActivity"></activity>
+        <activity android:name=".Activites.DynamicActivity" />
+        <activity android:name=".Activites.CompletedCaseActivity"></activity>
     </application>
 
 </manifest>
