@@ -63,7 +63,8 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 
-public class HospitalBlockActivity extends AppCompatActivity {
+public class HospitalBlockActivity extends AppCompatActivity implements
+        View.OnClickListener {
     private static final int MY_PERMISSION_CAMERA = 10;
     private static final int MY_PERMISSION_EXTERNAL_STORAGE = 11;
     private int REQUEST_CAMERA = 2, SELECT_FILE = 1;
@@ -167,19 +168,40 @@ public class HospitalBlockActivity extends AppCompatActivity {
         title14.setText(Html.fromHtml(string14));
         title19 = (TextView)findViewById(R.id.title19);
         title19.setText(Html.fromHtml(string19));
-        file1 = (TextView)findViewById(R.id.file_1);
+
         filename1 = (TextView)findViewById(R.id.filename1);
         ed_comments = (EditText)findViewById(R.id.ed_family);
         ed_date = (EditText)findViewById(R.id.edit_consult);
-
-
-        file1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
-
+        file1 = (TextView)findViewById(R.id.file_1);
+        file1.setOnClickListener((View.OnClickListener) this);
+        file2 = (TextView)findViewById(R.id.file2);
+        file2.setOnClickListener((View.OnClickListener) this);
+        file3 = (TextView)findViewById(R.id.file3);
+        file3.setOnClickListener((View.OnClickListener) this);
+        file4 = (TextView)findViewById(R.id.file4);
+        file4.setOnClickListener((View.OnClickListener) this);
+        file5 = (TextView)findViewById(R.id.file5);
+        file5.setOnClickListener((View.OnClickListener) this);
+        file6 = (TextView)findViewById(R.id.file6);
+        file6.setOnClickListener((View.OnClickListener) this);
+        file7 = (TextView)findViewById(R.id.file7);
+        file7.setOnClickListener((View.OnClickListener) this);
+        file8 = (TextView)findViewById(R.id.file8);
+        file8.setOnClickListener((View.OnClickListener) this);
+        file9 = (TextView)findViewById(R.id.file9);
+        file9.setOnClickListener((View.OnClickListener) this);
+        file10 = (TextView)findViewById(R.id.file10);
+        file10.setOnClickListener((View.OnClickListener) this);
+        file11 = (TextView)findViewById(R.id.file11);
+        file11.setOnClickListener((View.OnClickListener) this);
+        file12 = (TextView)findViewById(R.id.file12);
+        file12.setOnClickListener((View.OnClickListener) this);
+        file13 = (TextView)findViewById(R.id.file13);
+        file13.setOnClickListener((View.OnClickListener) this);
+        file14 = (TextView)findViewById(R.id.file14);
+        file14.setOnClickListener((View.OnClickListener) this);
+        file19 = (TextView)findViewById(R.id.file19);
+        file19.setOnClickListener((View.OnClickListener) this);
 
 
 
@@ -207,12 +229,67 @@ public class HospitalBlockActivity extends AppCompatActivity {
         });
 
         createEditTextView();
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
 
+            case R.id.file_1:
+                selectImage();
+                break;
 
-   /*     pendingInfoList =  getList();
-        pendingcaseAdapter = new PendingCasesAdapter(pendingInfoList,this.getApplication());
+            case R.id.file2:
+                selectImage();
+                break;
 
-        triggerlist.setAdapter(pendingcaseAdapter);*/
+            case R.id.file3:
+                selectImage();
+                break;
+            case R.id.file4:
+                selectImage();
+                break;
+
+            case R.id.file5:
+                selectImage();
+                break;
+            case R.id.file6:
+                selectImage();
+                break;
+
+            case R.id.file7:
+                selectImage();
+                break;
+            case R.id.file8:
+                selectImage();
+                break;
+
+            case R.id.file9:
+                selectImage();
+                break;
+            case R.id.file10:
+                selectImage();
+                break;
+
+            case R.id.file11:
+                selectImage();
+                break;
+            case R.id.file12:
+                selectImage();
+                break;
+
+            case R.id.file13:
+                selectImage();
+                break;
+            case R.id.file14:
+                selectImage();
+                break;
+            case R.id.file19:
+                selectImage();
+                break;
+
+            default:
+                break;
+        }
     }
     public void datepicker(){
         datePickerDialog = new DatePickerDialog(this,
@@ -596,8 +673,6 @@ public class HospitalBlockActivity extends AppCompatActivity {
                 .withTitle("Select a file")
                 .start();
     }
-
-
 
 
 

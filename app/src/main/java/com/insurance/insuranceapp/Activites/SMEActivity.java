@@ -98,7 +98,7 @@ public class SMEActivity extends AppCompatActivity {
         title5 = (TextView)findViewById(R.id.title5);
         title5.setText(Html.fromHtml(string5));
         title6 = (TextView)findViewById(R.id.title6);
-        title6.setText(string6);
+        title6.setText(Html.fromHtml(string6));
         title7 = (TextView)findViewById(R.id.title7);
         title7.setText(string7);
         title8 = (TextView)findViewById(R.id.title8);

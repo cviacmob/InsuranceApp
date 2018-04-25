@@ -29,7 +29,7 @@ public class UserAccountInfo extends Model {
     @Column(name = "father_name")
     private String father_name;
     @Column(name = "date_of_birth")
-    private String date_of_birth;
+    private Date date_of_birth;
     @Column(name = "aadhar_card_number")
     private String aadhar_card_number;
     @Column(name = "driving_license_number")
@@ -157,11 +157,11 @@ public class UserAccountInfo extends Model {
         this.present_address = present_address;
     }
 
-    public String getDate_of_birth() {
+    public Date getDate_of_birth() {
         return date_of_birth;
     }
 
-    public void setDate_of_birth(String date_of_birth) {
+    public void setDate_of_birth(Date date_of_birth) {
         this.date_of_birth = date_of_birth;
     }
 

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,23 +19,19 @@ import android.widget.Toast;
 
 import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
-import com.insurance.insuranceapp.RestAPI.PendingCasesInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
+import com.insurance.insuranceapp.Utilities.AlertDialogNoData;
 import com.insurance.insuranceapp.Utilities.InsApp;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.Call;
 import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -69,7 +64,7 @@ public class PendingCasesActivity extends AppCompatActivity {
         listView = findViewById(R.id.lab_list);
         btn = findViewById(R.id.btn_media);
 
-        getLogin();
+        getpendinglist();
 
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,7 +72,7 @@ public class PendingCasesActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final PendingCaseListInfo pendingInfo= (PendingCaseListInfo) parent.getAdapter().getItem(position);
                 String Block_type = pendingInfo.getCase_type();
-                String Block_name = pendingInfo.getCase_id();
+                String Block_name = pendingInfo.getCase_type_id();
                 if(Block_type!=null) {
                     if(Block_type.equalsIgnoreCase("default"))
                     {
@@ -209,9 +204,9 @@ public class PendingCasesActivity extends AppCompatActivity {
     }
 
 
-    private void getLogin() {
+    private void getpendinglist() {
 
-String consultantid = "";
+        String consultantid = "";
         progressDialog = new ProgressDialog(PendingCasesActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Loading...");
@@ -226,12 +221,11 @@ String consultantid = "";
                 .client(okHttpClient)
                 .build();
         insuranceAPI = retrofit.create(InsuranceAPI.class);
-        PendingCasesInfo reg =new PendingCasesInfo();
+
         for(UserAccountInfo user:userAccountInfoList) {
-            reg.setConsultant_id(user.getConsultant_id());
             consultantid=user.getConsultant_id();
         }
-        reg.setStatus("pending");
+
 
 
       Call<List<PendingCaseListInfo>> call = insuranceAPI.getpendinglist(consultantid , "pending");
@@ -245,12 +239,13 @@ String consultantid = "";
                 pendingInfoList =  response.body();
                 // profileInfoList = response.body();
 
+
                 if (response.code() == 200) {
-
-                    getList(pendingInfoList);
-
-
-
+                    if(pendingInfoList!=null){
+                        getList(pendingInfoList);
+                    }else if(pendingInfoList==null){
+                        AlertDialogNoData.alertdialog(PendingCasesActivity.this);
+                    }
 
                 }
 

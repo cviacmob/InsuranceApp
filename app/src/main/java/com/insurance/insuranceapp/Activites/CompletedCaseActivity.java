@@ -14,7 +14,7 @@ import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
-import com.insurance.insuranceapp.RestAPI.PendingCasesInfo;
+import com.insurance.insuranceapp.Utilities.AlertDialogNoData;
 import com.insurance.insuranceapp.Utilities.InsApp;
 
 import java.util.List;
@@ -68,12 +68,12 @@ public class CompletedCaseActivity extends AppCompatActivity {
                 .client(okHttpClient)
                 .build();
         insuranceAPI = retrofit.create(InsuranceAPI.class);
-        PendingCasesInfo reg =new PendingCasesInfo();
+
         for(UserAccountInfo user:userAccountInfoList) {
-            reg.setConsultant_id(user.getConsultant_id());
+
             consultantid=user.getConsultant_id();
         }
-        reg.setStatus("Submitted");
+
 
 
         Call<List<PendingCaseListInfo>> call = insuranceAPI.getpendinglist(consultantid , "submitted");
@@ -87,9 +87,12 @@ public class CompletedCaseActivity extends AppCompatActivity {
                 pendingInfoList =  response.body();
                 // profileInfoList = response.body();
 
+
                 if (response.code() == 200) {
                     if(pendingInfoList!=null){
                         getList(pendingInfoList);
+                    }else if(pendingInfoList==null){
+                        AlertDialogNoData.alertdialog(CompletedCaseActivity.this);
                     }
 
                 }

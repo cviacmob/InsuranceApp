@@ -17,7 +17,7 @@ public class ProfileInfo {
     private String primary_phone_no;
     private String secondary_phone_no;
     private String father_name;
-    private String date_of_birth;
+    private Date date_of_birth;
     private String aadhar_card_number;
     private String driving_license_number;
     private String permanent_address;
@@ -131,11 +131,11 @@ public class ProfileInfo {
         this.consultant_id = consultant_id;
     }
 
-    public String getDate_of_birth() {
+    public Date getDate_of_birth() {
         return date_of_birth;
     }
 
-    public void setDate_of_birth(String date_of_birth) {
+    public void setDate_of_birth(Date date_of_birth) {
         this.date_of_birth = date_of_birth;
     }
 

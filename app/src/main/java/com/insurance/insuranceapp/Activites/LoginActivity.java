@@ -3,6 +3,7 @@ package com.insurance.insuranceapp.Activites;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -38,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private String password;
     private  List<ProfileInfo> profileInfoList;
     private ProfileInfo profileInfo;
+    private TextInputLayout textInputLayout,pass_textinput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         setTitle("Login");
 
-        log = findViewById(R.id.log_btn);
+        log = findViewById(R.id.bt_sendd);
         uname = findViewById(R.id.edt_user_name);
         pass = findViewById(R.id.edt_pass);
-
+        textInputLayout = (TextInputLayout)findViewById(R.id.user_name);
+        pass_textinput = (TextInputLayout)findViewById(R.id.pass);
         log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,10 +71,10 @@ public class LoginActivity extends AppCompatActivity {
                             getLogin();
                         }
                         else{
-                            pass.setError("Cannot be empty");
+                            textInputLayout.setError("Cannot be empty");
                         }
                     }else{
-                        uname.setError("Cannot be empty");
+                        pass_textinput.setError("Cannot be empty");
 
                     }
 
@@ -94,8 +97,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         private void getLogin() {
-
-
             progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Loading...");
@@ -123,19 +124,27 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
 
-                    profileInfo =  response.body();
                    // profileInfoList = response.body();
 
                     if (response.code() == 200) {
+
+                        profileInfo =  response.body();
                         if(profileInfo!=null){
                             getdeletecareprovider();
                             userdetails(profileInfo);
+                            uname.getText().clear();
+                            pass.getText().clear();
                             Intent nav = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(nav);
                             finish();
 
+                        }else{
+                            textInputLayout.setError("username incorrect");
+                            pass_textinput.setError("password incorrect");
                         }
 
+                    }else{
+                        Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     }
 
                 }

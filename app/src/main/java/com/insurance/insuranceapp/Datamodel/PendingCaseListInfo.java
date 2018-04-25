@@ -10,12 +10,21 @@ public class PendingCaseListInfo {
     private String case_assigned_on;
     private String patient_name;
     private String claim_no;
-    private String status;
+    private String assign_status;
     private String policy_number;
     private String company_name;
+    private String case_type_id;
 
     public PendingCaseListInfo(){
 
+    }
+
+    public String getCase_type_id() {
+        return case_type_id;
+    }
+
+    public void setCase_type_id(String case_type_id) {
+        this.case_type_id = case_type_id;
     }
 
     public String getCase_id() {
@@ -58,12 +67,14 @@ public class PendingCaseListInfo {
         this.claim_no = claim_no;
     }
 
-    public String getStatus() {
-        return status;
+
+
+    public String getAssign_status() {
+        return assign_status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setAssign_status(String assign_status) {
+        this.assign_status = assign_status;
     }
 
     public String getPolicy_number() {

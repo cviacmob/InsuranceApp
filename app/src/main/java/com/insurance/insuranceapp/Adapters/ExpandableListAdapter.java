@@ -101,11 +101,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         }else if(listTitle.equalsIgnoreCase("Payments") || pos ==1){
             listTitleTextView.setText("Payments") ;
-            icon.setImageResource(R.drawable.billing);
+            icon.setImageResource(R.drawable.money);
         }else if(listTitle.equalsIgnoreCase("Dashboard") || pos ==2)
         {
             listTitleTextView.setText("Cases") ;
-            icon.setImageResource(R.drawable.docu);
+            icon.setImageResource(R.drawable.docc);
         }
 
         return convertView;

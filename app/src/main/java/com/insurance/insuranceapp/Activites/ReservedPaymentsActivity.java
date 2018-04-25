@@ -18,8 +18,8 @@ import com.insurance.insuranceapp.R;
 public class ReservedPaymentsActivity extends AppCompatActivity {
     private int mode;
     private TableLayout tableLayout;
-    private TableRow row1,row2,row3,row4,row5,row6,row7,row8,row9;
-    private TextView claim_number,patientname,blockname,TAT,casepay,TA,MRD,incentive,totalamt;
+    private TableRow row1,row2,row3,row4,row5,row6,row7,row9;
+    private TextView claim_number,patientname,blockname,TAT,TA,MRD,incentive,totalamt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,17 +35,16 @@ public class ReservedPaymentsActivity extends AppCompatActivity {
         row5 = (TableRow) tableLayout.getChildAt(4);
         row6 = (TableRow) tableLayout.getChildAt(5);
         row7 = (TableRow) tableLayout.getChildAt(6);
-        row8 = (TableRow) tableLayout.getChildAt(7);
-        row9 = (TableRow) tableLayout.getChildAt(8);
+
+        row9 = (TableRow) tableLayout.getChildAt(7);
 
         claim_number =(TextView)row1.getChildAt(1);
         patientname =(TextView)row2.getChildAt(1);
         blockname =(TextView)row3.getChildAt(1);
         TAT =(TextView)row4.getChildAt(1);
-        casepay =(TextView)row5.getChildAt(1);
+        incentive =(TextView)row5.getChildAt(1);
         TA =(TextView)row6.getChildAt(1);
         MRD =(TextView)row7.getChildAt(1);
-        incentive =(TextView)row8.getChildAt(1);
         totalamt =(TextView)row9.getChildAt(1);
 
        if(mode==1){
@@ -67,10 +66,10 @@ public class ReservedPaymentsActivity extends AppCompatActivity {
         patientname.setText("Arun");
         blockname.setText("Hospital Block");
         TAT.setText("12");
-        casepay.setText("Rs.600");
+        incentive.setText("Rs.600");
         TA.setText("Rs.100");
         MRD.setText("Rs.400");
-        incentive.setText("Rs.100");
+
         totalamt.setText("Rs.1200");
     }
     @Override
