@@ -91,6 +91,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="23dp"
                             android:text="Total Amount Rs: "
+                            android:fontFamily="@font/verdana"
                             android:textColor="@color/Black"
                             android:textSize="14sp" />
                     </RelativeLayout>
@@ -124,8 +125,8 @@
                             android:layout_below="@+id/textView4"
                             android:layout_marginTop="21dp"
                             android:text="Pending Cases : "
+                            android:fontFamily="@font/verdana"
                             android:textColor="@color/Black"
-
                             android:textSize="14sp" />
 
                         <TextView
@@ -136,8 +137,9 @@
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/tx_pendincase"
                             android:layout_marginTop="18dp"
-                            android:text="Save and Submitted Cases : "
+                            android:text="Save Cases : "
                             android:textColor="@color/Black"
+                            android:fontFamily="@font/verdana"
 
                             android:textSize="14sp" />
 
@@ -150,7 +152,47 @@
                             android:layout_alignParentStart="true"
                             android:text="Completed Cases : "
                             android:textColor="@color/Black"
+                            android:fontFamily="@font/verdana"
+
                             android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/pending"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignEnd="@+id/textView4"
+                            android:layout_alignRight="@+id/textView4"
+                            android:layout_alignTop="@+id/tx_pendincase"
+                            android:text="TextView"
+                            android:fontFamily="@font/verdana"
+                            android:textColor="@color/Black"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:id="@+id/save"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/textView7"
+                            android:layout_alignBottom="@+id/textView7"
+                            android:layout_alignLeft="@+id/pending"
+                            android:layout_alignStart="@+id/pending"
+                            android:text="TextView"
+                            android:fontFamily="@font/verdana"
+                            android:textColor="@color/Black"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:id="@+id/completed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBaseline="@+id/textView8"
+                            android:layout_alignBottom="@+id/textView8"
+                            android:layout_alignLeft="@+id/save"
+                            android:layout_alignStart="@+id/save"
+                            android:text="TextView"
+                            android:fontFamily="@font/verdana"
+                            android:textColor="@color/Black"
+                            android:textSize="14sp"/>
                     </RelativeLayout>
 
 

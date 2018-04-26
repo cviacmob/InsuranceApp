@@ -53,8 +53,12 @@
         <activity android:name=".Activites.DisabilityActivity" />
         <activity android:name=".Activites.SMEActivity" />
         <activity android:name=".Activites.PersonalAccidentActivity" />
-        <activity android:name=".Activites.BillVerificationHospital" />
-        <activity android:name=".Activites.BillVerificationPharmacy" />
+        <activity android:name=".Activites.BillVerificationHospital" >
+
+        </activity>
+        <activity android:name=".Activites.BillVerificationPharmacy" >
+
+        </activity>
         <activity android:name=".Activites.DocumentsVerification" />
         <activity android:name=".Activites.Cashless" />
         <activity android:name=".Activites.IntimationCase" />

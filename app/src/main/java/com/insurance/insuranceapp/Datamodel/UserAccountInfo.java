@@ -29,7 +29,7 @@ public class UserAccountInfo extends Model {
     @Column(name = "father_name")
     private String father_name;
     @Column(name = "date_of_birth")
-    private Date date_of_birth;
+    private String date_of_birth;
     @Column(name = "aadhar_card_number")
     private String aadhar_card_number;
     @Column(name = "driving_license_number")
@@ -60,12 +60,41 @@ public class UserAccountInfo extends Model {
     private String ifsc_code;
     @Column(name = "status")
     private String status;
+    @Column(name = "Pending")
+    private String Pending;
+    @Column(name = "Saved")
+    private String Saved;
+    @Column(name = "Submitted")
+    private String Submitted;
 
     public UserAccountInfo(){
         super();
     }
 
 
+    public String getPending() {
+        return Pending;
+    }
+
+    public void setPending(String pending) {
+        Pending = pending;
+    }
+
+    public String getSaved() {
+        return Saved;
+    }
+
+    public void setSaved(String saved) {
+        Saved = saved;
+    }
+
+    public String getSubmitted() {
+        return Submitted;
+    }
+
+    public void setSubmitted(String submitted) {
+        Submitted = submitted;
+    }
 
     public void setConsultant_id(String consultant_id) {
         this.consultant_id = consultant_id;
@@ -157,11 +186,11 @@ public class UserAccountInfo extends Model {
         this.present_address = present_address;
     }
 
-    public Date getDate_of_birth() {
+    public String getDate_of_birth() {
         return date_of_birth;
     }
 
-    public void setDate_of_birth(Date date_of_birth) {
+    public void setDate_of_birth(String date_of_birth) {
         this.date_of_birth = date_of_birth;
     }
 

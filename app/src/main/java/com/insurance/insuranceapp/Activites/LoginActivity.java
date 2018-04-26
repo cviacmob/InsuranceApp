@@ -135,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                             uname.getText().clear();
                             pass.getText().clear();
                             Intent nav = new Intent(LoginActivity.this,MainActivity.class);
+
                             startActivity(nav);
                             finish();
 
@@ -191,6 +192,9 @@ public class LoginActivity extends AppCompatActivity {
             userAccountInfo.setSecondary_phone_no(profileInfo.getSecondary_phone_no());
             userAccountInfo.setState_id(profileInfo.getState_id());
             userAccountInfo.setStatus(profileInfo.getStatus());
+            userAccountInfo.setPending(profileInfo.getPending());
+            userAccountInfo.setSaved(profileInfo.getSaved());
+            userAccountInfo.setSubmitted(profileInfo.getSubmitted());
             userAccountInfo.save();
 
 

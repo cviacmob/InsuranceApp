@@ -19,6 +19,7 @@ import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.insuranceapp.Utilities.AlertDialogNoData;
 import com.insurance.insuranceapp.Utilities.InsApp;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -46,9 +47,6 @@ public class SavedCasesActivity extends AppCompatActivity {
         getpendinglist();
 
 
-
-
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -68,6 +66,7 @@ public class SavedCasesActivity extends AppCompatActivity {
                 if(Block_name.equalsIgnoreCase("1"))
                 {
                     Intent in = new Intent(SavedCasesActivity.this, HospitalBlockActivity.class);
+                    in.putExtra("data",pendingInfo);
                     startActivity(in);
                 } else if(Block_name.equalsIgnoreCase("2")){
                     Intent in = new Intent(SavedCasesActivity.this, PatientBlockActivity.class);
@@ -108,6 +107,7 @@ public class SavedCasesActivity extends AppCompatActivity {
                 }
             }else if(Block_type.equalsIgnoreCase("dynamic")){
                 Intent in = new Intent(SavedCasesActivity.this, DynamicActivity.class);
+                in.putExtra("data",pendingInfo);
                 startActivity(in); //this for activity starting
             }
 
@@ -183,7 +183,7 @@ public class SavedCasesActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
 
-                Toast.makeText(SavedCasesActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SavedCasesActivity.this, "SavedCasesActivity : " + t, Toast.LENGTH_SHORT).show();
 
             }
         });

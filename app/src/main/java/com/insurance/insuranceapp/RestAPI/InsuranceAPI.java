@@ -11,6 +11,7 @@ import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.Headers;
 import retrofit.http.POST;
 
 /**
@@ -25,4 +26,13 @@ public interface InsuranceAPI {
     @POST("/insapi/index.php/cases")
     Call<List<PendingCaseListInfo>> getpendinglist(@Field("consultant_id") String consultant_id,
                                                    @Field("status") String status);
+    @FormUrlEncoded
+    @POST("/insapi/index.php/savestatus")
+    Call<List<String>> getsavedata( @Field("consultant_id") String consultant_id,
+                                    @Field("assign_status") String status,
+                                    @Field("case_id") String caseid,
+                                    @Field("case_assignment_id") String assignment_id,
+                                    @Field("other_case_type_id") String othercasetypeid,
+                                    @Field("case_type") String casetype);
+
 }

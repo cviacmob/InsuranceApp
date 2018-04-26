@@ -43,6 +43,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
+import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.materialfilepicker.ui.FilePickerActivity;
@@ -120,15 +121,17 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
     private TextInputLayout textInputLayout;
     private Button button;
-
+    private PendingCaseListInfo pendingInfo;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hospital_block);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Hospital Part Block");
+        pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
         calendar = (ImageView)findViewById(R.id.ig_calender);
         ed_convoy = (EditText)findViewById(R.id.famildoc);

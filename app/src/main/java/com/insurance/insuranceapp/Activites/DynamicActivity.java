@@ -1,6 +1,7 @@
 package com.insurance.insuranceapp.Activites;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -23,13 +24,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
+import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
+import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
+import com.insurance.insuranceapp.Utilities.AlertDialogNoData;
+import com.insurance.insuranceapp.Utilities.InsApp;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import retrofit.Call;
+import retrofit.GsonConverterFactory;
+
+import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class DynamicActivity extends AppCompatActivity {
     private TextView title1,file1,filename1;
@@ -42,6 +54,10 @@ public class DynamicActivity extends AppCompatActivity {
     private TextView title8,file8,filename8;
     private TextView title9,file9,filename9;
     private TextView title31,file31,filename31;
+    ProgressDialog progressDialog;
+    InsApp api;
+    InsuranceAPI insuranceAPI;
+    private List<UserAccountInfo> userAccountInfoList;
 
     private String string1= "<font color='#000000'>Company Authorization Letter towards the hospital </font>" + "<font color='#FF0000'>*</font>";
     private String string2= "<font color='#000000'>Investigation report form  </font>" + "<font color='#FF0000'>*</font>";
@@ -68,6 +84,7 @@ public class DynamicActivity extends AppCompatActivity {
     int mYear = c.get(Calendar.YEAR); // current year
     int mMonth = c.get(Calendar.MONTH); // current month
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+    private PendingCaseListInfo pendingInfo;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +92,9 @@ public class DynamicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dynamic);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Others");
-
+        userAccountInfoList  = getAll();
+        pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        getsaveddatalist(pendingInfo);
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
         title2 = (TextView)findViewById(R.id.title2);
@@ -249,5 +268,70 @@ public class DynamicActivity extends AppCompatActivity {
         }
         onBackPressed();
         return true;
+    }
+
+    private void getsaveddatalist(PendingCaseListInfo pendingInfo) {
+
+        String consultantid = "";
+        progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
+                .baseUrl("http://vevelanbus.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        insuranceAPI = retrofit.create(InsuranceAPI.class);
+
+        for(UserAccountInfo user:userAccountInfoList) {
+            consultantid=user.getConsultant_id();
+        }
+        String status = pendingInfo.getAssign_status();
+        String assignmentID = pendingInfo.getCase_assignment_id();
+        String casetype =  pendingInfo.getCase_type();
+        String caseid = pendingInfo.getCase_id();
+        String casetypeid = pendingInfo.getCase_type_id();
+        String othercaseid =pendingInfo.getOther_case_type_id();
+
+        Call<List<String>> call = insuranceAPI.getsavedata(consultantid , status,caseid,assignmentID,othercaseid,casetype);
+        call.enqueue(new retrofit.Callback<List<String>>() {
+            @Override
+            public void onResponse(retrofit.Response<List<String>> response, retrofit.Retrofit retrofit) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                  response.body();
+                // profileInfoList = response.body();
+                if(pendingInfoList==null){
+                    AlertDialogNoData.alertdialog(DynamicActivity.this);
+                }
+                if (response.code() == 200) {
+                    if(pendingInfoList!=null){
+
+                    }
+
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                Toast.makeText(DynamicActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
     }
 }

@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
@@ -32,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import retrofit.Call;
 import retrofit.GsonConverterFactory;
+
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -215,6 +218,7 @@ public class PendingCasesActivity extends AppCompatActivity {
         com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
         okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
         okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+
         retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
                 .baseUrl("http://vevelanbus.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -226,19 +230,14 @@ public class PendingCasesActivity extends AppCompatActivity {
             consultantid=user.getConsultant_id();
         }
 
-
-
-      Call<List<PendingCaseListInfo>> call = insuranceAPI.getpendinglist(consultantid , "pending");
+        Call<List<PendingCaseListInfo>> call = insuranceAPI.getpendinglist(consultantid , "pending");
         call.enqueue(new retrofit.Callback<List<PendingCaseListInfo>>() {
             @Override
             public void onResponse(retrofit.Response<List<PendingCaseListInfo>> response, retrofit.Retrofit retrofit) {
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                 }
-
                 pendingInfoList =  response.body();
-                // profileInfoList = response.body();
-
 
                 if (response.code() == 200) {
                     if(pendingInfoList!=null){

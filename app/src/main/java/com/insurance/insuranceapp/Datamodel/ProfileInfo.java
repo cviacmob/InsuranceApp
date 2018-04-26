@@ -2,6 +2,7 @@ package com.insurance.insuranceapp.Datamodel;
 
 import com.activeandroid.query.Select;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * Created by Balaji on 4/13/2018.
  */
 
-public class ProfileInfo {
+public class ProfileInfo  {
     private String consultant_id;
     private String consultant_Name;
     private String agreementNumber;
@@ -17,7 +18,7 @@ public class ProfileInfo {
     private String primary_phone_no;
     private String secondary_phone_no;
     private String father_name;
-    private Date date_of_birth;
+    private String date_of_birth;
     private String aadhar_card_number;
     private String driving_license_number;
     private String permanent_address;
@@ -33,6 +34,9 @@ public class ProfileInfo {
     private String branch_location;
     private String ifsc_code;
     private String status;
+    private String Pending;
+    private String Saved;
+    private String Submitted;
 
 
 
@@ -48,6 +52,30 @@ public class ProfileInfo {
 
     public void setConsultant_Name(String consultant_Name) {
         this.consultant_Name = consultant_Name;
+    }
+
+    public String getPending() {
+        return Pending;
+    }
+
+    public void setPending(String pending) {
+        Pending = pending;
+    }
+
+    public String getSaved() {
+        return Saved;
+    }
+
+    public void setSaved(String saved) {
+        Saved = saved;
+    }
+
+    public String getSubmitted() {
+        return Submitted;
+    }
+
+    public void setSubmitted(String submitted) {
+        Submitted = submitted;
     }
 
     public String getAgreementNumber() {
@@ -131,11 +159,11 @@ public class ProfileInfo {
         this.consultant_id = consultant_id;
     }
 
-    public Date getDate_of_birth() {
+    public String getDate_of_birth() {
         return date_of_birth;
     }
 
-    public void setDate_of_birth(Date date_of_birth) {
+    public void setDate_of_birth(String date_of_birth) {
         this.date_of_birth = date_of_birth;
     }
 
