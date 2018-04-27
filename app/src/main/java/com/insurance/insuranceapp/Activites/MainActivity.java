@@ -162,13 +162,13 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }else if(groupPosition == 1 && childPosition == 0)
                 {
-                    Intent intent = new Intent(MainActivity.this, ReservedPaymentsActivity.class);
+                    Intent intent = new Intent(MainActivity.this, CompletedCaseActivity.class);
                     intent.putExtra("Payments",1);
                     startActivity(intent);
                 }
                 else if(groupPosition == 1 && childPosition == 1)
                 {
-                    Intent intent = new Intent(MainActivity.this, ReservedPaymentsActivity.class);
+                    Intent intent = new Intent(MainActivity.this, CompletedCaseActivity.class);
                     intent.putExtra("Payments",2);
                     startActivity(intent);
                 }

@@ -192,7 +192,7 @@ public class SavedCasesActivity extends AppCompatActivity {
     }
     private void getList(List<PendingCaseListInfo> pendingList) {
 
-        pendingcaseAdapter = new PendingCasesAdapter(pendingList,this.getApplication());
+        pendingcaseAdapter = new PendingCasesAdapter(pendingList,this.getApplication(),"");
         listView.setDivider(null);
         listView.setAdapter(pendingcaseAdapter);
 

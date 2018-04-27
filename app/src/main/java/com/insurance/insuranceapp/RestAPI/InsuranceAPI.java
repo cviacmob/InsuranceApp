@@ -1,5 +1,6 @@
 package com.insurance.insuranceapp.RestAPI;
 
+import com.insurance.insuranceapp.Datamodel.GetPaymentsInfo;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.Datamodel.ProfileInfo;
@@ -34,5 +35,10 @@ public interface InsuranceAPI {
                                     @Field("case_assignment_id") String assignment_id,
                                     @Field("other_case_type_id") String othercasetypeid,
                                     @Field("case_type") String casetype);
+    @FormUrlEncoded
+    @POST("/insapi/index.php/fees")
+    Call<List<GetPaymentsInfo>> getgetpayments(@Field("consultant_id") String consultant_id,
+                                               @Field("fee_is_paid") String status,
+                                                     @Field("case_assignment_id") String case_assignment_id);
 
 }

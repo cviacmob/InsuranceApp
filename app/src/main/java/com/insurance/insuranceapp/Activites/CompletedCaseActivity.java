@@ -16,6 +16,7 @@ import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.insuranceapp.Utilities.AlertDialogNoData;
 import com.insurance.insuranceapp.Utilities.InsApp;
+import com.insurance.insuranceapp.Utilities.Prefs;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -33,25 +34,49 @@ public class CompletedCaseActivity extends AppCompatActivity {
     InsApp api;
     InsuranceAPI insuranceAPI;
     private List<UserAccountInfo> userAccountInfoList;
+    private String  domainurl;
+    private int mode;
+    private String temp ="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_completed_case);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Completed Cases");
+        mode =  getIntent().getIntExtra("Payments",0);
+        domainurl = Prefs.getString("domainurl", "");
         listView = findViewById(R.id.lab_list);
         userAccountInfoList  = getAll();
-        getLogin();
+        if(mode==1){
+            temp = "submitted";
+            setTitle("Confirmed Payments");
+            getcompleted();
+            //text_values();
+
+        }else if(mode == 2){
+            temp = "reserved";
+           // getpayments();
+            setTitle("Reserved Payments");
+            getcompleted();
+
+          //  reservedtext_values();
+        }else {
+            temp = "completed";
+            setTitle("Completed Cases");
+            getcompleted();
+        }
+
+
+
     }
 
     private void getList(List<PendingCaseListInfo> pendingCasesActivityList) {
 
-        pendingcaseAdapter = new PendingCasesAdapter(pendingCasesActivityList,this.getApplication());
+        pendingcaseAdapter = new PendingCasesAdapter(pendingCasesActivityList,this.getApplication(),temp);
         listView.setDivider(null);
         listView.setAdapter(pendingcaseAdapter);
 
     }
-    private void getLogin() {
+    private void getcompleted() {
 
         String consultantid = "";
         progressDialog = new ProgressDialog(CompletedCaseActivity.this, R.style.AppTheme_Dark_Dialog);
@@ -63,7 +88,7 @@ public class CompletedCaseActivity extends AppCompatActivity {
         okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
         okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
         retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl("http://vevelanbus.com")
+                .baseUrl(domainurl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
@@ -83,11 +108,7 @@ public class CompletedCaseActivity extends AppCompatActivity {
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                 }
-
                 pendingInfoList =  response.body();
-                // profileInfoList = response.body();
-
-
                 if (response.code() == 200) {
                     if(pendingInfoList!=null){
                         getList(pendingInfoList);

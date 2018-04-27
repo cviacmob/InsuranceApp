@@ -1,83 +1,59 @@
 package com.insurance.insuranceapp.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.insurance.insuranceapp.Activites.ReservedPaymentsActivity;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.R;
 
 import java.util.List;
 
 /**
- * Created by Balaji on 4/14/2018.
+ * Created by Balaji on 4/27/2018.
  */
 
-public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
+public class paymentsListAdapter extends ArrayAdapter<PendingCaseListInfo> {
 
-    private List<PendingCaseListInfo> pendingInfoList;
-    private String temp;
+private List<PendingCaseListInfo> pendingInfoList;
 
-    private int lastPostion = -1;
 
-    Context mContext;
+private int lastPostion = -1;
 
-    public PendingCasesAdapter(List<PendingCaseListInfo> objects, Context context , String tempstring) {
+        Context mContext;
+
+public paymentsListAdapter(List<PendingCaseListInfo> objects, Context context) {
         super(context, R.layout.layout_pending, objects);
         pendingInfoList = objects;
         mContext = context;
-        temp = tempstring;
+        }
 
-    }
+public static class ViewHolder {
+    public TableLayout tableLayout;
+    public TableRow row1,row2,row3,row4,row5,row6,row7,row8,row9,row10,row11;
+    public TextView claim_number,patientname,blockname,case_assignment_id,policy_no,insurance_compy,case_id,Assigned_to,case_assigned_on,status,case_type_id;
 
-    public static class ViewHolder {
-        public TableLayout tableLayout;
-        public TableRow row1,row2,row3,row4,row5,row6,row7,row8,row9,row10,row11;
-        public TextView claim_number,patientname,blockname,case_assignment_id,policy_no,insurance_compy,case_id,Assigned_to,case_assigned_on,status,case_type_id;
-        public Button payments;
 
-    }
+}
 
 
     @Override
-    public View getView(int position, final View convertView, ViewGroup parent) {
-        final PendingCaseListInfo all = getItem(position);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        PendingCaseListInfo all = getItem(position);
         View vw = convertView;
-        ViewHolder holder;
+        PendingCasesAdapter.ViewHolder holder;
 
         if (convertView == null) {
 
             LayoutInflater inf = LayoutInflater.from(getContext());
             vw = inf.inflate(R.layout.layout_pending, parent, false);
-            holder = new ViewHolder();
+            holder = new PendingCasesAdapter.ViewHolder();
             holder.tableLayout = (TableLayout)vw.findViewById(R.id.tableLayout);
-            holder.payments = (Button)vw.findViewById(R.id.bt_paymnts);
-            if(temp.equalsIgnoreCase("reserved") || temp.equalsIgnoreCase("submitted")){
-                holder.payments.setVisibility(View.VISIBLE);
-
-                holder.payments.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent in = new Intent(mContext, ReservedPaymentsActivity.class);
-                        in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        in.putExtra("paymentscase",temp);
-                        in.putExtra("object",all);
-                        mContext.startActivity(in);
-
-
-                    }
-                });
-            }
-
             holder.row1 = (TableRow) holder.tableLayout.getChildAt(0);
             holder.row2 = (TableRow) holder.tableLayout.getChildAt(1);
             holder.row3 = (TableRow) holder.tableLayout.getChildAt(2);
@@ -107,7 +83,7 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
 
             vw.setTag(holder);
         } else {
-            holder = (ViewHolder) vw.getTag();
+            holder = (PendingCasesAdapter.ViewHolder) vw.getTag();
         }
 
 

@@ -2,6 +2,7 @@ package com.insurance.insuranceapp.Activites;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.insuranceapp.RestAPI.ResponseJson;
 import com.insurance.insuranceapp.Utilities.InsApp;
+import com.insurance.insuranceapp.Utilities.Prefs;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -40,13 +42,16 @@ public class LoginActivity extends AppCompatActivity {
     private  List<ProfileInfo> profileInfoList;
     private ProfileInfo profileInfo;
     private TextInputLayout textInputLayout,pass_textinput;
+    private  String domainurl = "http://vevelanbus.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setTitle("Login");
-
+        SharedPreferences.Editor editor = Prefs.edit();
+        editor.putString("domainurl",domainurl);
+        editor.commit();
         log = findViewById(R.id.bt_sendd);
         uname = findViewById(R.id.edt_user_name);
         pass = findViewById(R.id.edt_pass);
@@ -106,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
             okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
             okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
             retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                    .baseUrl("http://vevelanbus.com")
+                    .baseUrl(domainurl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build();
@@ -135,7 +140,6 @@ public class LoginActivity extends AppCompatActivity {
                             uname.getText().clear();
                             pass.getText().clear();
                             Intent nav = new Intent(LoginActivity.this,MainActivity.class);
-
                             startActivity(nav);
                             finish();
 
