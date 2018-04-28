@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -22,10 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,12 +39,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
-import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
+import com.insurance.insuranceapp.Datamodel.AudioResponse;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.R;
+import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.materialfilepicker.ui.FilePickerActivity;
 import com.insurance.materialfilepicker.widget.MaterialFilePicker;
 
@@ -59,10 +58,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import retrofit2.Retrofit;
+import retrofit.Call;
+import retrofit.GsonConverterFactory;
+
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class HospitalBlockActivity extends AppCompatActivity implements
         View.OnClickListener {
@@ -72,6 +75,14 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     private String userChoosenTask;
     public static final int PERMISSIONS_REQUEST_CODE = 0;
     public static final int FILE_PICKER_REQUEST_CODE = 1;
+    String AudioSavePathInDevice = null;
+    MediaRecorder mediaRecorder ;
+    Random random ;
+    String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
+    ProgressDialog progressDialog;
+    InsuranceAPI insuranceAPI;
+    public static final int RequestPermissionCode = 1;
+    MediaPlayer mediaPlayer ;
     private TextView title1,file1,filename1;
     private TextView title2,file2,filename2;
     private TextView title3,file3,filename3;
@@ -206,7 +217,23 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         file19 = (TextView)findViewById(R.id.file19);
         file19.setOnClickListener((View.OnClickListener) this);
 
-
+        if(checkPermission()){
+        AudioSavePathInDevice = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CreateRandomAudioFileName(5) + "AudioRecording.3gp";
+        MediaRecorderReady();
+        try {
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+        } catch (IllegalStateException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        }
+        else {
+            requestPermission();
+        }
 
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,6 +255,8 @@ public class HospitalBlockActivity extends AppCompatActivity implements
                 }else{
                     textInputLayout.setError("Cannot be empty");
                 }
+                mediaRecorder.stop();
+                sendAudio();
             }
         });
         backbutton.setOnClickListener(new View.OnClickListener() {
@@ -236,9 +265,70 @@ public class HospitalBlockActivity extends AppCompatActivity implements
                 onBackPressed();
             }
         });
-
         createEditTextView();
     }
+
+    public boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+    }
+    public String CreateRandomAudioFileName(int string){
+        StringBuilder stringBuilder = new StringBuilder( string );
+        int i = 0 ;
+        while(i < string ) {
+            stringBuilder.append(RandomAudioFileName.charAt(random.nextInt(RandomAudioFileName.length())));
+            i++ ;
+        }
+        return stringBuilder.toString();
+    }
+    public void MediaRecorderReady(){
+        mediaRecorder=new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        mediaRecorder.setOutputFile(AudioSavePathInDevice);
+    }
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(HospitalBlockActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
+    }
+
+    public void sendAudio(){
+        progressDialog = new ProgressDialog(HospitalBlockActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Submitting...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+
+        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
+                .baseUrl("http://vevelanbus.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        insuranceAPI = retrofit.create(InsuranceAPI.class);
+
+//        Call<AudioResponse> call = insuranceAPI.sendAudio();
+  //      call.enqueue(new retrofit.Callback<AudioResponse>() {
+   //         @Override
+     //       public void onResponse(retrofit.Response<AudioResponse> response, retrofit.Retrofit retrofit) {
+       //         if (progressDialog != null) {
+         //           progressDialog.dismiss();
+           //     }
+            //}
+            //@Override
+            //public void onFailure(Throwable t) {
+              //  if (progressDialog != null) {
+                //    progressDialog.dismiss();
+                //}
+                //Toast.makeText(HospitalBlockActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+            //}
+       // });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -300,6 +390,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
                 break;
         }
     }
+
     public void datepicker(){
         datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
@@ -673,7 +764,6 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         Toast.makeText(this, "Allow external storage reading", Toast.LENGTH_SHORT).show();
     }
 
-
     private void openFilePicker() {
         new MaterialFilePicker()
                 .withActivity(this)
@@ -682,8 +772,5 @@ public class HospitalBlockActivity extends AppCompatActivity implements
                 .withTitle("Select a file")
                 .start();
     }
-
-
-
 
 }

@@ -45,11 +45,6 @@ public class PendingCasesActivity extends AppCompatActivity {
     private Button btn;
     private PendingCasesAdapter pendingcaseAdapter;
     private List<PendingCaseListInfo> pendingInfoList;
-    private PendingInfo pendingInfo;
-    String AudioSavePathInDevice = null;
-    MediaRecorder mediaRecorder ;
-    Random random ;
-    String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
     public static final int RequestPermissionCode = 1;
     MediaPlayer mediaPlayer ;
     ProgressDialog progressDialog;
@@ -66,10 +61,7 @@ public class PendingCasesActivity extends AppCompatActivity {
         userAccountInfoList  = getAll();
         listView = findViewById(R.id.lab_list);
         btn = findViewById(R.id.btn_media);
-
         getpendinglist();
-
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -82,6 +74,9 @@ public class PendingCasesActivity extends AppCompatActivity {
                         if(Block_name.equalsIgnoreCase("1"))
                         {
                             Intent in = new Intent(PendingCasesActivity.this, HospitalBlockActivity.class);
+//                          Bundle bundle = new Bundle();
+//                          bundle.putParcelable("data", );
+//                         in.putExtras(bundle);
                             startActivity(in);
                         } else if(Block_name.equalsIgnoreCase("2")){
                             Intent in = new Intent(PendingCasesActivity.this, PatientBlockActivity.class);
@@ -147,13 +142,6 @@ public class PendingCasesActivity extends AppCompatActivity {
                 }
             }
         });
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaRecorder.stop();
-                Toast.makeText(PendingCasesActivity.this,"Recording Works",Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void getList(List<PendingCaseListInfo> pendingCasesActivityList) {
@@ -164,7 +152,6 @@ public class PendingCasesActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -174,38 +161,13 @@ public class PendingCasesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_home) {
-            Intent in = new Intent(PendingCasesActivity.this,MainActivity.class);
+            Intent in = new Intent(PendingCasesActivity.this, MainActivity.class);
             startActivity(in);
             return true;
         }
         onBackPressed();
         return true;
     }
-    public boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
-        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
-    }
-    public String CreateRandomAudioFileName(int string){
-        StringBuilder stringBuilder = new StringBuilder( string );
-        int i = 0 ;
-        while(i < string ) {
-            stringBuilder.append(RandomAudioFileName.charAt(random.nextInt(RandomAudioFileName.length())));
-            i++ ;
-        }
-        return stringBuilder.toString();
-    }
-    public void MediaRecorderReady(){
-        mediaRecorder=new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(AudioSavePathInDevice);
-    }
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(PendingCasesActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
-    }
-
 
     private void getpendinglist() {
 
@@ -238,30 +200,22 @@ public class PendingCasesActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
                 pendingInfoList =  response.body();
-
                 if (response.code() == 200) {
                     if(pendingInfoList!=null){
                         getList(pendingInfoList);
                     }else if(pendingInfoList==null){
                         AlertDialogNoData.alertdialog(PendingCasesActivity.this);
                     }
-
                 }
-
             }
-
 
             @Override
             public void onFailure(Throwable t) {
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                 }
-
                 Toast.makeText(PendingCasesActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
-
             }
         });
-
-
     }
 }
