@@ -69,6 +69,8 @@ public class SMEActivity extends AppCompatActivity {
     int mMonth = c.get(Calendar.MONTH); // current month
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
     private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
+    private Button backbutton;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +116,13 @@ public class SMEActivity extends AppCompatActivity {
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
         calendar = (ImageView)findViewById(R.id.ig_calender);
         submit = (Button)findViewById(R.id.bt_submit);
-
+        backbutton = (Button)findViewById(R.id.bt_back);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override

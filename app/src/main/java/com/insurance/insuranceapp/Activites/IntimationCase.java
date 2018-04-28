@@ -80,6 +80,8 @@ public class IntimationCase extends AppCompatActivity {
     private TextInputLayout textInputLayout;
     private List<PendingInfo> pendingInfoList;
     private RelativeLayout relativeLayout;
+    private Button backbutton;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +126,13 @@ public class IntimationCase extends AppCompatActivity {
         title14.setText((string14));
         title15 = (TextView)findViewById(R.id.file26);
         title15.setText((string15));
-
+        backbutton = (Button)findViewById(R.id.bt_back);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

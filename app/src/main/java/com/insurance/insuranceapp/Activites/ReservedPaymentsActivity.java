@@ -11,11 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.insurance.insuranceapp.Adapters.PendingCasesAdapter;
+import com.insurance.insuranceapp.Adapters.paymentsListAdapter;
 import com.insurance.insuranceapp.Datamodel.GetPaymentsInfo;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
@@ -43,44 +46,34 @@ public class ReservedPaymentsActivity extends AppCompatActivity {
     InsuranceAPI insuranceAPI;
     private List<UserAccountInfo> userAccountInfoList;
     private String domainurl;
-    private List<GetPaymentsInfo> getPaymentsInfo;
+
     private PendingCaseListInfo pendingCaseListInfo;
-    private String case_Assignment_id= "";
+    private String temp= "";
+    private ListView listview;
+    private paymentsListAdapter paymentsListAdapter;
+    private List<GetPaymentsInfo> getPaymentsInfoList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reserved_payments);
+        setContentView(R.layout.activity_completed_case);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-         mode =  getIntent().getStringExtra("paymentscase");
+         mode =  getIntent().getStringExtra("payments");
         userAccountInfoList  = getAll();
         domainurl = Prefs.getString("domainurl", "");
         pendingCaseListInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("object");
         tableLayout = (TableLayout)findViewById(R.id.tableLayout);
-        row1 = (TableRow) tableLayout.getChildAt(0);
+        listview = (ListView)findViewById(R.id.lab_list);
 
-        row2 = (TableRow) tableLayout.getChildAt(1);
-        row3 = (TableRow) tableLayout.getChildAt(2);
-        row4 = (TableRow) tableLayout.getChildAt(3);
-        row5 = (TableRow) tableLayout.getChildAt(4);
-        row6 = (TableRow) tableLayout.getChildAt(5);
-        row7 = (TableRow) tableLayout.getChildAt(6);
 
-        row9 = (TableRow) tableLayout.getChildAt(7);
 
-        claim_number =(TextView)row1.getChildAt(1);
-        patientname =(TextView)row2.getChildAt(1);
-        blockname =(TextView)row3.getChildAt(1);
-        convanceypay =(TextView)row4.getChildAt(1);
-        incentive =(TextView)row5.getChildAt(1);
-        TA =(TextView)row6.getChildAt(1);
-        MRD =(TextView)row7.getChildAt(1);
-        totalamt =(TextView)row9.getChildAt(1);
 
-       if(mode.equalsIgnoreCase("submitted")){
+       if(mode.equalsIgnoreCase("Confirmed")){
            setTitle("Confirmed Payments");
+           temp = "Confirmed";
            getpayments();
        }else if(mode.equalsIgnoreCase("Reserved")){
            setTitle("Reserved Payments");
+           temp = "Reserved";
            getpayments();
 
 
@@ -90,32 +83,12 @@ public class ReservedPaymentsActivity extends AppCompatActivity {
 
     }
 
+private  void getdate(List<GetPaymentsInfo> getPaymentsInfoList){
+    paymentsListAdapter = new paymentsListAdapter(getPaymentsInfoList,this.getApplication());
+    listview.setDivider(null);
+    listview.setAdapter(paymentsListAdapter);
+}
 
-    private void reservedtext_values(){
-        if(getPaymentsInfo!=null) {
-            for(GetPaymentsInfo pay:getPaymentsInfo) {
-                claim_number.setText(pay.getClaim_no());
-                patientname.setText(pay.getPatient_name());
-                blockname.setText(pay.getCase_type());
-                try {
-                    int consultant_fee = Integer.parseInt(pay.getConsultant_fee()!=null?pay.getConsultant_fee():"0");
-                convanceypay.setText(""+consultant_fee);
-                int insentive = Integer.parseInt(pay.getConsult_insentivies()!=null?pay.getConsult_insentivies():"0");
-                incentive.setText(""+insentive);
-                int ta = Integer.parseInt(pay.getPay_conveyance()!=null?pay.getPay_conveyance():"0");
-                TA.setText(""+ta);
-                int mrd = Integer.parseInt(pay.getMrd_amount()!=null?pay.getMrd_amount():"0");
-                MRD.setText(""+mrd);
-                int total = consultant_fee+insentive+ta+mrd;
-                totalamt.setText("Rs. " + total);
-
-                }
-                catch (Exception e) {
-                    Toast.makeText(ReservedPaymentsActivity.this, "reservedtext_values", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -157,29 +130,23 @@ public class ReservedPaymentsActivity extends AppCompatActivity {
             consultantid=user.getConsultant_id();
         }
 
-        case_Assignment_id = pendingCaseListInfo.getCase_assignment_id();
-        Call<List<GetPaymentsInfo>> call = insuranceAPI.getgetpayments(consultantid , mode,case_Assignment_id);
+
+        Call<List<GetPaymentsInfo>> call = insuranceAPI.getgetpayments(consultantid , temp);
         call.enqueue(new retrofit.Callback<List<GetPaymentsInfo>>() {
             @Override
             public void onResponse(retrofit.Response<List<GetPaymentsInfo>> response, retrofit.Retrofit retrofit) {
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                 }
-               getPaymentsInfo = response.body();
-                reservedtext_values();
+                getPaymentsInfoList = response.body();
+              if(getPaymentsInfoList!=null){
+                  getdate(getPaymentsInfoList);
+              }
 
-               /* if (response.code() == 200) {
-                    if(pendingInfoList!=null){
-                        getList(pendingInfoList);
-                    }else if(pendingInfoList==null){
-                        AlertDialogNoData.alertdialog(ReservedPaymentsActivity.this);
-                    }
 
-                }*/
+
 
             }
-
-
             @Override
             public void onFailure(Throwable t) {
                 if (progressDialog != null) {

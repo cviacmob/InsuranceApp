@@ -120,6 +120,8 @@ public class BillVerificationHospital extends AppCompatActivity implements
     private String string18= "Evidence for Trigger";
     private String string31 = "Conveyance File(s)";
     private String gender = "";
+    private Button backbutton;
+
     private RadioGroup radiogrp;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -235,7 +237,13 @@ public class BillVerificationHospital extends AppCompatActivity implements
 
             }
         });
-
+        backbutton = (Button)findViewById(R.id.bt_back);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         createEditTextView();
 
     }

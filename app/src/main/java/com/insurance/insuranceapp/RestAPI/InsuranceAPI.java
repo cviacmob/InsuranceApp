@@ -38,7 +38,6 @@ public interface InsuranceAPI {
     @FormUrlEncoded
     @POST("/insapi/index.php/fees")
     Call<List<GetPaymentsInfo>> getgetpayments(@Field("consultant_id") String consultant_id,
-                                               @Field("fee_is_paid") String status,
-                                                     @Field("case_assignment_id") String case_assignment_id);
+                                               @Field("fee_is_paid") String status);
 
 }

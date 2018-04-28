@@ -90,10 +90,47 @@
                             android:layout_below="@+id/textView2"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="23dp"
-                            android:text="Total Amount Rs: "
+                            android:text="Reserved Payments Total "
                             android:fontFamily="@font/verdana"
                             android:textColor="@color/Black"
                             android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/textView6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_below="@+id/textView5"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="23dp"
+                            android:text="Confirmed Payments Total "
+                            android:fontFamily="@font/verdana"
+                            android:textColor="@color/Black"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tx_totalreserved"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/textView5"
+                            android:layout_toEndOf="@+id/textView2"
+                            android:layout_toRightOf="@+id/textView2"
+                            android:fontFamily="@font/verdana"
+                            android:textColor="@color/Black"
+                            android:textSize="14sp"
+                            android:text="" />
+
+                        <TextView
+                            android:id="@+id/tx_totalconfirmed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/textView6"
+                            android:layout_toEndOf="@+id/textView2"
+                            android:layout_toRightOf="@+id/textView2"
+                            android:fontFamily="@font/verdana"
+                            android:textColor="@color/Black"
+                            android:textSize="14sp"
+                            android:text="" />
                     </RelativeLayout>
 
 

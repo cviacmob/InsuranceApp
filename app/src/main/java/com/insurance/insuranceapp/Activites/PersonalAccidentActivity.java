@@ -67,6 +67,7 @@ public class PersonalAccidentActivity extends AppCompatActivity {
     int mYear = c.get(Calendar.YEAR); // current year
     int mMonth = c.get(Calendar.MONTH); // current month
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+    private Button backbutton;
 
 
     private String string1 = "<font color='#000000'>Company Authorization Letter towards the hospital </font>" + "<font color='#FF0000'>*</font>";
@@ -169,6 +170,14 @@ public class PersonalAccidentActivity extends AppCompatActivity {
         title25.setText(string25);
         title26 = (TextView) findViewById(R.id.title26);
         title26.setText(string26);
+        backbutton = (Button)findViewById(R.id.bt_back);
+
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override

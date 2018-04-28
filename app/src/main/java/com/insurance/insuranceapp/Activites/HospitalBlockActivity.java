@@ -108,7 +108,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     private Button bt_next;
     private Button save,submit,back;
     private TextView filechoose1;
-
+    private Button backbutton;
     private List<PendingInfo> pendingInfoList;
     private RelativeLayout relativeLayout;
     private EditText ed_comments,ed_date,ed_convoy,ed_mrd;
@@ -138,7 +138,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         ed_mrd = (EditText)findViewById(R.id.famildoc1);
         save = (Button)findViewById(R.id.care_save);
         submit = (Button)findViewById(R.id.bt_submit);
-
+        backbutton = (Button)findViewById(R.id.bt_back);
 
         back = (Button)findViewById(R.id.bt_back);
         title1 = (TextView)findViewById(R.id.title1);
@@ -228,6 +228,12 @@ public class HospitalBlockActivity extends AppCompatActivity implements
                 }else{
                     textInputLayout.setError("Cannot be empty");
                 }
+            }
+        });
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 
@@ -676,6 +682,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
                 .withTitle("Select a file")
                 .start();
     }
+
 
 
 

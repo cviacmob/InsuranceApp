@@ -69,6 +69,8 @@ public class PatientBlockActivity extends AppCompatActivity implements
     private TextView title8,file8,filename8;
     private TextView title9,file9,filename9;
     private TextView title19,file19,filename19;
+    private Button backbutton;
+
 
 
     private String string1= "<font color='#000000'>Patient Doctor Questionarie  </font>" + "<font color='#FF0000'>*</font>";
@@ -130,6 +132,7 @@ public class PatientBlockActivity extends AppCompatActivity implements
         title19 = (TextView)findViewById(R.id.title19);
         title19.setText((string19));
         submit = (Button)findViewById(R.id.bt_submit);
+        backbutton = (Button)findViewById(R.id.bt_back);
 
 
         file1 = (TextView)findViewById(R.id.file1);
@@ -174,7 +177,12 @@ public class PatientBlockActivity extends AppCompatActivity implements
             }
         });
 
-
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

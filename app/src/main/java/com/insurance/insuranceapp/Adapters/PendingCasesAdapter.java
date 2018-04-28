@@ -24,17 +24,17 @@ import java.util.List;
 public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
 
     private List<PendingCaseListInfo> pendingInfoList;
-    private String temp;
+
 
     private int lastPostion = -1;
 
     Context mContext;
 
-    public PendingCasesAdapter(List<PendingCaseListInfo> objects, Context context , String tempstring) {
+    public PendingCasesAdapter(List<PendingCaseListInfo> objects, Context context) {
         super(context, R.layout.layout_pending, objects);
         pendingInfoList = objects;
         mContext = context;
-        temp = tempstring;
+
 
     }
 
@@ -42,7 +42,7 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
         public TableLayout tableLayout;
         public TableRow row1,row2,row3,row4,row5,row6,row7,row8,row9,row10,row11;
         public TextView claim_number,patientname,blockname,case_assignment_id,policy_no,insurance_compy,case_id,Assigned_to,case_assigned_on,status,case_type_id;
-        public Button payments;
+
 
     }
 
@@ -59,24 +59,8 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
             vw = inf.inflate(R.layout.layout_pending, parent, false);
             holder = new ViewHolder();
             holder.tableLayout = (TableLayout)vw.findViewById(R.id.tableLayout);
-            holder.payments = (Button)vw.findViewById(R.id.bt_paymnts);
-            if(temp.equalsIgnoreCase("reserved") || temp.equalsIgnoreCase("submitted")){
-                holder.payments.setVisibility(View.VISIBLE);
-
-                holder.payments.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent in = new Intent(mContext, ReservedPaymentsActivity.class);
-                        in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        in.putExtra("paymentscase",temp);
-                        in.putExtra("object",all);
-                        mContext.startActivity(in);
 
 
-                    }
-                });
-            }
 
             holder.row1 = (TableRow) holder.tableLayout.getChildAt(0);
             holder.row2 = (TableRow) holder.tableLayout.getChildAt(1);

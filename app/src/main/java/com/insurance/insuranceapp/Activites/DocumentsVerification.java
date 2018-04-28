@@ -79,6 +79,7 @@ public class DocumentsVerification extends AppCompatActivity {
     private String string10 = "Others";
     private String string11= "Evidence for Trigger";
     private String string31 = "Conveyance File(s)";
+    private Button backbutton;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -125,7 +126,13 @@ public class DocumentsVerification extends AppCompatActivity {
         title31 = (TextView)findViewById(R.id.title31);
         title31.setText(string31);
 
-
+        backbutton = (Button)findViewById(R.id.bt_back);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

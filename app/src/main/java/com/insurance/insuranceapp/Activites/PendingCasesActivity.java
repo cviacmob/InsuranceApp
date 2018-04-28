@@ -158,7 +158,7 @@ public class PendingCasesActivity extends AppCompatActivity {
 
     private void getList(List<PendingCaseListInfo> pendingCasesActivityList) {
 
-        pendingcaseAdapter = new PendingCasesAdapter(pendingCasesActivityList,this.getApplication(),"");
+        pendingcaseAdapter = new PendingCasesAdapter(pendingCasesActivityList,this.getApplication());
         listView.setDivider(null);
         listView.setAdapter(pendingcaseAdapter);
 

@@ -79,6 +79,8 @@ public class BillVerificationPharmacy extends AppCompatActivity {
     private String string18= "Evidence for Trigger";
     private String string31 = "Conveyance File(s)";
     private String gender = "";
+    private Button backbutton;
+
     private RadioGroup radiogrp;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -123,7 +125,13 @@ public class BillVerificationPharmacy extends AppCompatActivity {
         title31 = (TextView)findViewById(R.id.title31);
         title31.setText(string31);
 
-
+        backbutton = (Button)findViewById(R.id.bt_back);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         radiogrp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

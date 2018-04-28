@@ -37,6 +37,7 @@ public class CompletedCaseActivity extends AppCompatActivity {
     private String  domainurl;
     private int mode;
     private String temp ="";
+    private String temp1="saved";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,24 +47,11 @@ public class CompletedCaseActivity extends AppCompatActivity {
         domainurl = Prefs.getString("domainurl", "");
         listView = findViewById(R.id.lab_list);
         userAccountInfoList  = getAll();
-        if(mode==1){
-            temp = "submitted";
-            setTitle("Confirmed Payments");
-            getcompleted();
-            //text_values();
 
-        }else if(mode == 2){
-            temp = "reserved";
-           // getpayments();
-            setTitle("Reserved Payments");
-            getcompleted();
-
-          //  reservedtext_values();
-        }else {
-            temp = "completed";
+        temp = "submitted";
             setTitle("Completed Cases");
             getcompleted();
-        }
+
 
 
 
@@ -71,7 +59,7 @@ public class CompletedCaseActivity extends AppCompatActivity {
 
     private void getList(List<PendingCaseListInfo> pendingCasesActivityList) {
 
-        pendingcaseAdapter = new PendingCasesAdapter(pendingCasesActivityList,this.getApplication(),temp);
+        pendingcaseAdapter = new PendingCasesAdapter(pendingCasesActivityList,this.getApplication());
         listView.setDivider(null);
         listView.setAdapter(pendingcaseAdapter);
 
@@ -101,7 +89,7 @@ public class CompletedCaseActivity extends AppCompatActivity {
 
 
 
-        Call<List<PendingCaseListInfo>> call = insuranceAPI.getpendinglist(consultantid , "submitted");
+        Call<List<PendingCaseListInfo>> call = insuranceAPI.getpendinglist(consultantid , temp);
         call.enqueue(new retrofit.Callback<List<PendingCaseListInfo>>() {
             @Override
             public void onResponse(retrofit.Response<List<PendingCaseListInfo>> response, retrofit.Retrofit retrofit) {

@@ -70,6 +70,8 @@ public class DisabilityActivity extends AppCompatActivity {
     int mYear = c.get(Calendar.YEAR); // current year
     int mMonth = c.get(Calendar.MONTH); // current month
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+    private Button backbutton;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +111,13 @@ public class DisabilityActivity extends AppCompatActivity {
         calendar = (ImageView)findViewById(R.id.ig_calender);
         submit = (Button)findViewById(R.id.bt_submit);
         createEditTextView();
-
+        backbutton = (Button)findViewById(R.id.bt_back);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

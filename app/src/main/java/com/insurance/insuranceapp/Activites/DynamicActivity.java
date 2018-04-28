@@ -85,6 +85,8 @@ public class DynamicActivity extends AppCompatActivity {
     int mMonth = c.get(Calendar.MONTH); // current month
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
     private PendingCaseListInfo pendingInfo;
+    private Button backbutton;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +148,13 @@ public class DynamicActivity extends AppCompatActivity {
 
             }
         });
-
+        backbutton = (Button)findViewById(R.id.bt_back);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
     }
 
