@@ -6,12 +6,8 @@ package com.insurance.insuranceapp.RestAPI;
 
 public class ResponseJson {
 
-
     private String code;
     private String description;
-
-
-
 
     public String getCode() {
         return code;

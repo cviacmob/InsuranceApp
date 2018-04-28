@@ -1,5 +1,6 @@
 package com.insurance.insuranceapp.RestAPI;
 
+import com.insurance.insuranceapp.Datamodel.AudioResponse;
 import com.insurance.insuranceapp.Datamodel.GetPaymentsInfo;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
@@ -13,7 +14,10 @@ import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.Headers;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.Part;
+import retrofit.http.Query;
 
 /**
  * Created by Balaji on 4/16/2018.
@@ -40,4 +44,16 @@ public interface InsuranceAPI {
     Call<List<GetPaymentsInfo>> getgetpayments(@Field("consultant_id") String consultant_id,
                                                @Field("fee_is_paid") String status);
 
+
+    @Multipart
+    @POST("insapi/audioupload.php/")
+    Call<AudioResponse> sendAudio(@Query("consultant_id") String consultant_id,
+                                  @Query("case_type") String case_type,
+                                  @Query("assign_status") String assign_status,
+                                  @Query("case_id") String case_id,
+                                  @Query("case_assignment_id") String case_assignment_id,
+                                  @Query("claim_no") String claim_no,
+                                  @Query("case_type_id") String case_type_id,
+//                                  @Part() ,
+                                  @Query("submit") String submit);
 }
