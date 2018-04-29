@@ -44,7 +44,6 @@ public interface InsuranceAPI {
     Call<List<GetPaymentsInfo>> getgetpayments(@Field("consultant_id") String consultant_id,
                                                @Field("fee_is_paid") String status);
 
-
     @Multipart
     @POST("insapi/audioupload.php/")
     Call<AudioResponse> sendAudio(@Query("consultant_id") String consultant_id,

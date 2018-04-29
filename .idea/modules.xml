@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/InsuranceApp.iml" filepath="$PROJECT_DIR$/InsuranceApp.iml" />
-      <module fileurl="file://E:\bala\Chakravarthy\otherproject\InsuranceApp\Sample.iml" filepath="E:\bala\Chakravarthy\otherproject\InsuranceApp\Sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://E:\bala\Chakravarthy\otherproject\InsuranceApp\app\app.iml" filepath="E:\bala\Chakravarthy\otherproject\InsuranceApp\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/materialfilepicker/materialfilepicker.iml" filepath="$PROJECT_DIR$/materialfilepicker/materialfilepicker.iml" />
     </modules>
   </component>
