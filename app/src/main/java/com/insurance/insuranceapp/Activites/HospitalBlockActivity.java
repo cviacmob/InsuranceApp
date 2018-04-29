@@ -735,7 +735,6 @@ public class HospitalBlockActivity extends AppCompatActivity implements
                 if (rsp.getImageUrl() != null) {
                     Employee.updateProfileImageUrl(empcode, rsp.getImageUrl());
                     Toast.makeText(MyProfile.this, "Profile photo updated ", Toast.LENGTH_LONG).show();
-
                 }
             }
 
