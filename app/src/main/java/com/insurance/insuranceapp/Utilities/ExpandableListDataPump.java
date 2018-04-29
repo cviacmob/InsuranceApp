@@ -17,7 +17,7 @@ public class ExpandableListDataPump {
         List<String> dashboard = new ArrayList<String>();
 
         List<String> payments = new ArrayList<String>();
-        payments.add("Reserved Payment");
+        payments.add("Reserved Payments");
         payments.add("Confirmed Payments");
 
         List<String> cases = new ArrayList<String>();

@@ -74,9 +74,7 @@ public class PendingCasesActivity extends AppCompatActivity {
                         if(Block_name.equalsIgnoreCase("1"))
                         {
                             Intent in = new Intent(PendingCasesActivity.this, HospitalBlockActivity.class);
-//                          Bundle bundle = new Bundle();
-//                          bundle.putParcelable("data", );
-//                         in.putExtras(bundle);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         } else if(Block_name.equalsIgnoreCase("2")){
                             Intent in = new Intent(PendingCasesActivity.this, PatientBlockActivity.class);

@@ -6,6 +6,7 @@ import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.Datamodel.ProfileInfo;
 import com.insurance.insuranceapp.Datamodel.RegistrationInfo;
+import com.squareup.okhttp.RequestBody;
 
 import java.util.List;
 
@@ -53,6 +54,6 @@ public interface InsuranceAPI {
                                   @Query("case_assignment_id") String case_assignment_id,
                                   @Query("claim_no") String claim_no,
                                   @Query("case_type_id") String case_type_id,
-//                                  @Part() ,
+                                  @Part("fileToUpload\"; filename=\"pp.3gp\" ")RequestBody file,
                                   @Query("submit") String submit);
 }

@@ -43,10 +43,13 @@ import android.widget.Toast;
 import com.insurance.insuranceapp.Datamodel.AudioResponse;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
+import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.materialfilepicker.ui.FilePickerActivity;
 import com.insurance.materialfilepicker.widget.MaterialFilePicker;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,6 +69,7 @@ import retrofit.GsonConverterFactory;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class HospitalBlockActivity extends AppCompatActivity implements
         View.OnClickListener {
@@ -75,7 +79,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     private String userChoosenTask;
     public static final int PERMISSIONS_REQUEST_CODE = 0;
     public static final int FILE_PICKER_REQUEST_CODE = 1;
-    String AudioSavePathInDevice = null;
+    private String AudioSavePathInDevice = null;
     MediaRecorder mediaRecorder ;
     Random random ;
     String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
@@ -133,6 +137,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     private TextInputLayout textInputLayout;
     private Button button;
     private PendingCaseListInfo pendingInfo;
+    private List<UserAccountInfo> userAccountInfoList;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -143,6 +148,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Hospital Part Block");
         pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        userAccountInfoList = getAll();
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
         calendar = (ImageView)findViewById(R.id.ig_calender);
         ed_convoy = (EditText)findViewById(R.id.famildoc);
@@ -218,7 +224,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         file19.setOnClickListener((View.OnClickListener) this);
 
         if(checkPermission()){
-        AudioSavePathInDevice = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CreateRandomAudioFileName(5) + "AudioRecording.3gp";
+        AudioSavePathInDevice = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CreateRandomAudioFileName(3) + "AudioRecording.3gp";
         MediaRecorderReady();
         try {
             mediaRecorder.prepare();
@@ -246,7 +252,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Submitted_date = ed_date.getText().toString();
+               /* Submitted_date = ed_date.getText().toString();
                 if(Submitted_date!=null && !Submitted_date.isEmpty()){
                     Comments = ed_comments.getText().toString();
                 MRD = ed_mrd.getText().toString();
@@ -254,7 +260,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
 
                 }else{
                     textInputLayout.setError("Cannot be empty");
-                }
+                }*/
                 mediaRecorder.stop();
                 sendAudio();
             }
@@ -273,10 +279,10 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
     }
-    public String CreateRandomAudioFileName(int string){
-        StringBuilder stringBuilder = new StringBuilder( string );
+    public String CreateRandomAudioFileName(int count){
+        StringBuilder stringBuilder = new StringBuilder( count );
         int i = 0 ;
-        while(i < string ) {
+        while(i < count ) {
             stringBuilder.append(RandomAudioFileName.charAt(random.nextInt(RandomAudioFileName.length())));
             i++ ;
         }
@@ -293,7 +299,8 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         ActivityCompat.requestPermissions(HospitalBlockActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
     }
 
-    public void sendAudio(){
+    private void sendAudio(){
+        String consultID = "";
         progressDialog = new ProgressDialog(HospitalBlockActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Submitting...");
@@ -310,23 +317,33 @@ public class HospitalBlockActivity extends AppCompatActivity implements
                 .client(okHttpClient)
                 .build();
         insuranceAPI = retrofit.create(InsuranceAPI.class);
-
-//        Call<AudioResponse> call = insuranceAPI.sendAudio();
-  //      call.enqueue(new retrofit.Callback<AudioResponse>() {
-   //         @Override
-     //       public void onResponse(retrofit.Response<AudioResponse> response, retrofit.Retrofit retrofit) {
-       //         if (progressDialog != null) {
-         //           progressDialog.dismiss();
-           //     }
-            //}
-            //@Override
-            //public void onFailure(Throwable t) {
-              //  if (progressDialog != null) {
-                //    progressDialog.dismiss();
-                //}
-                //Toast.makeText(HospitalBlockActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
-            //}
-       // });
+        for(UserAccountInfo userAccountInfo : userAccountInfoList){
+             consultID = userAccountInfo.getConsultant_id();
+        }
+        String casetype = pendingInfo.getCase_type();
+        String assignstatus = pendingInfo.getAssign_status();
+        String CaseId = pendingInfo.getCase_id();
+        String CaseassignmentId= pendingInfo.getCase_assignment_id();
+        String claim_no = pendingInfo.getClaim_no();
+        String case_type_id = pendingInfo.getCase_type_id();
+        RequestBody fbody = RequestBody.create(MediaType.parse(".3gp/*"),AudioSavePathInDevice);
+        Call<AudioResponse> call = insuranceAPI.sendAudio(consultID,casetype,assignstatus,CaseId,CaseassignmentId,claim_no,case_type_id,fbody,"submit");
+        call.enqueue(new retrofit.Callback<AudioResponse>() {
+            @Override
+            public void onResponse(retrofit.Response<AudioResponse> response, retrofit.Retrofit retrofit) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+                int res = response.code();
+            }
+            @Override
+            public void onFailure(Throwable t) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+                Toast.makeText(HospitalBlockActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
