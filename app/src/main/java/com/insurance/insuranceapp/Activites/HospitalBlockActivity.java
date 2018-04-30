@@ -40,7 +40,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.insurance.insuranceapp.Datamodel.AudioResponse;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
@@ -49,7 +48,9 @@ import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.materialfilepicker.ui.FilePickerActivity;
 import com.insurance.materialfilepicker.widget.MaterialFilePicker;
 import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.ResponseBody;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -65,7 +66,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.Call;
-import retrofit.GsonConverterFactory;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -137,6 +137,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     private TextInputLayout textInputLayout;
     private Button button;
     private PendingCaseListInfo pendingInfo;
+    private String AudioSavePath = null;
     private List<UserAccountInfo> userAccountInfoList;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -156,7 +157,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         save = (Button)findViewById(R.id.care_save);
         submit = (Button)findViewById(R.id.bt_submit);
         backbutton = (Button)findViewById(R.id.bt_back);
-
+        random = new Random();
         back = (Button)findViewById(R.id.bt_back);
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
@@ -224,8 +225,13 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         file19.setOnClickListener((View.OnClickListener) this);
 
         if(checkPermission()){
-        AudioSavePathInDevice = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CreateRandomAudioFileName(3) + "AudioRecording.3gp";
-        MediaRecorderReady();
+
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+            String format = simpleDateFormat.format(new Date());
+            AudioSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + format + ".mp3";
+            MediaRecorderReady();
+
         try {
             mediaRecorder.prepare();
             mediaRecorder.start();
@@ -279,21 +285,13 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
     }
-    public String CreateRandomAudioFileName(int count){
-        StringBuilder stringBuilder = new StringBuilder( count );
-        int i = 0 ;
-        while(i < count ) {
-            stringBuilder.append(RandomAudioFileName.charAt(random.nextInt(RandomAudioFileName.length())));
-            i++ ;
-        }
-        return stringBuilder.toString();
-    }
+
     public void MediaRecorderReady(){
         mediaRecorder=new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(AudioSavePathInDevice);
+        mediaRecorder.setOutputFile(AudioSavePath);
     }
     private void requestPermission() {
         ActivityCompat.requestPermissions(HospitalBlockActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
@@ -312,10 +310,10 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
 
         retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl("http://vevelanbus.com")
-                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(getBaseContext().getString(R.string.DomainURL))
                 .client(okHttpClient)
                 .build();
+
         insuranceAPI = retrofit.create(InsuranceAPI.class);
         for(UserAccountInfo userAccountInfo : userAccountInfoList){
              consultID = userAccountInfo.getConsultant_id();
@@ -326,25 +324,53 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         String CaseassignmentId= pendingInfo.getCase_assignment_id();
         String claim_no = pendingInfo.getClaim_no();
         String case_type_id = pendingInfo.getCase_type_id();
-        RequestBody fbody = RequestBody.create(MediaType.parse(".3gp/*"),AudioSavePathInDevice);
-        Call<AudioResponse> call = insuranceAPI.sendAudio(consultID,casetype,assignstatus,CaseId,CaseassignmentId,claim_no,case_type_id,fbody,"submit");
-        call.enqueue(new retrofit.Callback<AudioResponse>() {
+        File file = new File(AudioSavePath);
+        RequestBody fbody = RequestBody.create(MediaType.parse("mp3/*"),file);
+        String submit = "submit";
+        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+        builder.addFormDataPart("consultant_id", consultID);
+        builder.addFormDataPart("case_type", casetype);
+        builder.addFormDataPart("assign_status", assignstatus);
+        builder.addFormDataPart("case_id",CaseId);
+        builder.addFormDataPart("case_assignment_id", CaseassignmentId);
+        builder.addFormDataPart("claim_no", claim_no);
+        builder.addFormDataPart("case_type_id", case_type_id);
+        builder.addFormDataPart("fileToUpload", claim_no+"_audio.mp3", fbody);
+        builder.addFormDataPart("submit", submit);
+        Call<ResponseBody> call = insuranceAPI.sendAudio(builder.build());
+      //  Call<ResponseBody> call = insuranceAPI.sendAudio(consultID,casetype,assignstatus,CaseId,CaseassignmentId,claim_no,case_type_id,fbody,submit);
+        call.enqueue(new retrofit.Callback<ResponseBody>() {
             @Override
-            public void onResponse(retrofit.Response<AudioResponse> response, retrofit.Retrofit retrofit) {
+            public void onResponse(retrofit.Response<ResponseBody> response, retrofit.Retrofit retrofit) {
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                 }
-                int res = response.code();
+                ResponseBody res = response.body();
+                try {
+                    String autocompleteOptions = res.string();
+                 //   Toast.makeText(HospitalBlockActivity.this, autocompleteOptions, Toast.LENGTH_SHORT).show();
+                    File file = new File(AudioSavePath);
+                    boolean deleted = file.delete();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
             }
             @Override
             public void onFailure(Throwable t) {
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                 }
-                Toast.makeText(HospitalBlockActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+                String err = t.getMessage() == null ? "" : t.getMessage();
+                Log.e("RETROFIT", err);
+               // Toast.makeText(HospitalBlockActivity.this, "Audio_file Failed: " + t, Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
 
     @Override
     public void onClick(View v) {

@@ -114,8 +114,6 @@ public class DashBoardFragment extends Fragment {
                         reservedtotal = reservedtotal+Integer.parseInt(getPaymentsInfo.getPay_conveyance() != null ? getPaymentsInfo.getPay_conveyance() : "0");
 
                         reservedtotal = reservedtotal+Integer.parseInt(getPaymentsInfo.getMrd_amount() != null ? getPaymentsInfo.getMrd_amount() : "0");
-
-
                     }
                     total_reserved.setText("Rs."+reservedtotal);
                     temp = "confirmed";
