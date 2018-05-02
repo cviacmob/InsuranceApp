@@ -138,8 +138,8 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     private Button button;
     private PendingCaseListInfo pendingInfo;
     private String AudioSavePath = null;
-    private List<UserAccountInfo> userAccountInfoList;
     private String format;
+    private List<UserAccountInfo> userAccountInfoList;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override

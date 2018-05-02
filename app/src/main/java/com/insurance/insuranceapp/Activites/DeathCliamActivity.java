@@ -3,12 +3,14 @@ package com.insurance.insuranceapp.Activites;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -36,10 +38,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
+import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
+import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.materialfilepicker.ui.FilePickerActivity;
 import com.insurance.materialfilepicker.widget.MaterialFilePicker;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.ResponseBody;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,8 +58,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import retrofit.Call;
+
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.insurance.insuranceapp.Activites.DisabilityActivity.PERMISSIONS_REQUEST_CODE;
 import static com.insurance.insuranceapp.Activites.DynamicActivity.FILE_PICKER_REQUEST_CODE;
 
@@ -62,6 +77,14 @@ public class DeathCliamActivity extends AppCompatActivity implements
     private String userChoosenTask;
     public static final int PERMISSIONS_REQUEST_CODE = 0;
     public static final int FILE_PICKER_REQUEST_CODE = 1;
+    MediaRecorder mediaRecorder ;
+    private String AudioSavePath = null;
+    private String format;
+    ProgressDialog progressDialog;
+    InsuranceAPI insuranceAPI;
+    private List<UserAccountInfo> userAccountInfoList;
+    private PendingCaseListInfo pendingInfo;
+    public static final int RequestPermissionCode = 1;
 
     private TextView title1,file1,filename1;
     private TextView title2,file2,filename2;
@@ -262,6 +285,27 @@ public class DeathCliamActivity extends AppCompatActivity implements
         file31 = (TextView)findViewById(R.id.file31);
         file31.setOnClickListener((View.OnClickListener) this);
 
+        if(checkPermission()){
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+            format = simpleDateFormat.format(new Date());
+            AudioSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + format + ".mp3";
+            MediaRecorderReady();
+
+            try {
+                mediaRecorder.prepare();
+                mediaRecorder.start();
+            } catch (IllegalStateException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        else {
+            requestPermission();
+        }
 
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,6 +325,8 @@ public class DeathCliamActivity extends AppCompatActivity implements
                }else{
                    textInputLayout.setError("Cannot be empty");
                }
+                mediaRecorder.stop();
+                sendAudio();
             }
         });
         calendar.setOnClickListener(new View.OnClickListener() {
@@ -295,6 +341,96 @@ public class DeathCliamActivity extends AppCompatActivity implements
 
 
 
+    }
+
+    public boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public void MediaRecorderReady(){
+        mediaRecorder=new MediaRecorder();
+        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        mediaRecorder.setOutputFile(AudioSavePath);
+    }
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(DeathCliamActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
+    }
+
+    private void sendAudio(){
+        String consultID = "";
+        progressDialog = new ProgressDialog(DeathCliamActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Submitting...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+
+        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
+                .baseUrl(getBaseContext().getString(R.string.DomainURL))
+                .client(okHttpClient)
+                .build();
+
+        insuranceAPI = retrofit.create(InsuranceAPI.class);
+        for(UserAccountInfo userAccountInfo : userAccountInfoList){
+            consultID = userAccountInfo.getConsultant_id();
+        }
+        String casetype = pendingInfo.getCase_type();
+        String assignstatus = pendingInfo.getAssign_status();
+        String CaseId = pendingInfo.getCase_id();
+        String CaseassignmentId= pendingInfo.getCase_assignment_id();
+        String claim_no = pendingInfo.getClaim_no();
+        String case_type_id = pendingInfo.getCase_type_id();
+        File file = new File(AudioSavePath);
+        RequestBody fbody = RequestBody.create(MediaType.parse("mp3/*"),file);
+        String submit = "submit";
+        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+        builder.addFormDataPart("consultant_id", consultID);
+        builder.addFormDataPart("case_type", casetype);
+        builder.addFormDataPart("assign_status", assignstatus);
+        builder.addFormDataPart("case_id",CaseId);
+        builder.addFormDataPart("case_assignment_id", CaseassignmentId);
+        builder.addFormDataPart("claim_no", claim_no);
+        builder.addFormDataPart("case_type_id", case_type_id);
+        builder.addFormDataPart("fileToUpload", claim_no+"_"+format+".mp3", fbody);
+        builder.addFormDataPart("submit", submit);
+        Call<ResponseBody> call = insuranceAPI.sendAudio(builder.build());
+        //  Call<ResponseBody> call = insuranceAPI.sendAudio(consultID,casetype,assignstatus,CaseId,CaseassignmentId,claim_no,case_type_id,fbody,submit);
+        call.enqueue(new retrofit.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(retrofit.Response<ResponseBody> response, retrofit.Retrofit retrofit) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+                ResponseBody res = response.body();
+                try {
+                    String autocompleteOptions = res.string();
+                    //   Toast.makeText(HospitalBlockActivity.this, autocompleteOptions, Toast.LENGTH_SHORT).show();
+                    File file = new File(AudioSavePath);
+                    boolean deleted = file.delete();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+            @Override
+            public void onFailure(Throwable t) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+                String err = t.getMessage() == null ? "" : t.getMessage();
+                Log.e("RETROFIT", err);
+                // Toast.makeText(HospitalBlockActivity.this, "Audio_file Failed: " + t, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     protected void createEditTextView() {
