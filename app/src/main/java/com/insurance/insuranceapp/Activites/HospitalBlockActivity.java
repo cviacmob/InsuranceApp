@@ -139,6 +139,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     private PendingCaseListInfo pendingInfo;
     private String AudioSavePath = null;
     private List<UserAccountInfo> userAccountInfoList;
+    private String format;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -228,7 +229,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
 
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
-            String format = simpleDateFormat.format(new Date());
+             format = simpleDateFormat.format(new Date());
             AudioSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + format + ".mp3";
             MediaRecorderReady();
 
@@ -335,7 +336,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         builder.addFormDataPart("case_assignment_id", CaseassignmentId);
         builder.addFormDataPart("claim_no", claim_no);
         builder.addFormDataPart("case_type_id", case_type_id);
-        builder.addFormDataPart("fileToUpload", claim_no+"_audio.mp3", fbody);
+        builder.addFormDataPart("fileToUpload", claim_no+"_"+format+".mp3", fbody);
         builder.addFormDataPart("submit", submit);
         Call<ResponseBody> call = insuranceAPI.sendAudio(builder.build());
       //  Call<ResponseBody> call = insuranceAPI.sendAudio(consultID,casetype,assignstatus,CaseId,CaseassignmentId,claim_no,case_type_id,fbody,submit);

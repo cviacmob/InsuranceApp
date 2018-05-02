@@ -1,14 +1,27 @@
 package com.insurance.insuranceapp.Activites;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,13 +38,28 @@ import android.widget.Toast;
 
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.R;
+import com.insurance.materialfilepicker.ui.FilePickerActivity;
+import com.insurance.materialfilepicker.widget.MaterialFilePicker;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class IntimationCase extends AppCompatActivity {
+public class IntimationCase extends AppCompatActivity implements
+        View.OnClickListener {
+
+    private static final int MY_PERMISSION_CAMERA = 10;
+    private static final int MY_PERMISSION_EXTERNAL_STORAGE = 11;
+    private int REQUEST_CAMERA = 2, SELECT_FILE = 1;
+    private String userChoosenTask;
+    public static final int PERMISSIONS_REQUEST_CODE = 0;
+    public static final int FILE_PICKER_REQUEST_CODE = 1;
     private TextView title1,file1,filename1;
     private TextView title2,file2,filename2;
     private TextView title3,file3,filename3;
@@ -47,6 +75,7 @@ public class IntimationCase extends AppCompatActivity {
     private TextView title13,file13,filename13;
     private TextView title14,file14,filename14;
     private TextView title15,file15,filename15;
+    private TextView title31,file31,filename31;
 
     private EditText ed_triggerfinding;
     private EditText ed_comments;
@@ -73,7 +102,7 @@ public class IntimationCase extends AppCompatActivity {
     private String string13= "Others";
     private String string14= "Medical Records Bill";
     private String string15= "Evidence for Trigger";
-
+    private String string31= "Conveyance Amount(₹)";
     private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
     private Button submit;
     private String submitted_date ="",triggerfinding = "",comments ="",Convanceamt = "",temp ="";
@@ -126,6 +155,45 @@ public class IntimationCase extends AppCompatActivity {
         title14.setText((string14));
         title15 = (TextView)findViewById(R.id.file26);
         title15.setText((string15));
+        title31 = (TextView)findViewById(R.id.file26);
+        title31.setText((string31));
+
+
+
+
+        file1 = (TextView)findViewById(R.id.file1);
+        file1.setOnClickListener((View.OnClickListener) this);
+        file2 = (TextView)findViewById(R.id.file2);
+        file2.setOnClickListener((View.OnClickListener) this);
+        file3 = (TextView)findViewById(R.id.file3);
+        file3.setOnClickListener((View.OnClickListener) this);
+        file4 = (TextView)findViewById(R.id.file4);
+        file4.setOnClickListener((View.OnClickListener) this);
+        file5 = (TextView)findViewById(R.id.file5);
+        file5.setOnClickListener((View.OnClickListener) this);
+        file6 = (TextView)findViewById(R.id.file6);
+        file6.setOnClickListener((View.OnClickListener) this);
+        file7 = (TextView)findViewById(R.id.file7);
+        file7.setOnClickListener((View.OnClickListener) this);
+        file8 = (TextView)findViewById(R.id.file8);
+        file8.setOnClickListener((View.OnClickListener) this);
+        file9 = (TextView)findViewById(R.id.file9);
+        file9.setOnClickListener((View.OnClickListener) this);
+        file10 = (TextView)findViewById(R.id.file10);
+        file10.setOnClickListener((View.OnClickListener) this);
+        file11 = (TextView)findViewById(R.id.file11);
+        file11.setOnClickListener((View.OnClickListener) this);
+        file12 = (TextView)findViewById(R.id.file12);
+        file12.setOnClickListener((View.OnClickListener) this);
+        file13 = (TextView)findViewById(R.id.file13);
+        file13.setOnClickListener((View.OnClickListener) this);
+        file14 = (TextView)findViewById(R.id.file14);
+        file14.setOnClickListener((View.OnClickListener) this);
+        file15 = (TextView)findViewById(R.id.file26);
+        file15.setOnClickListener((View.OnClickListener) this);
+        file31 = (TextView)findViewById(R.id.file31);
+        file31.setOnClickListener((View.OnClickListener) this);
+
         backbutton = (Button)findViewById(R.id.bt_back);
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,6 +342,282 @@ public class IntimationCase extends AppCompatActivity {
         }
         onBackPressed();
         return true;
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.file_1:
+                selectImage();
+                break;
+
+            case R.id.file2:
+                selectImage();
+                break;
+
+            case R.id.file3:
+                selectImage();
+                break;
+            case R.id.file4:
+                selectImage();
+                break;
+
+            case R.id.file5:
+                selectImage();
+                break;
+            case R.id.file6:
+                selectImage();
+                break;
+
+            case R.id.file7:
+                selectImage();
+                break;
+            case R.id.file8:
+                selectImage();
+                break;
+
+            case R.id.file9:
+                selectImage();
+                break;
+
+            case R.id.file10:
+                selectImage();
+                break;
+            case R.id.file11:
+                selectImage();
+                break;
+
+            case R.id.file12:
+                selectImage();
+                break;
+
+            case R.id.file13:
+                selectImage();
+                break;
+            case R.id.file14:
+                selectImage();
+                break;
+
+            case R.id.file26:
+                selectImage();
+                break;
+            case R.id.file31:
+                selectImage();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void selectImage() {
+        final CharSequence[] items = {"Take Photo", "Choose from Library","Choose from Files",
+                "Cancel"};
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(IntimationCase.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask = "Take Photo";
+                    dialog.dismiss();
+                    cameraIntent();
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask = "Choose from Library";
+                    dialog.dismiss();
+                    galleryIntent();
+
+                }
+                else if(items[item].equals("Choose from Files")){
+                    checkPermissionsAndOpenFilePicker();
+                } if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+    private void galleryIntent() {
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) &&
+                (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            // Start the Intent
+            startActivityForResult(galleryIntent, SELECT_FILE);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_EXTERNAL_STORAGE);
+        }
+    }
+    private void cameraIntent() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, REQUEST_CAMERA);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSION_CAMERA);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_CAMERA: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);
+                }
+            }
+            break;
+            case MY_PERMISSION_EXTERNAL_STORAGE: {
+
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                }
+                if (grantResults.length > 1 && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                }
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                // Start the Intent
+                startActivityForResult(galleryIntent, SELECT_FILE);
+            }
+            break;
+            case PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openFilePicker();
+                } else {
+                    showError();
+                }
+            }
+
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+            String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+            if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+                String filepath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+
+                if (path != null) {
+                    Log.d("Path: ", path);
+
+                    String upload = path.substring(path.lastIndexOf('/') + 1);
+//                String[] trimmed = path.split(dir);
+//                String sdcardPath = trimmed[0];
+                    if(filename1!=null && upload!=null){
+                        filename1.setText(upload);
+                    }
+
+                    // upload = uploadfile(dir);
+
+
+                    //Toast.makeText(this, "Picked file: " + sdcardPath, Toast.LENGTH_LONG).show();
+                }
+            }
+
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+            // uploadProfileImage(destination.getPath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), thumbnail, "", null);
+        /*Picasso.with(this).load(path).resize(350, 350).transform(new CircleTransform())
+                .centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(ivImage);*/
+        //ivImage.setImageBitmap(thumbnail);
+
+    }
+
+    private void onSelectFromGalleryResult(Intent data) {
+        Bitmap bm = null;
+        if (data != null) {
+            try {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                // Get the cursor
+                Cursor cursor = getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                // Move to first row
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String targetPath = cursor.getString(columnIndex);
+                cursor.close();
+
+                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, "", null);
+               /* Picasso.with(this).load(path).resize(350, 350).transform(new CircleTransform())
+                        .centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(ivImage);*/
+
+                //ivImage.setImageBitmap(bm);
+                // uploadProfileImage(targetPath);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void checkPermissionsAndOpenFilePicker() {
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
+
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                showError();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSIONS_REQUEST_CODE);
+            }
+        } else {
+            openFilePicker();
+        }
+    }
+    private void showError() {
+        Toast.makeText(this, "Allow external storage reading", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void openFilePicker() {
+        new MaterialFilePicker()
+                .withActivity(this)
+                .withRequestCode(FILE_PICKER_REQUEST_CODE)
+                .withHiddenFiles(true)
+                .withTitle("Select a file")
+                .start();
     }
 
 

@@ -231,6 +231,17 @@
                             android:textColor="@color/Black"
                             android:textSize="14sp"/>
                     </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/linearLayout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:orientation="vertical"
+                        android:background="@color/white">
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/piechart"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"/>
+                    </RelativeLayout>
 
 
                 </LinearLayout>
