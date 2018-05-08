@@ -115,6 +115,7 @@ public class PendingCasesActivity extends AppCompatActivity {
                         }
                     }else if(Block_type.equalsIgnoreCase("dynamic")){
                         Intent in = new Intent(PendingCasesActivity.this, DynamicActivity.class);
+                        in.putExtra("data",pendingInfo);
                         startActivity(in); //this for activity starting
                     }
 

@@ -38,6 +38,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.insurance.insuranceapp.Datamodel.DynamicFileNameInfo;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
@@ -73,7 +74,8 @@ import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class DynamicActivity extends AppCompatActivity implements
         View.OnClickListener {
-
+    private List<String> docNameList;
+    private List<DynamicFileNameInfo> dynamicFileNameInfoList;
     private static final int MY_PERMISSION_CAMERA = 10;
     private static final int MY_PERMISSION_EXTERNAL_STORAGE = 11;
     private int REQUEST_CAMERA = 2, SELECT_FILE = 1;
@@ -136,7 +138,8 @@ public class DynamicActivity extends AppCompatActivity implements
         setTitle("Others");
         userAccountInfoList  = getAll();
         pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
-        getsaveddatalist(pendingInfo);
+        getdetails(pendingInfo);
+     //   getsaveddatalist(pendingInfo);
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
         title2 = (TextView)findViewById(R.id.title2);
@@ -146,11 +149,14 @@ public class DynamicActivity extends AppCompatActivity implements
         title4 = (TextView)findViewById(R.id.title4);
         title4.setText(Html.fromHtml(string4));
         title5 = (TextView)findViewById(R.id.title5);
-        title5.setText((string5));
         title6 = (TextView)findViewById(R.id.title6);
-        title6.setText(string6);
         title7 = (TextView)findViewById(R.id.title7);
-        title7.setText((string7));
+        for(int i=0; i<=getFileName().size();i++){
+            Object[] doc = new Object[getFileName().size()-1];
+        //    title5.setText(dynamicFileNameInfoList.indexOf());
+            title6.setText(string6);
+            title7.setText((string7));
+        }
         title8 = (TextView)findViewById(R.id.title8);
         title8.setText(string8);
         title9 = (TextView)findViewById(R.id.title9);
@@ -187,6 +193,7 @@ public class DynamicActivity extends AppCompatActivity implements
         calendar = (ImageView)findViewById(R.id.ig_calender);
         submit = (Button)findViewById(R.id.bt_submit);
         createEditTextView();
+
 
         if(checkPermission()){
 
@@ -258,7 +265,14 @@ public class DynamicActivity extends AppCompatActivity implements
     private void requestPermission() {
         ActivityCompat.requestPermissions(DynamicActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
     }
+private List<String> getFileName(){
+        docNameList = new ArrayList<>();
+        for(DynamicFileNameInfo dyna:dynamicFileNameInfoList){
+            docNameList.add(dyna.getDocument_name());
+        }
 
+      return docNameList;
+}
     private void sendAudio(){
         String consultID = "";
         progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
@@ -452,6 +466,61 @@ public class DynamicActivity extends AppCompatActivity implements
         return true;
     }
 
+
+    private void getdetails (PendingCaseListInfo pendingInfo){
+        String consultantid = "";
+        progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
+                .baseUrl("http://vevelanbus.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        insuranceAPI = retrofit.create(InsuranceAPI.class);
+
+        for(UserAccountInfo user:userAccountInfoList) {
+            consultantid=user.getConsultant_id();
+        }
+
+        String status = pendingInfo.getAssign_status();
+        String assignmentID = pendingInfo.getCase_assignment_id();
+        String flag ="0";
+
+
+        Call<List<DynamicFileNameInfo>> call = insuranceAPI.getdetails(consultantid,status,assignmentID,flag);
+        call.enqueue(new retrofit.Callback<List<DynamicFileNameInfo>>() {
+            @Override
+            public void onResponse(retrofit.Response<List<DynamicFileNameInfo>> response, retrofit.Retrofit retrofit) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                if(dynamicFileNameInfoList!=null) {
+                    dynamicFileNameInfoList = response.body();
+                }
+
+
+            }
+
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                Toast.makeText(DynamicActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
     private void getsaveddatalist(PendingCaseListInfo pendingInfo) {
 
         String consultantid = "";

@@ -1,5 +1,6 @@
 package com.insurance.insuranceapp.RestAPI;
 
+import com.insurance.insuranceapp.Datamodel.DynamicFileNameInfo;
 import com.insurance.insuranceapp.Datamodel.GetPaymentsInfo;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.ProfileInfo;
@@ -40,6 +41,13 @@ public interface InsuranceAPI {
     Call<List<GetPaymentsInfo>> getgetpayments(@Field("consultant_id") String consultant_id,
                                                @Field("fee_is_paid") String status);
 
+
+    @FormUrlEncoded
+    @POST("/insapi/index.php/dynamiccase")
+    Call<List<DynamicFileNameInfo>> getdetails(@Field("consultant_id") String consultant_id,
+                                               @Field("assign_status") String status,
+                                               @Field("case_assignment_id") String assignment_id,
+                                               @Field("flag") String flag);
 
     @POST("insapi/audioupload.php/")
     Call<ResponseBody> sendAudio(@Body RequestBody body);
