@@ -5,6 +5,7 @@ import com.insurance.insuranceapp.Datamodel.GetPaymentsInfo;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.ProfileInfo;
 import com.insurance.insuranceapp.Datamodel.RegistrationInfo;
+import com.insurance.insuranceapp.Datamodel.TriggersInfo;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
 
@@ -48,6 +49,11 @@ public interface InsuranceAPI {
                                                @Field("assign_status") String status,
                                                @Field("case_assignment_id") String assignment_id,
                                                @Field("flag") String flag);
+
+    @FormUrlEncoded
+    @POST("/insapi/index.php/triggers")
+    Call<List<TriggersInfo>> gettriggersdetails(@Field("case_assignment_id") String assignment_id,
+                                                @Field("flag") String flag);
 
     @POST("insapi/audioupload.php/")
     Call<ResponseBody> sendAudio(@Body RequestBody body);

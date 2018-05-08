@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.insurance.insuranceapp.Datamodel.DynamicFileNameInfo;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
+import com.insurance.insuranceapp.Datamodel.TriggersInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
@@ -74,6 +75,7 @@ import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class DynamicActivity extends AppCompatActivity implements
         View.OnClickListener {
+    private   List<TriggersInfo> triggersInfoList;
     private List<String> docNameList;
     private List<DynamicFileNameInfo> dynamicFileNameInfoList;
     private static final int MY_PERMISSION_CAMERA = 10;
@@ -139,7 +141,7 @@ public class DynamicActivity extends AppCompatActivity implements
         userAccountInfoList  = getAll();
         pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
         getdetails(pendingInfo);
-     //   getsaveddatalist(pendingInfo);
+
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
         title2 = (TextView)findViewById(R.id.title2);
@@ -151,12 +153,12 @@ public class DynamicActivity extends AppCompatActivity implements
         title5 = (TextView)findViewById(R.id.title5);
         title6 = (TextView)findViewById(R.id.title6);
         title7 = (TextView)findViewById(R.id.title7);
-        for(int i=0; i<=getFileName().size();i++){
+       /* for(int i=0; i<=getFileName().size();i++){
             Object[] doc = new Object[getFileName().size()-1];
         //    title5.setText(dynamicFileNameInfoList.indexOf());
             title6.setText(string6);
             title7.setText((string7));
-        }
+        }*/
         title8 = (TextView)findViewById(R.id.title8);
         title8.setText(string8);
         title9 = (TextView)findViewById(R.id.title9);
@@ -192,7 +194,6 @@ public class DynamicActivity extends AppCompatActivity implements
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
         calendar = (ImageView)findViewById(R.id.ig_calender);
         submit = (Button)findViewById(R.id.bt_submit);
-        createEditTextView();
 
 
         if(checkPermission()){
@@ -387,14 +388,144 @@ private List<String> getFileName(){
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_home) {
+            Intent in = new Intent(DynamicActivity.this,MainActivity.class);
+            startActivity(in);
+            return true;
+        }
+        onBackPressed();
+        return true;
+    }
+
+
+    private void getdetails (final PendingCaseListInfo pendingInfo){
+        String consultantid = "";
+        progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
+                .baseUrl("http://vevelanbus.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        insuranceAPI = retrofit.create(InsuranceAPI.class);
+
+        for(UserAccountInfo user:userAccountInfoList) {
+            consultantid=user.getConsultant_id();
+        }
+
+        String status = pendingInfo.getAssign_status();
+        String assignmentID = pendingInfo.getCase_assignment_id();
+        String flag ="0";
+
+
+        Call<List<DynamicFileNameInfo>> call = insuranceAPI.getdetails(consultantid,status,assignmentID,flag);
+        call.enqueue(new retrofit.Callback<List<DynamicFileNameInfo>>() {
+            @Override
+            public void onResponse(retrofit.Response<List<DynamicFileNameInfo>> response, retrofit.Retrofit retrofit) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+                dynamicFileNameInfoList = response.body();
+                if(dynamicFileNameInfoList!=null) {
+
+                    gettriggerslist(pendingInfo);
+                }
+
+
+            }
+
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                Toast.makeText(DynamicActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+    private void gettriggerslist(PendingCaseListInfo pendingInfo) {
+
+        String consultantid = "";
+        progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
+                .baseUrl("http://vevelanbus.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        insuranceAPI = retrofit.create(InsuranceAPI.class);
+
+        for(UserAccountInfo user:userAccountInfoList) {
+            consultantid=user.getConsultant_id();
+        }
+
+        String assignmentID = pendingInfo.getCase_assignment_id();
+        String flag ="0";
+
+        Call<List<TriggersInfo>> call = insuranceAPI.gettriggersdetails(assignmentID,flag);
+        call.enqueue(new retrofit.Callback<List<TriggersInfo>>() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void onResponse(retrofit.Response<List<TriggersInfo>> response, retrofit.Retrofit retrofit) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+                triggersInfoList = response.body();
+                if(triggersInfoList!=null) {
+
+                    createEditTextView();
+                }
+
+            }
+
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                Toast.makeText(DynamicActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+    }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     protected void createEditTextView() {
         LinearLayout linearLayout= (LinearLayout)findViewById(R.id.linear);      //find the linear layout
         linearLayout.removeAllViews();
         relativeLayout = (RelativeLayout)findViewById(R.id.realdynmo);
-        pendingInfoList =  getList();
+        //  pendingInfoList =  getList();
 
-        for(int i=1;i<=pendingInfoList.size();i++) {
+        for(int i=1;i<=triggersInfoList.size();i++) {
 
             EditText edittext = new EditText(this);
             TextView title = new TextView(this);
@@ -448,144 +579,6 @@ private List<String> getFileName(){
             });
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_home) {
-            Intent in = new Intent(DynamicActivity.this,MainActivity.class);
-            startActivity(in);
-            return true;
-        }
-        onBackPressed();
-        return true;
-    }
-
-
-    private void getdetails (PendingCaseListInfo pendingInfo){
-        String consultantid = "";
-        progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Loading...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
-        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
-        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
-        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl("http://vevelanbus.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-        insuranceAPI = retrofit.create(InsuranceAPI.class);
-
-        for(UserAccountInfo user:userAccountInfoList) {
-            consultantid=user.getConsultant_id();
-        }
-
-        String status = pendingInfo.getAssign_status();
-        String assignmentID = pendingInfo.getCase_assignment_id();
-        String flag ="0";
-
-
-        Call<List<DynamicFileNameInfo>> call = insuranceAPI.getdetails(consultantid,status,assignmentID,flag);
-        call.enqueue(new retrofit.Callback<List<DynamicFileNameInfo>>() {
-            @Override
-            public void onResponse(retrofit.Response<List<DynamicFileNameInfo>> response, retrofit.Retrofit retrofit) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
-
-                if(dynamicFileNameInfoList!=null) {
-                    dynamicFileNameInfoList = response.body();
-                }
-
-
-            }
-
-
-            @Override
-            public void onFailure(Throwable t) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
-
-                Toast.makeText(DynamicActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-    }
-    private void getsaveddatalist(PendingCaseListInfo pendingInfo) {
-
-        String consultantid = "";
-        progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Loading...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
-        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
-        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
-        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl("http://vevelanbus.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-        insuranceAPI = retrofit.create(InsuranceAPI.class);
-
-        for(UserAccountInfo user:userAccountInfoList) {
-            consultantid=user.getConsultant_id();
-        }
-        String status = pendingInfo.getAssign_status();
-        String assignmentID = pendingInfo.getCase_assignment_id();
-        String casetype =  pendingInfo.getCase_type();
-        String caseid = pendingInfo.getCase_id();
-        String casetypeid = pendingInfo.getCase_type_id();
-        String othercaseid =pendingInfo.getOther_case_type_id();
-
-        Call<List<String>> call = insuranceAPI.getsavedata(consultantid , status,caseid,assignmentID,othercaseid,casetype);
-        call.enqueue(new retrofit.Callback<List<String>>() {
-            @Override
-            public void onResponse(retrofit.Response<List<String>> response, retrofit.Retrofit retrofit) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
-
-                  response.body();
-                // profileInfoList = response.body();
-                if(pendingInfoList==null){
-                    AlertDialogNoData.alertdialog(DynamicActivity.this);
-                }
-                if (response.code() == 200) {
-                    if(pendingInfoList!=null){
-
-                    }
-
-                }
-
-            }
-
-
-            @Override
-            public void onFailure(Throwable t) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
-
-                Toast.makeText(DynamicActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
