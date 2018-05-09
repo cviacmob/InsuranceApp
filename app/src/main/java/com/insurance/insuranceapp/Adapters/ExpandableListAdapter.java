@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.insurance.insuranceapp.R;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -21,10 +22,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private List<String> expandableListTitle;
-    private HashMap<String, List<String>> expandableListDetail;
+    private LinkedHashMap<String, List<String>> expandableListDetail;
 
     public ExpandableListAdapter(Context context, List<String> expandableListTitle,
-                                 HashMap<String, List<String>> expandableListDetail) {
+                                 LinkedHashMap<String, List<String>> expandableListDetail) {
         this.context = context;
         this.expandableListTitle = expandableListTitle;
         this.expandableListDetail = expandableListDetail;
@@ -94,7 +95,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView listTitleTextView = (TextView) convertView
                 .findViewById(R.id.listTitle);
         //listTitleTextView.setTypeface(null, Typeface.BOLD);
-        if(listTitle.equalsIgnoreCase("cases") || pos ==0)
+        if(listTitle.equalsIgnoreCase("Dashboard") || pos ==0)
         {
             listTitleTextView.setText("Dashboard") ;
             icon.setImageResource(R.drawable.dashboard);
@@ -102,7 +103,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         }else if(listTitle.equalsIgnoreCase("Payments") || pos ==1){
             listTitleTextView.setText("Payments") ;
             icon.setImageResource(R.drawable.money);
-        }else if(listTitle.equalsIgnoreCase("Dashboard") || pos ==2)
+        }else if(listTitle.equalsIgnoreCase("Cases") || pos ==2)
         {
             listTitleTextView.setText("Cases") ;
             icon.setImageResource(R.drawable.docc);

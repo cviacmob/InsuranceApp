@@ -23,6 +23,11 @@
             android:name="AA_MODELS"
             android:value=" com.insurance.insuranceapp.Datamodel.UserAccountInfo" />
 
+
+        <provider android:name="com.activeandroid.content.ContentProvider"
+            android:exported="false"
+            android:enabled="true"
+            android:authorities="com.insurance.insuranceapp"/>
         <activity
             android:name=".Activites.MainActivity"
             android:label="@string/app_name"

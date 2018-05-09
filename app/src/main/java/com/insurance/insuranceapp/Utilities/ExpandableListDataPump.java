@@ -3,6 +3,7 @@ package com.insurance.insuranceapp.Utilities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -11,8 +12,8 @@ import java.util.List;
 
 public class ExpandableListDataPump {
 
-    public static HashMap<String, List<String>> getData() {
-        HashMap<String, List<String>> expandableListDetail = new HashMap<String, List<String>>();
+    public static LinkedHashMap<String, List<String>> getData() {
+        LinkedHashMap<String, List<String>> expandableListDetail = new LinkedHashMap<String, List<String>>();
 
         List<String> dashboard = new ArrayList<String>();
 
@@ -28,9 +29,9 @@ public class ExpandableListDataPump {
         Collections.sort(payments);
         Collections.sort(cases);
 
-        expandableListDetail.put("Dashboard", cases);
+        expandableListDetail.put("Dashboard",dashboard);
         expandableListDetail.put("Payments", payments);
-        expandableListDetail.put("Cases", dashboard);
+        expandableListDetail.put("Cases", cases );
 
         return expandableListDetail;
     }

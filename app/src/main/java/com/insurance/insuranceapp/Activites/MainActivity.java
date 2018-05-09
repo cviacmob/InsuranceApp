@@ -39,6 +39,7 @@ import com.insurance.insuranceapp.Utilities.ExpandableListDataPump;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private ExpandableListView expandableListView;
     private ExpandableListAdapter expandableListAdapter;
     private List<String> expandableListTitle;
-    private HashMap<String, List<String>> expandableListDetail;
+    private LinkedHashMap<String, List<String>> expandableListDetail;
     private String domainurl,patientid,companyid;
     private List<UserAccountInfo> userAccountInfoList;
     @Override

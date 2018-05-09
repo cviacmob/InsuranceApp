@@ -86,7 +86,7 @@ public class DashBoardFragment extends Fragment {
             pending.setText(user.getPending());
         }
 
-        piadigdata();
+       // piadigdata();
         return view;
     }
 
@@ -129,11 +129,8 @@ public class DashBoardFragment extends Fragment {
 
         ArrayList<String> xVals = new ArrayList<String>();
 
-
-        xVals.add("Saved Cases");
-
         xVals.add("Pending Cases");
-
+        xVals.add("Saved Cases");
         xVals.add("Submitted Cases");
 
 
@@ -258,7 +255,7 @@ public class DashBoardFragment extends Fragment {
                     progressDialog.dismiss();
                 }
 
-                Toast.makeText(getActivity(), "Network Issue" + t, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Network Issue" + t, Toast.LENGTH_SHORT).show();
 
             }
         });

@@ -96,9 +96,8 @@ public class DynamicActivity extends AppCompatActivity implements
     private TextView title2,file2,filename2;
     private TextView title3,file3,filename3;
     private TextView title4,file4,filename4;
-    private TextView title5,file5,filename5;
-    private TextView title6,file6,filename6;
-    private TextView title7,file7,filename7;
+
+
     private TextView title8,file8,filename8;
     private TextView title9,file9,filename9;
     private TextView title31,file31,filename31;
@@ -141,30 +140,8 @@ public class DynamicActivity extends AppCompatActivity implements
         userAccountInfoList  = getAll();
         pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
         getdetails(pendingInfo);
+        textdata();
 
-        title1 = (TextView)findViewById(R.id.title1);
-        title1.setText(Html.fromHtml(string1));
-        title2 = (TextView)findViewById(R.id.title2);
-        title2.setText(Html.fromHtml(string2));
-        title3 = (TextView)findViewById(R.id.title3);
-        title3.setText(Html.fromHtml(string3));
-        title4 = (TextView)findViewById(R.id.title4);
-        title4.setText(Html.fromHtml(string4));
-        title5 = (TextView)findViewById(R.id.title5);
-        title6 = (TextView)findViewById(R.id.title6);
-        title7 = (TextView)findViewById(R.id.title7);
-       /* for(int i=0; i<=getFileName().size();i++){
-            Object[] doc = new Object[getFileName().size()-1];
-        //    title5.setText(dynamicFileNameInfoList.indexOf());
-            title6.setText(string6);
-            title7.setText((string7));
-        }*/
-        title8 = (TextView)findViewById(R.id.title8);
-        title8.setText(string8);
-        title9 = (TextView)findViewById(R.id.title9);
-        title9.setText(string9);
-        title31 = (TextView)findViewById(R.id.title31);
-        title31.setText(string31);
 
         file1 = (TextView)findViewById(R.id.file1);
         file1.setOnClickListener((View.OnClickListener) this);
@@ -174,12 +151,6 @@ public class DynamicActivity extends AppCompatActivity implements
         file3.setOnClickListener((View.OnClickListener) this);
         file4 = (TextView)findViewById(R.id.file4);
         file4.setOnClickListener((View.OnClickListener) this);
-        file5 = (TextView)findViewById(R.id.file5);
-        file5.setOnClickListener((View.OnClickListener) this);
-        file6 = (TextView)findViewById(R.id.file6);
-        file6.setOnClickListener((View.OnClickListener) this);
-        file7 = (TextView)findViewById(R.id.file7);
-        file7.setOnClickListener((View.OnClickListener) this);
         file8 = (TextView)findViewById(R.id.file8);
         file8.setOnClickListener((View.OnClickListener) this);
         file9 = (TextView)findViewById(R.id.file9);
@@ -249,6 +220,24 @@ public class DynamicActivity extends AppCompatActivity implements
             }
         });
 
+    }
+    private void textdata(){
+        title1 = (TextView)findViewById(R.id.title1);
+        title1.setText(Html.fromHtml(string1));
+        title2 = (TextView)findViewById(R.id.title2);
+        title2.setText(Html.fromHtml(string2));
+        title3 = (TextView)findViewById(R.id.title3);
+        title3.setText(Html.fromHtml(string3));
+        title4 = (TextView)findViewById(R.id.title4);
+        title4.setText(Html.fromHtml(string4));
+
+
+        title8 = (TextView)findViewById(R.id.title8);
+        title8.setText(string8);
+        title9 = (TextView)findViewById(R.id.title9);
+        title9.setText(string9);
+        title31 = (TextView)findViewById(R.id.title31);
+        title31.setText(string31);
     }
     public boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
@@ -347,28 +336,7 @@ private List<String> getFileName(){
         });
     }
 
-    private List<PendingInfo> getList(){
 
-        pendingInfoList = new ArrayList<>();
-
-        PendingInfo pendingInfo = new PendingInfo();
-        pendingInfo.setCliam_no("5461235");
-        pendingInfo.setPatient_name("Arun");
-        pendingInfo.setCase_type("Hospital Block");
-        pendingInfo.setPolicy_number("54322578");
-        pendingInfo.setCompany_name("LIC");
-
-        pendingInfo.setCase_assigned_on("Vijila ");
-
-        pendingInfo.setStatus("pending");
-
-        pendingInfoList.add(pendingInfo);
-
-        pendingInfoList.add(pendingInfo);
-
-
-        return pendingInfoList;
-    }
     public void datepicker(){
         datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
@@ -436,6 +404,7 @@ private List<String> getFileName(){
 
         Call<List<DynamicFileNameInfo>> call = insuranceAPI.getdetails(consultantid,status,assignmentID,flag);
         call.enqueue(new retrofit.Callback<List<DynamicFileNameInfo>>() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onResponse(retrofit.Response<List<DynamicFileNameInfo>> response, retrofit.Retrofit retrofit) {
                 if (progressDialog != null) {
@@ -443,7 +412,7 @@ private List<String> getFileName(){
                 }
                 dynamicFileNameInfoList = response.body();
                 if(dynamicFileNameInfoList!=null) {
-
+                    filelayout();
                     gettriggerslist(pendingInfo);
                 }
 
@@ -517,6 +486,67 @@ private List<String> getFileName(){
         });
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private void filelayout(){
+        List<String> Document_name = new ArrayList<>();
+        List<String>  fileNeameList = new ArrayList<>();
+        LinearLayout linearLayout= (LinearLayout)findViewById(R.id.lineare);
+
+        for(int i=1;i<=dynamicFileNameInfoList.size();i++) {
+            for(DynamicFileNameInfo dyno:dynamicFileNameInfoList) {
+                Document_name.add(dyno.getDocument_name());
+                fileNeameList.add(dyno.getAttach_file_name());
+            }
+            TextView title = new TextView(this);
+            TextView button = new TextView(this);
+            TextView filename = new TextView(this);
+            title.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            title.setText(Document_name.get(i));
+
+            button.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            filename.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            params.setMargins(10, 10, 10, 10);
+            Typeface face = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                face = getResources().getFont(R.font.verdana);
+            }
+
+            title.setTypeface(face);
+            button.setTypeface(face);
+            filename.setTypeface(face);
+            title.setLayoutParams(params);
+            button.setLayoutParams(params);
+            button.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
+
+            title.setTextColor(getResources().getColor(R.color.Black));
+
+            button.setTextColor(getResources().getColor(R.color.Black));
+            filename.setTextColor(getResources().getColor(R.color.Black));
+
+            button.setPadding(5, 5, 5, 5);
+            filename.setPadding(5, 5, 5, 5);
+
+            button.setText("Choose File");
+
+            filename.setTextSize(15f);
+
+            filename.setText(fileNeameList.get(i));
+            button.setTextSize(17f);
+            title.setTextSize(15f);
+            linearLayout.addView(title);
+            linearLayout.addView(button);
+            linearLayout.addView(filename);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(),"asf",Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     protected void createEditTextView() {
