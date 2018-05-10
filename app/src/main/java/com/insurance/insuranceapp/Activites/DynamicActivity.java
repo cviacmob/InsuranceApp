@@ -573,6 +573,8 @@ private List<String> getFileName(){
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 face = getResources().getFont(R.font.verdana);
             }
+            button.setOnClickListener(this);
+            button.setId(++i);
             edittext.setTypeface(face);
             title.setTypeface(face);
             button.setTypeface(face);
@@ -601,13 +603,19 @@ private List<String> getFileName(){
             linearLayout.addView(edittext);
             linearLayout.addView(button);
             linearLayout.addView(filename);
+
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int  ii = v.getId();
+
                     Toast.makeText(getApplicationContext(),"asf",Toast.LENGTH_SHORT).show();
                 }
             });
         }
+
+
+
     }
     @Override
     public void onClick(View v) {

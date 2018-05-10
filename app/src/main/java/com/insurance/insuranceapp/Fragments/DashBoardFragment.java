@@ -50,7 +50,7 @@ import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
  */
 
 public class DashBoardFragment extends Fragment {
-    private TextView save, pending, completed, total_reserved, total_confirmed;
+    private TextView save, pending, completed,query, total_reserved, total_confirmed;
     private List<UserAccountInfo> userAccountInfoList;
     private List<GetPaymentsInfo> getPaymentsreserved;
     private List<GetPaymentsInfo> getPaymentsconfirmed;
@@ -72,18 +72,20 @@ public class DashBoardFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_fragments, container, false);
         setHasOptionsMenu(true);
         domainurl = Prefs.getString("domainurl", "");
-        save = (TextView) view.findViewById(R.id.save);
+        query = (TextView) view.findViewById(R.id.query);
+        save = (TextView)view.findViewById(R.id.save);
         completed = (TextView) view.findViewById(R.id.completed);
         pending = (TextView) view.findViewById(R.id.pending);
         total_reserved = (TextView) view.findViewById(R.id.tx_totalreserved);
         total_confirmed = (TextView) view.findViewById(R.id.tx_totalconfirmed);
-        pieChart = (PieChart) view.findViewById(R.id.piechart);
+
         userAccountInfoList = getAll();
         getpayments();
         for (UserAccountInfo user : userAccountInfoList) {
-            save.setText(user.getSaved());
-            completed.setText(user.getSubmitted());
-            pending.setText(user.getPending());
+            save.setText(user.getSaved()!=null?user.getSaved():"0");
+            completed.setText(user.getSubmitted()!=null?user.getSubmitted():"0");
+            pending.setText(user.getPending()!=null?user.getPending():"0");
+            query.setText(user.getRaise_query()!=null?user.getRaise_query():"0");
         }
 
        // piadigdata();
@@ -94,7 +96,7 @@ public class DashBoardFragment extends Fragment {
 
     }
 
-    private void piadigdata() {
+  /*  private void piadigdata() {
         String a ;
         String b;
         String c ;
@@ -180,7 +182,7 @@ public class DashBoardFragment extends Fragment {
         Log.i("PieChart", "nothing selected");
     }
     });
-}
+}*/
     private void getpayments() {
 
         String consultantid = "";

@@ -199,6 +199,7 @@ public class LoginActivity extends AppCompatActivity {
             userAccountInfo.setPending(profileInfo.getPending());
             userAccountInfo.setSaved(profileInfo.getSaved());
             userAccountInfo.setSubmitted(profileInfo.getSubmitted());
+            userAccountInfo.setRaise_query(profileInfo.getRaise_query());
             userAccountInfo.save();
 
 

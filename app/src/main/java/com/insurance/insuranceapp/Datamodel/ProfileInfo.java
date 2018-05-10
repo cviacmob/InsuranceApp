@@ -37,6 +37,7 @@ public class ProfileInfo  {
     private String Pending;
     private String Saved;
     private String Submitted;
+    private String raise_query;
 
 
 
@@ -45,6 +46,13 @@ public class ProfileInfo  {
 
     }
 
+    public String getRaise_query() {
+        return raise_query;
+    }
+
+    public void setRaise_query(String raise_query) {
+        this.raise_query = raise_query;
+    }
 
     public String getConsultant_Name() {
         return consultant_Name;

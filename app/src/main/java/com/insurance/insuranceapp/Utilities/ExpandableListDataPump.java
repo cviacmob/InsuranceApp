@@ -23,8 +23,10 @@ public class ExpandableListDataPump {
 
         List<String> cases = new ArrayList<String>();
         cases.add("Pending Cases");
+        cases.add("Query cases");
         cases.add("Submitted Cases");
-        cases.add("Save Cases");
+        cases.add("Saved Cases");
+
 
         Collections.sort(payments);
         Collections.sort(cases);

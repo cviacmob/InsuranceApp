@@ -66,11 +66,21 @@ public class UserAccountInfo extends Model {
     private String Saved;
     @Column(name = "Submitted")
     private String Submitted;
+    @Column(name = "raise_query")
+    private String raise_query;
 
     public UserAccountInfo(){
         super();
     }
 
+
+    public String getRaise_query() {
+        return raise_query;
+    }
+
+    public void setRaise_query(String raise_query) {
+        this.raise_query = raise_query;
+    }
 
     public String getPending() {
         return Pending;

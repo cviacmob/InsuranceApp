@@ -153,11 +153,15 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Intent intent = new Intent(MainActivity.this, PendingCasesActivity.class);
                     startActivity(intent);
-                }if(groupPosition == 2 && childPosition == 2)
+                }if(groupPosition == 2 && childPosition == 3)
                 {
                     Intent intent = new Intent(MainActivity.this, CompletedCaseActivity.class);
                     startActivity(intent);
                 }if(groupPosition == 2 && childPosition == 1)
+                {
+                    Intent intent = new Intent(MainActivity.this, QueryCasesActivity.class);
+                    startActivity(intent);
+                }if(groupPosition == 2 && childPosition == 2)
                 {
                     Intent intent = new Intent(MainActivity.this, SavedCasesActivity.class);
                     startActivity(intent);
