@@ -142,7 +142,7 @@ public class SavedCasesActivity extends AppCompatActivity {
         okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
         okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
         retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl("http://vevelanbus.com")
+                .baseUrl(getBaseContext().getString(R.string.DomainURL))
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();

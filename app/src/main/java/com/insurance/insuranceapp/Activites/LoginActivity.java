@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private  List<ProfileInfo> profileInfoList;
     private ProfileInfo profileInfo;
     private TextInputLayout textInputLayout,pass_textinput;
-    private  String domainurl = "http://vevelanbus.com";
+    private  String domainurl = "http://ayuhas.co.in";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

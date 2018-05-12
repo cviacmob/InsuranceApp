@@ -120,7 +120,7 @@ private  void getdate(List<GetPaymentsInfo> getPaymentsInfoList){
         okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
 
         retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl(domainurl)
+                .baseUrl(getBaseContext().getString(R.string.DomainURL))
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();

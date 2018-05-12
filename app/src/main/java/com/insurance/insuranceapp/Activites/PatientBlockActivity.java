@@ -368,8 +368,8 @@ public class PatientBlockActivity extends AppCompatActivity implements
             button.setText("Choose File");
             edittext.setTextSize(15f);
             filename.setTextSize(15f);
-            edittext.setHint(Html.fromHtml("hi"));
-            filename.setText(triggerreply);
+            edittext.setHint(Html.fromHtml(triggerreply));
+            filename.setText("filename");
             button.setTextSize(17f);
             title.setTextSize(15f);
             linearLayout.addView(title);

@@ -88,7 +88,7 @@ public class DashBoardFragment extends Fragment {
             query.setText(user.getRaise_query()!=null?user.getRaise_query():"0");
         }
 
-       // piadigdata();
+
         return view;
     }
 
@@ -96,93 +96,7 @@ public class DashBoardFragment extends Fragment {
 
     }
 
-  /*  private void piadigdata() {
-        String a ;
-        String b;
-        String c ;
-        int d = 0;
-        int e =0;
-        int f =0;
-        for(UserAccountInfo user:userAccountInfoList){
 
-             a = user.getSaved();
-             d = Integer.parseInt(a);
-             b = user.getPending();
-             e = Integer.parseInt(b);
-             c = user.getSubmitted();
-             f = Integer.parseInt(c);
-        }
-
-
-
-        ArrayList<Entry> yvalues = new ArrayList<Entry>();
-        if (d > 0) {
-            yvalues.add(new Entry(d, 0));
-        }
-        if (e > 0) {
-            yvalues.add(new Entry(e, 1));
-        }
-        if (f > 0) {
-
-            yvalues.add(new Entry(f, 2));
-        }
-
-        PieDataSet dataSet = new PieDataSet(yvalues, "Dashboard");
-
-        ArrayList<String> xVals = new ArrayList<String>();
-
-        xVals.add("Pending Cases");
-        xVals.add("Saved Cases");
-        xVals.add("Submitted Cases");
-
-
-
-
-    PieData data = new PieData(xVals, dataSet);
-
-        data.setValueFormatter(new PercentFormatter());
-    // Default value
-    //data.setValueFormatter(new DefaultValueFormatter(0));
-        pieChart.setData(data);
-        pieChart.setDescription("This is Pie Chart");
-        pieChart.setDrawHoleEnabled(true);
-        pieChart.setTransparentCircleRadius(28f);
-
-        pieChart.setHoleRadius(58f);
-        dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
-
-        data.setValueTextSize(13f);
-        data.setValueTextColor(Color.DKGRAY);
-
-        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener()
-    {
-        @Override
-        public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-        if (e == null)
-
-            return;
-            if(e.getXIndex()==2){
-                Intent in =new Intent(getActivity(), CompletedCaseActivity.class);
-                startActivity(in);
-            }else if(e.getXIndex()==0){
-                Intent in =new Intent(getActivity(), SavedCasesActivity.class);
-                startActivity(in);
-            }else if(e.getXIndex()==1){
-                Intent in =new Intent(getActivity(), PendingCasesActivity.class);
-                startActivity(in);
-            }
-        Log.i("VAL SELECTED",
-                "Value: " + e.getVal() + ", xIndex: " + e.getXIndex()
-                        + ", DataSet index: " + dataSetIndex);
-    }
-
-        @Override
-        public void onNothingSelected() {
-
-        Log.i("PieChart", "nothing selected");
-    }
-    });
-}*/
     private void getpayments() {
 
         String consultantid = "";

@@ -107,9 +107,7 @@ public class DynamicActivity extends AppCompatActivity implements
     private String string2= "<font color='#000000'>Investigation report form  </font>" + "<font color='#FF0000'>*</font>";
     private String string3= "<font color='#000000'>Insured Questionnaire </font>" + "<font color='#FF0000'>*</font>";
     private String string4= "<font color='#000000'>Treating doctor Questionnaire  </font>" + "<font color='#FF0000'>*</font>";
-    private String string5= "Test document 1";
-    private String string6 = "Test document 2";
-    private String string7 = "Test document 3";
+
     private String string8 = "Others";
     private String string9 = "Evidence for Trigger";
     private String string31 = "Conveyance File(s)";
@@ -255,14 +253,7 @@ public class DynamicActivity extends AppCompatActivity implements
     private void requestPermission() {
         ActivityCompat.requestPermissions(DynamicActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
     }
-private List<String> getFileName(){
-        docNameList = new ArrayList<>();
-        for(DynamicFileNameInfo dyna:dynamicFileNameInfoList){
-            docNameList.add(dyna.getDocument_name());
-        }
 
-      return docNameList;
-}
     private void sendAudio(){
         String consultID = "";
         progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
@@ -387,7 +378,7 @@ private List<String> getFileName(){
         okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
         okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
         retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl("http://vevelanbus.com")
+                .baseUrl(getBaseContext().getString(R.string.DomainURL))
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
@@ -444,7 +435,7 @@ private List<String> getFileName(){
         okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
         okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
         retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl("http://vevelanbus.com")
+                .baseUrl(getBaseContext().getString(R.string.DomainURL))
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
@@ -553,18 +544,18 @@ private List<String> getFileName(){
         LinearLayout linearLayout= (LinearLayout)findViewById(R.id.linear);      //find the linear layout
         linearLayout.removeAllViews();
         relativeLayout = (RelativeLayout)findViewById(R.id.realdynmo);
-        //  pendingInfoList =  getList();
-
+        TextView[] button = new TextView[10];
+        //TextView button = new TextView(this);
         for(int i=1;i<=triggersInfoList.size();i++) {
 
             EditText edittext = new EditText(this);
             TextView title = new TextView(this);
-            TextView button = new TextView(this);
+           button[i] = new TextView(this);
             TextView filename = new TextView(this);
             title.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             title.setText("sf" + i);
             edittext.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 160));
-            button.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            button[i].setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             filename.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -573,63 +564,73 @@ private List<String> getFileName(){
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 face = getResources().getFont(R.font.verdana);
             }
-            button.setOnClickListener(this);
-            button.setId(++i);
+
             edittext.setTypeface(face);
             title.setTypeface(face);
-            button.setTypeface(face);
+            button[i].setTypeface(face);
             filename.setTypeface(face);
             title.setLayoutParams(params);
-            button.setLayoutParams(params);
-            button.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
+            button[i].setLayoutParams(params);
+            button[i].setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
             edittext.setInputType(10);
             title.setTextColor(getResources().getColor(R.color.Black));
             edittext.setTextColor(getResources().getColor(R.color.Black));
-            button.setTextColor(getResources().getColor(R.color.Black));
+            button[i].setTextColor(getResources().getColor(R.color.Black));
             filename.setTextColor(getResources().getColor(R.color.Black));
             edittext.setGravity(Gravity.BOTTOM | Gravity.LEFT);
             edittext.setPadding(5, 5, 5, 5);
-            button.setPadding(5, 5, 5, 5);
+            button[i].setPadding(5, 5, 5, 5);
             filename.setPadding(5, 5, 5, 5);
             edittext.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
-            button.setText("Choose File");
+            button[i].setText("Choose File");
             edittext.setTextSize(15f);
             filename.setTextSize(15f);
             edittext.setHint(Html.fromHtml(triggerreply));
             filename.setText("adfd");
-            button.setTextSize(17f);
+            button[i].setTextSize(17f);
             title.setTextSize(15f);
             linearLayout.addView(title);
             linearLayout.addView(edittext);
-            linearLayout.addView(button);
+            linearLayout.addView(button[i]);
             linearLayout.addView(filename);
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int  ii = v.getId();
-
-                    Toast.makeText(getApplicationContext(),"asf",Toast.LENGTH_SHORT).show();
-                }
-            });
+            button[i].setOnClickListener(handleOnClick(button[i]));
         }
-
-
-
+        /*button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int in = v.getId();
+                Toast.makeText(getApplicationContext(),"asf",Toast.LENGTH_SHORT).show();
+            }
+        });*/
     }
+
+    private View.OnClickListener handleOnClick(TextView textView) {
+        return new View.OnClickListener() {
+            public void onClick(View v) {
+                int in = v.getId();
+                selectImage();
+
+            }
+        };
+    }
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.file_1:
+            case R.id.file1:
+                int i = v.getId();
                 selectImage();
                 break;
 
             case R.id.file2:
+                int iq = v.getId();
                 selectImage();
                 break;
 
             case R.id.file3:
+                int iw = v.getId();
                 selectImage();
                 break;
             case R.id.file4:
