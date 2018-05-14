@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private  List<ProfileInfo> profileInfoList;
     private ProfileInfo profileInfo;
     private TextInputLayout textInputLayout,pass_textinput;
-    private  String domainurl ="http://ayuhas.co.in";
+    private  String domainurl ="http://vevelanbus.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,6 +200,7 @@ public class LoginActivity extends AppCompatActivity {
             userAccountInfo.setSaved(profileInfo.getSaved());
             userAccountInfo.setSubmitted(profileInfo.getSubmitted());
             userAccountInfo.setRaise_query(profileInfo.getRaise_query());
+            userAccountInfo.setAprove_raise_query(profileInfo.getAprove_raise_query());
             userAccountInfo.save();
 
 

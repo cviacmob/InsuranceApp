@@ -37,21 +37,27 @@ public class ProfileInfo  {
     private String Pending;
     private String Saved;
     private String Submitted;
-    private String raise_query;
-
-
-
+    private String Raise_query;
+    private String Aprove_raise_query;
 
     public ProfileInfo(){
 
     }
 
+    public String getAprove_raise_query() {
+        return Aprove_raise_query;
+    }
+
+    public void setAprove_raise_query(String aprove_raise_query) {
+        Aprove_raise_query = aprove_raise_query;
+    }
+
     public String getRaise_query() {
-        return raise_query;
+        return Raise_query;
     }
 
     public void setRaise_query(String raise_query) {
-        this.raise_query = raise_query;
+        this.Raise_query = raise_query;
     }
 
     public String getConsultant_Name() {

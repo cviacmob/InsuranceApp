@@ -45,7 +45,6 @@ import com.insurance.insuranceapp.Datamodel.TriggersInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
-import com.insurance.insuranceapp.Utilities.AlertDialogNoData;
 import com.insurance.insuranceapp.Utilities.InsApp;
 import com.insurance.materialfilepicker.ui.FilePickerActivity;
 import com.insurance.materialfilepicker.widget.MaterialFilePicker;
@@ -75,6 +74,7 @@ import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class DynamicActivity extends AppCompatActivity implements
         View.OnClickListener {
+    private TextView filename;
     private   List<TriggersInfo> triggersInfoList;
     private List<String> docNameList;
     private List<DynamicFileNameInfo> dynamicFileNameInfoList;
@@ -544,18 +544,32 @@ public class DynamicActivity extends AppCompatActivity implements
         LinearLayout linearLayout= (LinearLayout)findViewById(R.id.linear);      //find the linear layout
         linearLayout.removeAllViews();
         relativeLayout = (RelativeLayout)findViewById(R.id.realdynmo);
-        TextView[] button = new TextView[10];
+        TextView[] buttonholder = new TextView[10];
         //TextView button = new TextView(this);
-        for(int i=1;i<=triggersInfoList.size();i++) {
+        int in = triggersInfoList.size();
+        List<String> titleList = new ArrayList<>();
+        List<String> fileNameList = new ArrayList<>();
+
+        for(TriggersInfo tri:triggersInfoList) {
+
+            titleList.add(tri.getTrigger_name());
+            fileNameList.add(tri.getTrigger_file());
+        }
+        for(int i=1;i<=in;i++) {
 
             EditText edittext = new EditText(this);
             TextView title = new TextView(this);
-           button[i] = new TextView(this);
-            TextView filename = new TextView(this);
+          TextView button = new TextView(this);
+
+            button.setId(i-1);
+            filename = new TextView(this);
+            filename.setId(i-1);
             title.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            title.setText("sf" + i);
+
+            title.setText(titleList.get(i-1));
+
             edittext.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 160));
-            button[i].setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            button.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             filename.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -564,59 +578,47 @@ public class DynamicActivity extends AppCompatActivity implements
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 face = getResources().getFont(R.font.verdana);
             }
-
             edittext.setTypeface(face);
             title.setTypeface(face);
-            button[i].setTypeface(face);
+            button.setTypeface(face);
             filename.setTypeface(face);
             title.setLayoutParams(params);
-            button[i].setLayoutParams(params);
-            button[i].setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
+            button.setLayoutParams(params);
+            button.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
             edittext.setInputType(10);
             title.setTextColor(getResources().getColor(R.color.Black));
             edittext.setTextColor(getResources().getColor(R.color.Black));
-            button[i].setTextColor(getResources().getColor(R.color.Black));
+            button.setTextColor(getResources().getColor(R.color.Black));
             filename.setTextColor(getResources().getColor(R.color.Black));
             edittext.setGravity(Gravity.BOTTOM | Gravity.LEFT);
             edittext.setPadding(5, 5, 5, 5);
-            button[i].setPadding(5, 5, 5, 5);
+            button.setPadding(5, 5, 5, 5);
             filename.setPadding(5, 5, 5, 5);
             edittext.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
-            button[i].setText("Choose File");
+            button.setText("Choose File");
             edittext.setTextSize(15f);
             filename.setTextSize(15f);
             edittext.setHint(Html.fromHtml(triggerreply));
-            filename.setText("adfd");
-            button[i].setTextSize(17f);
+           filename.setText(fileNameList.get(i-1));
+            button.setTextSize(17f);
+
             title.setTextSize(15f);
+            button.setOnClickListener(this);
+            buttonholder[i] = button;
             linearLayout.addView(title);
             linearLayout.addView(edittext);
-            linearLayout.addView(button[i]);
+            linearLayout.addView(button);
             linearLayout.addView(filename);
-            button[i].setOnClickListener(handleOnClick(button[i]));
+
         }
-        /*button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int in = v.getId();
-                Toast.makeText(getApplicationContext(),"asf",Toast.LENGTH_SHORT).show();
-            }
-        });*/
+
     }
 
-    private View.OnClickListener handleOnClick(TextView textView) {
-        return new View.OnClickListener() {
-            public void onClick(View v) {
-                int in = v.getId();
-                selectImage();
-
-            }
-        };
-    }
 
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()) {
 
             case R.id.file1:
@@ -657,6 +659,19 @@ public class DynamicActivity extends AppCompatActivity implements
 
             case R.id.file31:
                 selectImage();
+                break;
+
+            case 0:
+                selectImage();
+                filename.setText("0");
+                break;
+            case 1:
+                    selectImage();
+                filename.setText("1");
+                    break;
+            case 2:
+                selectImage();
+             filename.setText("2");
                 break;
         }
     }
@@ -832,9 +847,7 @@ public class DynamicActivity extends AppCompatActivity implements
 
                 bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
                 String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, "", null);
-               /* Picasso.with(this).load(path).resize(350, 350).transform(new CircleTransform())
-                        .centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(ivImage);*/
-
+              filename.setText(getfilename(targetPath));
                 //ivImage.setImageBitmap(bm);
                 // uploadProfileImage(targetPath);
 
@@ -868,6 +881,10 @@ public class DynamicActivity extends AppCompatActivity implements
                 .withHiddenFiles(true)
                 .withTitle("Select a file")
                 .start();
+    }
+    private String getfilename(String fileName){
+
+        return fileName;
     }
 
 }

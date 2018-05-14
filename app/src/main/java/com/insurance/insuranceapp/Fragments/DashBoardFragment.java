@@ -85,7 +85,11 @@ public class DashBoardFragment extends Fragment {
             save.setText(user.getSaved()!=null?user.getSaved():"0");
             completed.setText(user.getSubmitted()!=null?user.getSubmitted():"0");
             pending.setText(user.getPending()!=null?user.getPending():"0");
-            query.setText(user.getRaise_query()!=null?user.getRaise_query():"0");
+            if(user.getRaise_query()!=null) {
+                query.setText(user.getRaise_query());
+            }else if(user.getAprove_raise_query()!=null ) {
+                query.setText(user.getAprove_raise_query());
+            }
         }
 
 

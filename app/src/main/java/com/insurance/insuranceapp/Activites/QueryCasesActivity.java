@@ -2,6 +2,7 @@ package com.insurance.insuranceapp.Activites;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,7 +26,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.insurance.insuranceapp.Datamodel.GetPaymentsInfo;
+import com.insurance.insuranceapp.Datamodel.QueryInfo;
+import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
+import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
+import com.insurance.insuranceapp.Utilities.InsApp;
 import com.insurance.materialfilepicker.ui.FilePickerActivity;
 import com.insurance.materialfilepicker.widget.MaterialFilePicker;
 
@@ -34,9 +40,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import retrofit.Call;
+import retrofit.GsonConverterFactory;
 
 import static com.insurance.insuranceapp.Activites.DeathCliamActivity.FILE_PICKER_REQUEST_CODE;
 import static com.insurance.insuranceapp.Activites.DeathCliamActivity.PERMISSIONS_REQUEST_CODE;
+import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class QueryCasesActivity extends AppCompatActivity {
 
@@ -45,7 +60,11 @@ public class QueryCasesActivity extends AppCompatActivity {
     private TextView qc_query,qc_queryfile,qc_queryon;
     private EditText QueryRly;
     private TextView file,filename,title;
-
+    ProgressDialog progressDialog;
+    InsApp api;
+    InsuranceAPI insuranceAPI;
+    private  List<QueryInfo> queryInfo;
+    private List<UserAccountInfo> userAccountInfoList;
     private Button bt_back,bt_submit;
     private String queryReply = "";
     private String userChoosenTask;
@@ -56,10 +75,10 @@ public class QueryCasesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_query_cases);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Query Cases");
+        userAccountInfoList = getAll();
         qc_query = (TextView)findViewById(R.id.pending);
         qc_queryfile = (TextView)findViewById(R.id.query);
         qc_queryon = (TextView)findViewById(R.id.save);
-
         QueryRly = (EditText)findViewById(R.id.ed_comments);
         title = (TextView)findViewById(R.id.title31);
         file = (TextView)findViewById(R.id.file31);
@@ -78,7 +97,7 @@ public class QueryCasesActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
+        getQueryCases();
         bt_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,6 +106,29 @@ public class QueryCasesActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void textviewValues(){
+
+
+        for(QueryInfo qry:queryInfo) {
+            qc_query.setText(qry.getQc_case_query());
+            title.setText(qry.getQc_case_query());
+            qc_queryfile.setText(qry.getQc_query_file());
+            String srt = qry.getQc_query_on();
+            try {
+                String sr=    modifyDateLayout(srt);
+                qc_queryon.setText(sr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+    private String modifyDateLayout(String inputDate) throws ParseException{
+        Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(inputDate);
+        return new SimpleDateFormat("dd-MM-yyyy").format(date);
     }
 
     @Override
@@ -253,6 +295,7 @@ public class QueryCasesActivity extends AppCompatActivity {
         /*Picasso.with(this).load(path).resize(350, 350).transform(new CircleTransform())
                 .centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(ivImage);*/
         //ivImage.setImageBitmap(thumbnail);
+        filename.setText(path);
 
     }
 
@@ -277,7 +320,7 @@ public class QueryCasesActivity extends AppCompatActivity {
                 String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, "", null);
                /* Picasso.with(this).load(path).resize(350, 350).transform(new CircleTransform())
                         .centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(ivImage);*/
-
+                filename.setText(path);
                 //ivImage.setImageBitmap(bm);
                 // uploadProfileImage(targetPath);
 
@@ -311,5 +354,58 @@ public class QueryCasesActivity extends AppCompatActivity {
                 .withHiddenFiles(true)
                 .withTitle("Select a file")
                 .start();
+    }
+
+    private void getQueryCases() {
+
+        String consultantid = "";
+        progressDialog = new ProgressDialog(QueryCasesActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+
+        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
+                .baseUrl(getBaseContext().getString(R.string.DomainURL))
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        insuranceAPI = retrofit.create(InsuranceAPI.class);
+
+        for(UserAccountInfo user:userAccountInfoList) {
+            consultantid=user.getConsultant_id();
+        }
+        String status  = "aprove_raise_query";
+        Call<List<QueryInfo>> call = insuranceAPI.getquerycases(consultantid , status);
+        call.enqueue(new retrofit.Callback<List<QueryInfo>>() {
+            @Override
+            public void onResponse(retrofit.Response<List<QueryInfo>> response, retrofit.Retrofit retrofit) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+                queryInfo = response.body();
+                if(queryInfo!=null) {
+                    textviewValues();
+
+                }
+
+
+
+            }
+            @Override
+            public void onFailure(Throwable t) {
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                }
+
+                Toast.makeText(QueryCasesActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
     }
 }
