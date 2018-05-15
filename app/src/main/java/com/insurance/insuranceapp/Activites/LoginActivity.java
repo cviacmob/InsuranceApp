@@ -200,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
             userAccountInfo.setSaved(profileInfo.getSaved());
             userAccountInfo.setSubmitted(profileInfo.getSubmitted());
             userAccountInfo.setRaise_query(profileInfo.getRaise_query());
-            userAccountInfo.setAprove_raise_query(profileInfo.getAprove_raise_query());
+            userAccountInfo.setApprove_raise_query(profileInfo.getApprove_raise_query());
             userAccountInfo.save();
 
 

@@ -74,7 +74,9 @@ import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class DynamicActivity extends AppCompatActivity implements
         View.OnClickListener {
+    private EditText[] ed;
     private TextView filename;
+    private String strfilename;
     private   List<TriggersInfo> triggersInfoList;
     private List<String> docNameList;
     private List<DynamicFileNameInfo> dynamicFileNameInfoList;
@@ -96,8 +98,6 @@ public class DynamicActivity extends AppCompatActivity implements
     private TextView title2,file2,filename2;
     private TextView title3,file3,filename3;
     private TextView title4,file4,filename4;
-
-
     private TextView title8,file8,filename8;
     private TextView title9,file9,filename9;
     private TextView title31,file31,filename31;
@@ -127,6 +127,8 @@ public class DynamicActivity extends AppCompatActivity implements
     int mMonth = c.get(Calendar.MONTH); // current month
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
     private Button backbutton;
+    List<EditText> allEds = new ArrayList<EditText>();
+
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -190,6 +192,8 @@ public class DynamicActivity extends AppCompatActivity implements
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               int in = allEds.size();
+
                 submitted_date =  ed_date.getText().toString();
                 if(submitted_date!=null && !submitted_date.isEmpty())
                 {
@@ -199,8 +203,8 @@ public class DynamicActivity extends AppCompatActivity implements
                 }else{
                     textInputLayout.setError("Cannot be empty");
                 }
-                mediaRecorder.stop();
-                sendAudio();
+               // mediaRecorder.stop();
+               // sendAudio();
             }
         });
         calendar.setOnClickListener(new View.OnClickListener() {
@@ -544,28 +548,34 @@ public class DynamicActivity extends AppCompatActivity implements
         LinearLayout linearLayout= (LinearLayout)findViewById(R.id.linear);      //find the linear layout
         linearLayout.removeAllViews();
         relativeLayout = (RelativeLayout)findViewById(R.id.realdynmo);
-        TextView[] buttonholder = new TextView[10];
+        final TextView[] buttonholder = new TextView[10];
+         final TextView[] filenameholder = new TextView[10];
+        ed = new EditText[10];
         //TextView button = new TextView(this);
         int in = triggersInfoList.size();
         List<String> titleList = new ArrayList<>();
         List<String> fileNameList = new ArrayList<>();
 
+
         for(TriggersInfo tri:triggersInfoList) {
 
             titleList.add(tri.getTrigger_name());
-            fileNameList.add(tri.getTrigger_file());
+           // fileNameList.add(tri.getTrigger_file());
         }
         for(int i=1;i<=in;i++) {
 
             EditText edittext = new EditText(this);
             TextView title = new TextView(this);
-          TextView button = new TextView(this);
-
-            button.setId(i-1);
+          final TextView button = new TextView(this);
+            allEds.add(edittext);
+            edittext.setId(i);
             filename = new TextView(this);
             filename.setId(i-1);
+           // filename.setText(""+(i-1));
+            button.setId(i-1);
+            fileNameList.add(""+(i-1));
             title.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
+            View child = linearLayout.getChildAt(i);
             title.setText(titleList.get(i-1));
 
             edittext.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 160));
@@ -599,20 +609,40 @@ public class DynamicActivity extends AppCompatActivity implements
             edittext.setTextSize(15f);
             filename.setTextSize(15f);
             edittext.setHint(Html.fromHtml(triggerreply));
-           filename.setText(fileNameList.get(i-1));
+
             button.setTextSize(17f);
 
             title.setTextSize(15f);
             button.setOnClickListener(this);
             buttonholder[i] = button;
+            filenameholder[i]=filename;
             linearLayout.addView(title);
             linearLayout.addView(edittext);
             linearLayout.addView(button);
             linearLayout.addView(filename);
 
+            final int finalI = i;
+            buttonholder[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int in = v.getId();
+                    int is = filenameholder[finalI].getId();
+                    if(is==in){
+                        selectImage();
+
+                       // filenameholder[finalI].setText();
+
+                    }
+                   // selectImage();
+                }
+            });
+
+
         }
 
+
     }
+
 
 
 
@@ -661,18 +691,7 @@ public class DynamicActivity extends AppCompatActivity implements
                 selectImage();
                 break;
 
-            case 0:
-                selectImage();
-                filename.setText("0");
-                break;
-            case 1:
-                    selectImage();
-                filename.setText("1");
-                    break;
-            case 2:
-                selectImage();
-             filename.setText("2");
-                break;
+
         }
     }
 
@@ -790,7 +809,8 @@ public class DynamicActivity extends AppCompatActivity implements
 //                String[] trimmed = path.split(dir);
 //                String sdcardPath = trimmed[0];
                     if(filename1!=null && upload!=null){
-                        filename1.setText(upload);
+
+                       strfilename = path;
                     }
 
                     // upload = uploadfile(dir);
@@ -822,6 +842,7 @@ public class DynamicActivity extends AppCompatActivity implements
             e.printStackTrace();
         }
         String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), thumbnail, "", null);
+        strfilename = path;
         /*Picasso.with(this).load(path).resize(350, 350).transform(new CircleTransform())
                 .centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(ivImage);*/
         //ivImage.setImageBitmap(thumbnail);
@@ -847,7 +868,7 @@ public class DynamicActivity extends AppCompatActivity implements
 
                 bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
                 String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, "", null);
-              filename.setText(getfilename(targetPath));
+                strfilename = path;
                 //ivImage.setImageBitmap(bm);
                 // uploadProfileImage(targetPath);
 

@@ -87,8 +87,8 @@ public class DashBoardFragment extends Fragment {
             pending.setText(user.getPending()!=null?user.getPending():"0");
             if(user.getRaise_query()!=null) {
                 query.setText(user.getRaise_query());
-            }else if(user.getAprove_raise_query()!=null ) {
-                query.setText(user.getAprove_raise_query());
+            }else if(user.getApprove_raise_query()!=null ) {
+                query.setText(user.getApprove_raise_query());
             }
         }
 

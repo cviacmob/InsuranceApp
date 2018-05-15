@@ -68,20 +68,20 @@ public class UserAccountInfo extends Model {
     private String Submitted;
     @Column(name = "raise_query")
     private String Raise_query;
-    @Column(name = "aprove_raise_query")
-    private String Aprove_raise_query;
+    @Column(name = "approve_raise_query")
+    private String Approve_raise_query;
 
     public UserAccountInfo(){
         super();
     }
 
 
-    public String getAprove_raise_query() {
-        return Aprove_raise_query;
+    public String getApprove_raise_query() {
+        return Approve_raise_query;
     }
 
-    public void setAprove_raise_query(String aprove_raise_query) {
-        this.Aprove_raise_query = aprove_raise_query;
+    public void setApprove_raise_query(String approve_raise_query) {
+        Approve_raise_query = approve_raise_query;
     }
 
     public String getRaise_query() {

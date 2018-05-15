@@ -38,18 +38,18 @@ public class ProfileInfo  {
     private String Saved;
     private String Submitted;
     private String Raise_query;
-    private String Aprove_raise_query;
+    private String Approve_raise_query;
 
     public ProfileInfo(){
 
     }
 
-    public String getAprove_raise_query() {
-        return Aprove_raise_query;
+    public String getApprove_raise_query() {
+        return Approve_raise_query;
     }
 
-    public void setAprove_raise_query(String aprove_raise_query) {
-        Aprove_raise_query = aprove_raise_query;
+    public void setApprove_raise_query(String approve_raise_query) {
+        Approve_raise_query = approve_raise_query;
     }
 
     public String getRaise_query() {
