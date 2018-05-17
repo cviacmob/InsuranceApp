@@ -132,6 +132,7 @@ public class DashBoardFragment extends Fragment {
                 if (progressDialog != null) {
                     progressDialog.dismiss();
                 }
+
                 getPaymentsreserved = response.body();
                 getPaymentsconfirmed = response.body();
                 if(temp.equalsIgnoreCase("reserved") && getPaymentsreserved!=null){
@@ -175,7 +176,7 @@ public class DashBoardFragment extends Fragment {
                     progressDialog.dismiss();
                 }
 
-                Toast.makeText(getContext(), "Network Issue" + t, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getContext(), "Network Issue" + t, Toast.LENGTH_SHORT).show();
 
             }
         });

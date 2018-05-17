@@ -75,8 +75,10 @@ import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 public class DynamicActivity extends AppCompatActivity implements
         View.OnClickListener {
     private EditText[] ed;
+    private int count = 0;
     private TextView filename;
-    private String strfilename;
+    private List<String> triggerlist;
+    private  TextView[] filenameholder;
     private   List<TriggersInfo> triggersInfoList;
     private List<String> docNameList;
     private List<DynamicFileNameInfo> dynamicFileNameInfoList;
@@ -138,9 +140,18 @@ public class DynamicActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Others");
         userAccountInfoList  = getAll();
+        triggerlist = new ArrayList<>();
         pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
         getdetails(pendingInfo);
         textdata();
+        filename1 = (TextView)findViewById(R.id.filename1);
+        filename2 = (TextView)findViewById(R.id.filename2);
+        filename3 = (TextView)findViewById(R.id.filename3);
+        filename4 = (TextView)findViewById(R.id.filename4);
+        filename8 = (TextView)findViewById(R.id.filename8);
+        filename9 = (TextView)findViewById(R.id.filename9);
+        filename31 = (TextView)findViewById(R.id.filename31);
+
 
 
         file1 = (TextView)findViewById(R.id.file1);
@@ -157,6 +168,14 @@ public class DynamicActivity extends AppCompatActivity implements
         file9.setOnClickListener((View.OnClickListener) this);
         file31 = (TextView)findViewById(R.id.file31);
         file31.setOnClickListener((View.OnClickListener) this);
+
+
+
+
+
+
+
+
 
         ed_triggerfinding = (EditText)findViewById(R.id.ed_triggers);
         ed_comments = (EditText)findViewById(R.id.ed_comments);
@@ -223,6 +242,7 @@ public class DynamicActivity extends AppCompatActivity implements
         });
 
     }
+
     private void textdata(){
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
@@ -549,7 +569,7 @@ public class DynamicActivity extends AppCompatActivity implements
         linearLayout.removeAllViews();
         relativeLayout = (RelativeLayout)findViewById(R.id.realdynmo);
         final TextView[] buttonholder = new TextView[10];
-         final TextView[] filenameholder = new TextView[10];
+        filenameholder = new TextView[10];
         ed = new EditText[10];
         //TextView button = new TextView(this);
         int in = triggersInfoList.size();
@@ -628,12 +648,11 @@ public class DynamicActivity extends AppCompatActivity implements
                     int in = v.getId();
                     int is = filenameholder[finalI].getId();
                     if(is==in){
+                        count=finalI+100;
                         selectImage();
 
-                       // filenameholder[finalI].setText();
 
                     }
-                   // selectImage();
                 }
             });
 
@@ -644,50 +663,45 @@ public class DynamicActivity extends AppCompatActivity implements
     }
 
 
-
-
     @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
 
             case R.id.file1:
-                int i = v.getId();
+              count = 1;
                 selectImage();
+
                 break;
 
             case R.id.file2:
-                int iq = v.getId();
+                count = 2;
                 selectImage();
+
                 break;
 
             case R.id.file3:
-                int iw = v.getId();
+                count = 3;
                 selectImage();
+
                 break;
             case R.id.file4:
+                count = 4;
                 selectImage();
                 break;
 
-            case R.id.file5:
-                selectImage();
-                break;
-            case R.id.file6:
-                selectImage();
-                break;
-
-            case R.id.file7:
-                selectImage();
-                break;
             case R.id.file8:
+                count = 8;
                 selectImage();
                 break;
 
             case R.id.file9:
+                count = 9;
                 selectImage();
                 break;
 
             case R.id.file31:
+                count = 31;
                 selectImage();
                 break;
 
@@ -792,6 +806,7 @@ public class DynamicActivity extends AppCompatActivity implements
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == SELECT_FILE)
+
                 onSelectFromGalleryResult(data);
             else if (requestCode == REQUEST_CAMERA)
                 onCaptureImageResult(data);
@@ -808,10 +823,27 @@ public class DynamicActivity extends AppCompatActivity implements
                     String upload = path.substring(path.lastIndexOf('/') + 1);
 //                String[] trimmed = path.split(dir);
 //                String sdcardPath = trimmed[0];
-                    if(filename1!=null && upload!=null){
 
-                       strfilename = path;
-                    }
+                        if(count==1) {
+
+                            filename1.setText(upload);
+                        }else if(count == 2) {
+                            filename2.setText(upload);
+                        }else if(count == 3){
+                            filename3.setText(upload);
+                        }else if(count == 4){
+                            filename4.setText(upload);
+                        }else if(count == 8){
+                            filename8.setText(upload);
+                        }else if(count == 9){
+                            filename9.setText(upload);
+                        }else if(count == 31){
+                            filename31.setText(upload);
+                        }else if(count ==count){
+
+                            triggerlist.add(upload);
+                            filenameholder[count-100].setText(upload);
+                        }
 
                     // upload = uploadfile(dir);
 
@@ -828,7 +860,7 @@ public class DynamicActivity extends AppCompatActivity implements
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
+                pendingInfo.getClaim_no()+"_"+pendingInfo.getCase_assignment_id()+"_"+System.currentTimeMillis() + ".jpg");
         FileOutputStream fo;
         try {
             destination.createNewFile();
@@ -841,8 +873,32 @@ public class DynamicActivity extends AppCompatActivity implements
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), thumbnail, "", null);
-        strfilename = path;
+
+        String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), thumbnail, "image", null);
+        String upload = destination.getPath().substring(destination.getPath().lastIndexOf('/') + 1);
+        if(count==1) {
+
+            filename1.setText(upload);
+        }else if(count == 2) {
+            filename2.setText(upload);
+        }else if(count == 3){
+            filename3.setText(upload);
+        }else if(count == 4){
+            filename4.setText(upload);
+        }else if(count == 8){
+            filename8.setText(upload);
+        }else if(count == 9){
+            filename9.setText(upload);
+        }else if(count == 31){
+            filename31.setText(upload);
+        }else if(count ==count){
+
+            triggerlist.add(upload);
+            filenameholder[count-100].setText(upload);
+        }
+
+
+
         /*Picasso.with(this).load(path).resize(350, 350).transform(new CircleTransform())
                 .centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(ivImage);*/
         //ivImage.setImageBitmap(thumbnail);
@@ -868,10 +924,32 @@ public class DynamicActivity extends AppCompatActivity implements
 
                 bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
                 String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, "", null);
-                strfilename = path;
-                //ivImage.setImageBitmap(bm);
-                // uploadProfileImage(targetPath);
 
+                String upload = pendingInfo.getClaim_no() + "_" + pendingInfo.getCase_assignment_id() + "_"+targetPath.substring(targetPath.lastIndexOf('/') + 1);
+
+
+
+
+                if(count==1) {
+
+                    filename1.setText(upload);
+                }else if(count == 2) {
+                    filename2.setText(upload);
+                }else if(count == 3){
+                    filename3.setText(upload);
+                }else if(count == 4){
+                    filename4.setText(upload);
+                }else if(count == 8){
+                    filename8.setText(upload);
+                }else if(count == 9){
+                    filename9.setText(upload);
+                }else if(count == 31){
+                    filename31.setText(upload);
+                }else if(count ==count){
+
+                    triggerlist.add(upload);
+                    filenameholder[count-100].setText(upload);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -903,9 +981,7 @@ public class DynamicActivity extends AppCompatActivity implements
                 .withTitle("Select a file")
                 .start();
     }
-    private String getfilename(String fileName){
 
-        return fileName;
-    }
+
 
 }
