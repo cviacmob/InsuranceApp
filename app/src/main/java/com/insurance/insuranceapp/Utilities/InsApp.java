@@ -7,6 +7,8 @@ import android.support.multidex.MultiDexApplication;
 
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Configuration;
+import com.insurance.insuranceapp.Datamodel.Triggers;
+import com.insurance.insuranceapp.Datamodel.TriggersInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 
 public class InsApp extends MultiDexApplication {
@@ -24,7 +26,7 @@ public class InsApp extends MultiDexApplication {
                 .build();
         Configuration.Builder configurationBuilder = new Configuration.Builder(this);
         configurationBuilder.addModelClasses(UserAccountInfo.class);
-
+        configurationBuilder.addModelClasses(Triggers.class);
         ActiveAndroid.initialize(this);
     }
 

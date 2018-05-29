@@ -4,11 +4,9 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-/**
- * Created by BALA on 08-05-2018.
- */
-@Table(name = "TriggersInfo")
-public class TriggersInfo extends Model {
+@Table(name = "Triggers")
+public class Triggers extends Model {
+
     @Column(name = "case_trigger_id")
     private String case_trigger_id;
     @Column(name = "trigger_name")

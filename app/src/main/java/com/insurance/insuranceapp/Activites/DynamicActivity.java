@@ -78,6 +78,7 @@ public class DynamicActivity extends AppCompatActivity implements
     private int count = 0;
     private TextView filename;
     private List<String> triggerlist;
+    private List<String> triggerListId;
     private  TextView[] filenameholder;
     private   List<TriggersInfo> triggersInfoList;
     private List<String> docNameList;
@@ -104,6 +105,7 @@ public class DynamicActivity extends AppCompatActivity implements
     private TextView title9,file9,filename9;
     private TextView title31,file31,filename31;
     InsApp api;
+    private String triggerID ="";
 
     private String string1= "<font color='#000000'>Company Authorization Letter towards the hospital </font>" + "<font color='#FF0000'>*</font>";
     private String string2= "<font color='#000000'>Investigation report form  </font>" + "<font color='#FF0000'>*</font>";
@@ -128,7 +130,7 @@ public class DynamicActivity extends AppCompatActivity implements
     int mYear = c.get(Calendar.YEAR); // current year
     int mMonth = c.get(Calendar.MONTH); // current month
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-    private Button backbutton;
+    private Button backbutton,bt_submit;
     List<EditText> allEds = new ArrayList<EditText>();
 
 
@@ -144,6 +146,7 @@ public class DynamicActivity extends AppCompatActivity implements
         pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
         getdetails(pendingInfo);
         textdata();
+        bt_submit = (Button)findViewById(R.id.bt_submit);
         filename1 = (TextView)findViewById(R.id.filename1);
         filename2 = (TextView)findViewById(R.id.filename2);
         filename3 = (TextView)findViewById(R.id.filename3);
@@ -184,7 +187,12 @@ public class DynamicActivity extends AppCompatActivity implements
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
         calendar = (ImageView)findViewById(R.id.ig_calender);
         submit = (Button)findViewById(R.id.bt_submit);
+        bt_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
 
         if(checkPermission()){
 
@@ -573,8 +581,10 @@ public class DynamicActivity extends AppCompatActivity implements
         ed = new EditText[10];
         //TextView button = new TextView(this);
         int in = triggersInfoList.size();
+
         List<String> titleList = new ArrayList<>();
         List<String> fileNameList = new ArrayList<>();
+        triggerListId  = new ArrayList<>();
 
 
         for(TriggersInfo tri:triggersInfoList) {
@@ -647,6 +657,9 @@ public class DynamicActivity extends AppCompatActivity implements
                 public void onClick(View v) {
                     int in = v.getId();
                     int is = filenameholder[finalI].getId();
+
+                   TriggersInfo triggerId = triggersInfoList.get(is);
+                    triggerID =  triggerId.getCase_trigger_id();
                     if(is==in){
                         count=finalI+100;
                         selectImage();
@@ -842,6 +855,7 @@ public class DynamicActivity extends AppCompatActivity implements
                         }else if(count ==count){
 
                             triggerlist.add(upload);
+                            triggerListId.add(triggerID);
                             filenameholder[count-100].setText(upload);
                         }
 
@@ -892,7 +906,7 @@ public class DynamicActivity extends AppCompatActivity implements
         }else if(count == 31){
             filename31.setText(upload);
         }else if(count ==count){
-
+            triggerListId.add(triggerID);
             triggerlist.add(upload);
             filenameholder[count-100].setText(upload);
         }
@@ -946,7 +960,7 @@ public class DynamicActivity extends AppCompatActivity implements
                 }else if(count == 31){
                     filename31.setText(upload);
                 }else if(count ==count){
-
+                    triggerListId.add(triggerID);
                     triggerlist.add(upload);
                     filenameholder[count-100].setText(upload);
                 }
