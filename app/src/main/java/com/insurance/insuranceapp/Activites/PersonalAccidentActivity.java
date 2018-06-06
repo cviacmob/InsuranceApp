@@ -243,7 +243,7 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
             AudioSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + format + ".mp3";
             MediaRecorderReady();
 
-            try {
+            /*try {
                 mediaRecorder.prepare();
                 mediaRecorder.start();
             } catch (IllegalStateException e) {
@@ -252,7 +252,7 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            }
+            }*/
         }
         else {
             requestPermission();
@@ -269,8 +269,8 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
                 } else {
                     textInputLayout.setError("Cannot be empty");
                 }
-                mediaRecorder.stop();
-                sendAudio();
+               // mediaRecorder.stop();
+               // sendAudio();
             }
         });
         calendar.setOnClickListener(new View.OnClickListener() {
@@ -304,7 +304,7 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
         file9.setOnClickListener((View.OnClickListener) this);
         file10 = (TextView)findViewById(R.id.file10);
         file10.setOnClickListener((View.OnClickListener) this);
-        file11 = (TextView)findViewById(R.id.file11);
+        file11 = (TextView)findViewById(R.id.file_11);
         file11.setOnClickListener((View.OnClickListener) this);
         file12 = (TextView)findViewById(R.id.file12);
         file12.setOnClickListener((View.OnClickListener) this);
@@ -360,7 +360,7 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
         ActivityCompat.requestPermissions(PersonalAccidentActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
     }
 
-    private void sendAudio(){
+/*    private void sendAudio(){
         String consultID = "";
         progressDialog = new ProgressDialog(PersonalAccidentActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -431,14 +431,14 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
                 // Toast.makeText(HospitalBlockActivity.this, "Audio_file Failed: " + t, Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     protected void createEditTextView() {
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linear);      //find the linear layout
         linearLayout.removeAllViews();
         relativeLayout = (RelativeLayout) findViewById(R.id.realdynmo);
-        pendingInfoList = getList();
+       // pendingInfoList = getList();
 
         for (int i = 1; i <= pendingInfoList.size(); i++) {
 
@@ -495,26 +495,7 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
         }
     }
 
-    private List<PendingInfo> getList() {
 
-        pendingInfoList = new ArrayList<>();
-
-        PendingInfo pendingInfo = new PendingInfo();
-        pendingInfo.setCliam_no("5461235");
-        pendingInfo.setPatient_name("Arun");
-        pendingInfo.setCase_type("Hospital Block");
-        pendingInfo.setPolicy_number("54322578");
-        pendingInfo.setCompany_name("LIC");
-
-        pendingInfo.setCase_assigned_on("Vijila ");
-
-        pendingInfo.setStatus("pending");
-
-        pendingInfoList.add(pendingInfo);
-
-
-        return pendingInfoList;
-    }
 
     public void datepicker() {
         datePickerDialog = new DatePickerDialog(this,

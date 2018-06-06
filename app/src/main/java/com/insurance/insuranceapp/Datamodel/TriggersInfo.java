@@ -7,15 +7,15 @@ import com.activeandroid.annotation.Table;
 /**
  * Created by BALA on 08-05-2018.
  */
-@Table(name = "TriggersInfo")
-public class TriggersInfo extends Model {
-    @Column(name = "case_trigger_id")
+
+public class TriggersInfo {
+
     private String case_trigger_id;
-    @Column(name = "trigger_name")
+
     private String trigger_name;
-    @Column(name = "trigger_file")
+
     private String trigger_file;
-    @Column(name = "trigger_answer")
+
     private String trigger_answer;
 
 

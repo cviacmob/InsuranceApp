@@ -54,7 +54,10 @@ public interface InsuranceAPI {
     @FormUrlEncoded
     @POST("/insapi/index.php/triggers")
     Call<List<TriggersInfo>> gettriggersdetails(@Field("case_assignment_id") String assignment_id,
-                                                @Field("flag") String flag);
+                                                @Field("flag") String flag,
+                                                @Field("case_trigger_id") List<String> case_trigger_id,
+                                                @Field("trigger_answer") List<String> trigger_answer,
+                                                @Field("trigger_file") List<String> trigger_file);
 
     @FormUrlEncoded
     @POST("/insapi/index.php/cases")

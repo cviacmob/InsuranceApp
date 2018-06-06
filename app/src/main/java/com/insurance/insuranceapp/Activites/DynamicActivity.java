@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.insurance.insuranceapp.Datamodel.DynamicFileNameInfo;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
+import com.insurance.insuranceapp.Datamodel.Triggers;
 import com.insurance.insuranceapp.Datamodel.TriggersInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
@@ -61,7 +62,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -70,6 +73,8 @@ import retrofit.GsonConverterFactory;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static com.insurance.insuranceapp.Datamodel.Triggers.getdeletetriggers;
+import static com.insurance.insuranceapp.Datamodel.Triggers.gettriAll;
 import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class DynamicActivity extends AppCompatActivity implements
@@ -79,6 +84,7 @@ public class DynamicActivity extends AppCompatActivity implements
     private TextView filename;
     private List<String> triggerlist;
     private List<String> triggerListId;
+
     private  TextView[] filenameholder;
     private   List<TriggersInfo> triggersInfoList;
     private List<String> docNameList;
@@ -106,12 +112,13 @@ public class DynamicActivity extends AppCompatActivity implements
     private TextView title31,file31,filename31;
     InsApp api;
     private String triggerID ="";
+    private Hashtable<Integer,String> triggerhash;
 
     private String string1= "<font color='#000000'>Company Authorization Letter towards the hospital </font>" + "<font color='#FF0000'>*</font>";
     private String string2= "<font color='#000000'>Investigation report form  </font>" + "<font color='#FF0000'>*</font>";
     private String string3= "<font color='#000000'>Insured Questionnaire </font>" + "<font color='#FF0000'>*</font>";
     private String string4= "<font color='#000000'>Treating doctor Questionnaire  </font>" + "<font color='#FF0000'>*</font>";
-
+    private  String assignmentID = "";
     private String string8 = "Others";
     private String string9 = "Evidence for Trigger";
     private String string31 = "Conveyance File(s)";
@@ -130,10 +137,10 @@ public class DynamicActivity extends AppCompatActivity implements
     int mYear = c.get(Calendar.YEAR); // current year
     int mMonth = c.get(Calendar.MONTH); // current month
     int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-    private Button backbutton,bt_submit;
+    private Button backbutton;
     List<EditText> allEds = new ArrayList<EditText>();
-
-
+    private String mode = "";
+    private List<String> triggeranswer;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,10 +150,12 @@ public class DynamicActivity extends AppCompatActivity implements
         setTitle("Others");
         userAccountInfoList  = getAll();
         triggerlist = new ArrayList<>();
+
+        triggeranswer = new ArrayList<>();
         pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
         getdetails(pendingInfo);
         textdata();
-        bt_submit = (Button)findViewById(R.id.bt_submit);
+        triggerhash =new Hashtable<Integer, String>();
         filename1 = (TextView)findViewById(R.id.filename1);
         filename2 = (TextView)findViewById(R.id.filename2);
         filename3 = (TextView)findViewById(R.id.filename3);
@@ -187,12 +196,7 @@ public class DynamicActivity extends AppCompatActivity implements
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
         calendar = (ImageView)findViewById(R.id.ig_calender);
         submit = (Button)findViewById(R.id.bt_submit);
-        bt_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
 
         if(checkPermission()){
 
@@ -203,7 +207,7 @@ public class DynamicActivity extends AppCompatActivity implements
 
             try {
                 mediaRecorder.prepare();
-                mediaRecorder.start();
+               // mediaRecorder.start();
             } catch (IllegalStateException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -219,17 +223,32 @@ public class DynamicActivity extends AppCompatActivity implements
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               int in = allEds.size();
 
-                submitted_date =  ed_date.getText().toString();
-                if(submitted_date!=null && !submitted_date.isEmpty())
+              /*  for (int i = 0; i<ed.length;i++){
+                   String ans =  ed[i].getText().toString();
+                    if(ans!=null){
+                        triggeranswer.add(ed[i].getText().toString());
+                    }
+
+                }*/
+               mode ="1";
+                gettriggerslist(pendingInfo);
+
+
+               // submitted_date =  ed_date.getText().toString();
+
+
+
+
+
+               /* if(submitted_date!=null && !submitted_date.isEmpty())
                 {
                     comments = ed_comments.getText().toString();
                     triggerfinding = ed_triggerfinding.getText().toString();
                     Convanceamt = ed_convance.getText().toString();
                 }else{
                     textInputLayout.setError("Cannot be empty");
-                }
+                }*/
                // mediaRecorder.stop();
                // sendAudio();
             }
@@ -286,78 +305,7 @@ public class DynamicActivity extends AppCompatActivity implements
         ActivityCompat.requestPermissions(DynamicActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
     }
 
-    private void sendAudio(){
-        String consultID = "";
-        progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Submitting...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
 
-        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
-        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
-        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
-
-        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl(getBaseContext().getString(R.string.DomainURL))
-                .client(okHttpClient)
-                .build();
-
-        insuranceAPI = retrofit.create(InsuranceAPI.class);
-        for(UserAccountInfo userAccountInfo : userAccountInfoList){
-            consultID = userAccountInfo.getConsultant_id();
-        }
-        String casetype = pendingInfo.getCase_type();
-        String assignstatus = pendingInfo.getAssign_status();
-        String CaseId = pendingInfo.getCase_id();
-        String CaseassignmentId= pendingInfo.getCase_assignment_id();
-        String claim_no = pendingInfo.getClaim_no();
-        String case_type_id = pendingInfo.getCase_type_id();
-        File file = new File(AudioSavePath);
-        RequestBody fbody = RequestBody.create(MediaType.parse("mp3/*"),file);
-        String submit = "submit";
-        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
-        builder.addFormDataPart("consultant_id", consultID);
-        builder.addFormDataPart("case_type", casetype);
-        builder.addFormDataPart("assign_status", assignstatus);
-        builder.addFormDataPart("case_id",CaseId);
-        builder.addFormDataPart("case_assignment_id", CaseassignmentId);
-        builder.addFormDataPart("claim_no", claim_no);
-        builder.addFormDataPart("case_type_id", case_type_id);
-        builder.addFormDataPart("fileToUpload", claim_no+"_"+format+".mp3", fbody);
-        builder.addFormDataPart("submit", submit);
-        Call<ResponseBody> call = insuranceAPI.sendAudio(builder.build());
-        //  Call<ResponseBody> call = insuranceAPI.sendAudio(consultID,casetype,assignstatus,CaseId,CaseassignmentId,claim_no,case_type_id,fbody,submit);
-        call.enqueue(new retrofit.Callback<ResponseBody>() {
-            @Override
-            public void onResponse(retrofit.Response<ResponseBody> response, retrofit.Retrofit retrofit) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
-                ResponseBody res = response.body();
-                try {
-                    String autocompleteOptions = res.string();
-                    //   Toast.makeText(HospitalBlockActivity.this, autocompleteOptions, Toast.LENGTH_SHORT).show();
-                    File file = new File(AudioSavePath);
-                    boolean deleted = file.delete();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-            @Override
-            public void onFailure(Throwable t) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
-                String err = t.getMessage() == null ? "" : t.getMessage();
-                Log.e("RETROFIT", err);
-                // Toast.makeText(HospitalBlockActivity.this, "Audio_file Failed: " + t, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
 
     public void datepicker(){
@@ -421,7 +369,7 @@ public class DynamicActivity extends AppCompatActivity implements
         }
 
         String status = pendingInfo.getAssign_status();
-        String assignmentID = pendingInfo.getCase_assignment_id();
+        assignmentID  = pendingInfo.getCase_assignment_id();
         String flag ="0";
 
 
@@ -436,6 +384,7 @@ public class DynamicActivity extends AppCompatActivity implements
                 dynamicFileNameInfoList = response.body();
                 if(dynamicFileNameInfoList!=null) {
                     filelayout();
+                    mode = "0";
                     gettriggerslist(pendingInfo);
                 }
 
@@ -477,10 +426,20 @@ public class DynamicActivity extends AppCompatActivity implements
             consultantid=user.getConsultant_id();
         }
 
-        String assignmentID = pendingInfo.getCase_assignment_id();
-        String flag ="0";
 
-        Call<List<TriggersInfo>> call = insuranceAPI.gettriggersdetails(assignmentID,flag);
+        if(mode.equalsIgnoreCase("0")){
+           assignmentID = pendingInfo.getCase_assignment_id();
+            mode = "0";
+            triggerListId = Collections.singletonList("");
+
+        }else{
+            mode = "1";
+            assignmentID = pendingInfo.getCase_assignment_id();
+
+
+        }
+
+        Call<List<TriggersInfo>> call = insuranceAPI.gettriggersdetails(assignmentID,mode,triggerListId,triggeranswer,triggerlist);
         call.enqueue(new retrofit.Callback<List<TriggersInfo>>() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
@@ -590,6 +549,7 @@ public class DynamicActivity extends AppCompatActivity implements
         for(TriggersInfo tri:triggersInfoList) {
 
             titleList.add(tri.getTrigger_name());
+
            // fileNameList.add(tri.getTrigger_file());
         }
         for(int i=1;i<=in;i++) {
@@ -646,6 +606,7 @@ public class DynamicActivity extends AppCompatActivity implements
             button.setOnClickListener(this);
             buttonholder[i] = button;
             filenameholder[i]=filename;
+            ed[i]=edittext;
             linearLayout.addView(title);
             linearLayout.addView(edittext);
             linearLayout.addView(button);
@@ -657,9 +618,9 @@ public class DynamicActivity extends AppCompatActivity implements
                 public void onClick(View v) {
                     int in = v.getId();
                     int is = filenameholder[finalI].getId();
-
-                   TriggersInfo triggerId = triggersInfoList.get(is);
+                    TriggersInfo triggerId = triggersInfoList.get(is);
                     triggerID =  triggerId.getCase_trigger_id();
+
                     if(is==in){
                         count=finalI+100;
                         selectImage();
@@ -825,10 +786,10 @@ public class DynamicActivity extends AppCompatActivity implements
                 onCaptureImageResult(data);
         }
 
-        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
-            String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+
+
             if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
-                String filepath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
 
                 if (path != null) {
                     Log.d("Path: ", path);
@@ -855,8 +816,10 @@ public class DynamicActivity extends AppCompatActivity implements
                         }else if(count ==count){
 
                             triggerlist.add(upload);
+
                             triggerListId.add(triggerID);
                             filenameholder[count-100].setText(upload);
+
                         }
 
                     // upload = uploadfile(dir);
@@ -866,7 +829,7 @@ public class DynamicActivity extends AppCompatActivity implements
                 }
             }
 
-        }
+
     }
 
     private void onCaptureImageResult(Intent data) {
@@ -909,6 +872,7 @@ public class DynamicActivity extends AppCompatActivity implements
             triggerListId.add(triggerID);
             triggerlist.add(upload);
             filenameholder[count-100].setText(upload);
+
         }
 
 
@@ -960,9 +924,13 @@ public class DynamicActivity extends AppCompatActivity implements
                 }else if(count == 31){
                     filename31.setText(upload);
                 }else if(count ==count){
+                    Triggers ss = new Triggers();
                     triggerListId.add(triggerID);
                     triggerlist.add(upload);
                     filenameholder[count-100].setText(upload);
+
+
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
