@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -38,6 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.utils.FileUtils;
 import com.insurance.insuranceapp.Datamodel.DynamicFileNameInfo;
 import com.insurance.insuranceapp.Datamodel.PendingCaseListInfo;
 import com.insurance.insuranceapp.Datamodel.PendingInfo;
@@ -51,6 +53,7 @@ import com.insurance.materialfilepicker.ui.FilePickerActivity;
 import com.insurance.materialfilepicker.widget.MaterialFilePicker;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
 
@@ -68,14 +71,20 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.MultipartBody;
 import retrofit.Call;
 import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Part;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.insurance.insuranceapp.Datamodel.Triggers.getdeletetriggers;
 import static com.insurance.insuranceapp.Datamodel.Triggers.gettriAll;
 import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
+import static com.squareup.okhttp.RequestBody.create;
 
 public class DynamicActivity extends AppCompatActivity implements
         View.OnClickListener {
@@ -84,7 +93,7 @@ public class DynamicActivity extends AppCompatActivity implements
     private TextView filename;
     private List<String> triggerlist;
     private List<String> triggerListId;
-
+    private static final String TAG = DynamicActivity.class.getSimpleName();
     private  TextView[] filenameholder;
     private   List<TriggersInfo> triggersInfoList;
     private List<String> docNameList;
@@ -96,7 +105,7 @@ public class DynamicActivity extends AppCompatActivity implements
     public static final int PERMISSIONS_REQUEST_CODE = 0;
     public static final int FILE_PICKER_REQUEST_CODE = 1;
     MediaRecorder mediaRecorder ;
-    private String AudioSavePath = null;
+
     private String format;
     ProgressDialog progressDialog;
     InsuranceAPI insuranceAPI;
@@ -140,6 +149,7 @@ public class DynamicActivity extends AppCompatActivity implements
     private Button backbutton;
     List<EditText> allEds = new ArrayList<EditText>();
     private String mode = "";
+    retrofit.Retrofit retrofit;
     private List<String> triggeranswer;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -198,27 +208,6 @@ public class DynamicActivity extends AppCompatActivity implements
         submit = (Button)findViewById(R.id.bt_submit);
 
 
-        if(checkPermission()){
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
-            format = simpleDateFormat.format(new Date());
-            AudioSavePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + format + ".mp3";
-            MediaRecorderReady();
-
-            try {
-                mediaRecorder.prepare();
-               // mediaRecorder.start();
-            } catch (IllegalStateException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        else {
-            requestPermission();
-        }
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,16 +283,7 @@ public class DynamicActivity extends AppCompatActivity implements
         return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
     }
 
-    public void MediaRecorderReady(){
-        mediaRecorder=new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(AudioSavePath);
-    }
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(DynamicActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
-    }
+
 
 
 
@@ -404,7 +384,10 @@ public class DynamicActivity extends AppCompatActivity implements
         });
 
     }
+
     private void gettriggerslist(PendingCaseListInfo pendingInfo) {
+
+
 
         String consultantid = "";
         progressDialog = new ProgressDialog(DynamicActivity.this, R.style.AppTheme_Dark_Dialog);
@@ -412,62 +395,132 @@ public class DynamicActivity extends AppCompatActivity implements
         progressDialog.setMessage("Loading...");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
-        okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
-        okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
-        retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
-                .baseUrl(getBaseContext().getString(R.string.DomainURL))
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-        insuranceAPI = retrofit.create(InsuranceAPI.class);
+
+        if(mode=="0"){
+            com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+            okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+            okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+             retrofit = new retrofit.Retrofit.Builder()
+                    .baseUrl(getBaseContext().getString(R.string.DomainURL))
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClient)
+                    .build();
+            insuranceAPI = retrofit.create(InsuranceAPI.class);
+        }
+
+
 
         for(UserAccountInfo user:userAccountInfoList) {
             consultantid=user.getConsultant_id();
         }
 
 
-        if(mode.equalsIgnoreCase("0")){
-           assignmentID = pendingInfo.getCase_assignment_id();
+        if(mode == "0"){
+            assignmentID = pendingInfo.getCase_assignment_id();
             mode = "0";
             triggerListId = Collections.singletonList("");
+            Call<List<TriggersInfo>> call = insuranceAPI.gettriggersdetails(assignmentID,mode,triggerListId,triggeranswer,triggerlist);
+            call.enqueue(new retrofit.Callback<List<TriggersInfo>>() {
+                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                @Override
+                public void onResponse(retrofit.Response<List<TriggersInfo>> response, retrofit.Retrofit retrofit) {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+                    triggersInfoList = response.body();
+                    if(triggersInfoList!=null) {
 
-        }else{
+                        createEditTextView();
+                    }
+
+                }
+
+
+                @Override
+                public void onFailure(Throwable t) {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+
+                    Toast.makeText(DynamicActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+
+        }else if(mode == "1"){
             mode = "1";
             assignmentID = pendingInfo.getCase_assignment_id();
 
+            com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
+            okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
+            okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
+            retrofit = new retrofit.Retrofit.Builder()
+                    .baseUrl(getBaseContext().getString(R.string.DomainURL))
+                    .client(okHttpClient)
+                    .build();
+
+            RequestBody fbody;
+            MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+            builder.addFormDataPart("case_assignment_id", assignmentID);
+            builder.addFormDataPart("flag", mode);
+            for (int i = 0; i < triggerListId.size(); i++) {
+                String triggID= triggerListId.get(i);
+
+                builder.addFormDataPart("case_trigger_id",triggID);
+            }
+
+            for (int i = 0; i < triggeranswer.size(); i++) {
+                String trigans= triggeranswer.get(i);
+                builder.addFormDataPart("trigger_answer",trigans);
+            }
+
+            for (int i = 0; i < triggerlist.size(); i++) {
+                File file = new File(triggerlist.get(i));
+                String mime = getMimeType(file.getAbsolutePath());
+                fbody = RequestBody.create(MediaType.parse(mime),file);
+                builder.addFormDataPart("file", file.getName(),fbody);
+            }
+
+            Call<ResponseBody> call = insuranceAPI.uploadMultiFile(builder.build());
+            call.enqueue(new retrofit.Callback<ResponseBody>() {
+                @Override
+                public void onResponse(retrofit.Response<ResponseBody> response, retrofit.Retrofit retrofit) {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+                    ResponseBody res = response.body();
+                    Toast.makeText(DynamicActivity.this, "Audio_file", Toast.LENGTH_SHORT).show();
+
+
+                }
+                @Override
+                public void onFailure(Throwable t) {
+                    if (progressDialog != null) {
+                        progressDialog.dismiss();
+                    }
+                    String err = t.getMessage() == null ? "" : t.getMessage();
+                    Log.e("RETROFIT", err);
+                    // Toast.makeText(HospitalBlockActivity.this, "Audio_file Failed: " + t, Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
 
-        Call<List<TriggersInfo>> call = insuranceAPI.gettriggersdetails(assignmentID,mode,triggerListId,triggeranswer,triggerlist);
-        call.enqueue(new retrofit.Callback<List<TriggersInfo>>() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void onResponse(retrofit.Response<List<TriggersInfo>> response, retrofit.Retrofit retrofit) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
-                triggersInfoList = response.body();
-                if(triggersInfoList!=null) {
-
-                    createEditTextView();
-                }
-
-            }
 
 
-            @Override
-            public void onFailure(Throwable t) {
-                if (progressDialog != null) {
-                    progressDialog.dismiss();
-                }
+    }
+    private void uploadMultiFile() {
 
-                Toast.makeText(DynamicActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+    }
 
-            }
-        });
-
-
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -815,10 +868,10 @@ public class DynamicActivity extends AppCompatActivity implements
                             filename31.setText(upload);
                         }else if(count ==count){
 
-                            triggerlist.add(upload);
+                            triggerlist.add(path);
 
                             triggerListId.add(triggerID);
-                            filenameholder[count-100].setText(upload);
+                            filenameholder[count-100].setText(path);
 
                         }
 
@@ -870,8 +923,8 @@ public class DynamicActivity extends AppCompatActivity implements
             filename31.setText(upload);
         }else if(count ==count){
             triggerListId.add(triggerID);
-            triggerlist.add(upload);
-            filenameholder[count-100].setText(upload);
+            triggerlist.add(destination.getPath());
+            filenameholder[count-100].setText(destination.getPath());
 
         }
 
@@ -901,7 +954,7 @@ public class DynamicActivity extends AppCompatActivity implements
                 cursor.close();
 
                 bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, "", null);
+                String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, "image", null);
 
                 String upload = pendingInfo.getClaim_no() + "_" + pendingInfo.getCase_assignment_id() + "_"+targetPath.substring(targetPath.lastIndexOf('/') + 1);
 
@@ -926,8 +979,8 @@ public class DynamicActivity extends AppCompatActivity implements
                 }else if(count ==count){
                     Triggers ss = new Triggers();
                     triggerListId.add(triggerID);
-                    triggerlist.add(upload);
-                    filenameholder[count-100].setText(upload);
+                    triggerlist.add(targetPath);
+                    filenameholder[count-100].setText(targetPath);
 
 
 

@@ -12,11 +12,14 @@ import com.squareup.okhttp.ResponseBody;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit.Call;
 import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit2.http.Part;
 
 /**
  * Created by Balaji on 4/16/2018.
@@ -57,12 +60,24 @@ public interface InsuranceAPI {
                                                 @Field("flag") String flag,
                                                 @Field("case_trigger_id") List<String> case_trigger_id,
                                                 @Field("trigger_answer") List<String> trigger_answer,
-                                                @Field("trigger_file") List<String> trigger_file);
+                                                @Field("file") List<String> file);
+    @POST("/insapi/index.php/triggers")
+    Call<ResponseBody> uploadMultiFile(@Body RequestBody body);
+
 
     @FormUrlEncoded
     @POST("/insapi/index.php/cases")
     Call<List<QueryInfo>> getquerycases(@Field("consultant_id") String assignment_id,
                                         @Field("status") String flag);
+
+    @Multipart
+    @POST("/insapi/index.php/triggers")
+    Call<ResponseBody> uploadMultipleFilesDynamic(
+            @Part("case_assignment_id") String assignment_id,
+            @Part("flag") String flag,
+            @Part("case_trigger_id") List<String> case_trigger_id,
+            @Part("trigger_answer") List<String> trigger_answer,
+            @Part  MultipartBody.Part file);
 
     @POST("insapi/audioupload.php/")
     Call<ResponseBody> sendAudio(@Body RequestBody body);
