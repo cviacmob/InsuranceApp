@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
@@ -27,6 +28,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -49,6 +52,7 @@ import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.insuranceapp.Utilities.InsApp;
+import com.insurance.insuranceapp.Utilities.RecorderService;
 import com.insurance.materialfilepicker.ui.FilePickerActivity;
 import com.insurance.materialfilepicker.widget.MaterialFilePicker;
 import com.squareup.okhttp.MediaType;
@@ -85,15 +89,22 @@ import static com.insurance.insuranceapp.Datamodel.Triggers.getdeletetriggers;
 import static com.insurance.insuranceapp.Datamodel.Triggers.gettriAll;
 import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 import static com.squareup.okhttp.RequestBody.create;
+import static okhttp3.MultipartBody.*;
 
-public class DynamicActivity extends AppCompatActivity implements
-        View.OnClickListener {
+
+public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.Callback,View.OnClickListener {
+    private static final String TAG = DynamicActivity.class.getSimpleName();
+    public static SurfaceView mSurfaceView;
+    public static SurfaceHolder mSurfaceHolder;
+    public static Camera mCamera;
+    public static boolean mPreviewRunning;
+
     private EditText[] ed;
     private int count = 0;
     private TextView filename;
     private List<String> triggerlist;
     private List<String> triggerListId;
-    private static final String TAG = DynamicActivity.class.getSimpleName();
+
     private  TextView[] filenameholder;
     private   List<TriggersInfo> triggersInfoList;
     private List<String> docNameList;
@@ -196,9 +207,6 @@ public class DynamicActivity extends AppCompatActivity implements
 
 
 
-
-
-
         ed_triggerfinding = (EditText)findViewById(R.id.ed_triggers);
         ed_comments = (EditText)findViewById(R.id.ed_comments);
         ed_date = (EditText)findViewById(R.id.edit_date);
@@ -212,7 +220,7 @@ public class DynamicActivity extends AppCompatActivity implements
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+           //    stopService(new Intent(DynamicActivity.this, RecorderService.class));
               /*  for (int i = 0; i<ed.length;i++){
                    String ans =  ed[i].getText().toString();
                     if(ans!=null){
@@ -222,7 +230,6 @@ public class DynamicActivity extends AppCompatActivity implements
                 }*/
                mode ="1";
                 gettriggerslist(pendingInfo);
-
 
                // submitted_date =  ed_date.getText().toString();
 
@@ -451,7 +458,7 @@ public class DynamicActivity extends AppCompatActivity implements
         }else if(mode == "1"){
             mode = "1";
             assignmentID = pendingInfo.getCase_assignment_id();
-
+            File file;
             com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
             okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
             okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
@@ -460,10 +467,16 @@ public class DynamicActivity extends AppCompatActivity implements
                     .client(okHttpClient)
                     .build();
 
-            RequestBody fbody;
-            MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
+            MultipartBody.Part fbody = null;
+
+            Builder builder = new Builder().setType(MultipartBody.FORM);
+
+
+
             builder.addFormDataPart("case_assignment_id", assignmentID);
             builder.addFormDataPart("flag", mode);
+           // MultipartBuilder builder = new MultipartBuilder().builder.setType(MultipartBody.FORM);
+
             for (int i = 0; i < triggerListId.size(); i++) {
                 String triggID= triggerListId.get(i);
 
@@ -476,13 +489,28 @@ public class DynamicActivity extends AppCompatActivity implements
             }
 
             for (int i = 0; i < triggerlist.size(); i++) {
-                File file = new File(triggerlist.get(i));
-                String mime = getMimeType(file.getAbsolutePath());
-                fbody = RequestBody.create(MediaType.parse(mime),file);
-                builder.addFormDataPart("file", file.getName(),fbody);
-            }
+                file = new File(triggerlist.get(i));
 
-            Call<ResponseBody> call = insuranceAPI.uploadMultiFile(builder.build());
+/*
+
+                okhttp3.RequestBody requestFile =
+                        okhttp3.RequestBody.create(
+                                MediaType.parse("multipart/form-data"),
+                                file
+                        );
+
+                MultipartBody.Part body =
+                        MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
+*/
+
+
+                fbody =MultipartBody.Part.createFormData("file", file.getName());
+               // builder.addFormDataPart("file", file.getName(), okhttp3.RequestBody.create(okhttp3.MediaType.parse("multipart/form-data"), file));
+
+            }
+                MultipartBody bui =builder.build();
+            Call<ResponseBody> call = insuranceAPI.uploadMultiFile(assignmentID,mode,triggerListId,triggeranswer);
+
             call.enqueue(new retrofit.Callback<ResponseBody>() {
                 @Override
                 public void onResponse(retrofit.Response<ResponseBody> response, retrofit.Retrofit retrofit) {
@@ -510,9 +538,7 @@ public class DynamicActivity extends AppCompatActivity implements
 
 
     }
-    private void uploadMultiFile() {
 
-    }
 
     public static String getMimeType(String url) {
         String type = null;
@@ -1018,5 +1044,18 @@ public class DynamicActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
 
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
+    }
 }

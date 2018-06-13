@@ -61,8 +61,15 @@ public interface InsuranceAPI {
                                                 @Field("case_trigger_id") List<String> case_trigger_id,
                                                 @Field("trigger_answer") List<String> trigger_answer,
                                                 @Field("file") List<String> file);
+
+
+    @Multipart
     @POST("/insapi/index.php/triggers")
-    Call<ResponseBody> uploadMultiFile(@Body RequestBody body);
+    Call<ResponseBody> uploadMultiFile(@Part("case_assignment_id") String assignment_id,
+                                       @Part("flag") String flag,
+                                       @Part("case_trigger_id") List<String> case_trigger_id,
+                                       @Part("trigger_answer") List<String> trigger_answer
+                                     );
 
 
     @FormUrlEncoded
@@ -77,7 +84,7 @@ public interface InsuranceAPI {
             @Part("flag") String flag,
             @Part("case_trigger_id") List<String> case_trigger_id,
             @Part("trigger_answer") List<String> trigger_answer,
-            @Part  MultipartBody.Part file);
+            @Part MultipartBody file);
 
     @POST("insapi/audioupload.php/")
     Call<ResponseBody> sendAudio(@Body RequestBody body);

@@ -622,7 +622,11 @@
                     android:textSize="12sp" />
             </RelativeLayout>
 
-
+            <SurfaceView
+                android:id="@+id/surfaceView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </SurfaceView>
         </RelativeLayout>
 
 
