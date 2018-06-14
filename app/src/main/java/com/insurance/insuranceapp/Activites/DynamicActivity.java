@@ -55,11 +55,9 @@ import com.insurance.insuranceapp.Utilities.InsApp;
 import com.insurance.insuranceapp.Utilities.RecorderService;
 import com.insurance.materialfilepicker.ui.FilePickerActivity;
 import com.insurance.materialfilepicker.widget.MaterialFilePicker;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
+
+
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -75,21 +73,23 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.ResponseBody;
+
 import okhttp3.MultipartBody;
 import retrofit.Call;
 import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Part;
+import retrofit2.Retrofit;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.insurance.insuranceapp.Datamodel.Triggers.getdeletetriggers;
-import static com.insurance.insuranceapp.Datamodel.Triggers.gettriAll;
+
 import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
-import static com.squareup.okhttp.RequestBody.create;
-import static okhttp3.MultipartBody.*;
+
 
 public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.Callback, View.OnClickListener {
 
@@ -176,9 +176,9 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
         mSurfaceHolder.addCallback(this);
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-        Intent intent = new Intent(DynamicActivity.this, RecorderService.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startService(intent);
+//        Intent intent = new Intent(DynamicActivity.this, RecorderService.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+       // startService(intent);
 
         userAccountInfoList = getAll();
         triggerlist = new ArrayList<>();
@@ -222,7 +222,7 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stopService(new Intent(DynamicActivity.this, RecorderService.class));
+               // stopService(new Intent(DynamicActivity.this, RecorderService.class));
               /*  for (int i = 0; i<ed.length;i++){
                    String ans =  ed[i].getText().toString();
                     if(ans!=null){
@@ -450,76 +450,58 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
             com.squareup.okhttp.OkHttpClient okHttpClient = new com.squareup.okhttp.OkHttpClient();
             okHttpClient.setConnectTimeout(120000, TimeUnit.MILLISECONDS);
             okHttpClient.setReadTimeout(120000, TimeUnit.MILLISECONDS);
-            retrofit = new retrofit.Retrofit.Builder()
+
+            retrofit.Retrofit retrofit = new retrofit.Retrofit.Builder()
                     .baseUrl(getBaseContext().getString(R.string.DomainURL))
                     .client(okHttpClient)
                     .build();
 
-            MultipartBody.Part fbody = null;
 
-            Builder builder = new Builder().setType(MultipartBody.FORM);
+            insuranceAPI = retrofit.create(InsuranceAPI.class);
 
+            MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM);
 
-            builder.addFormDataPart("case_assignment_id", assignmentID);
-            builder.addFormDataPart("flag", mode);
-            // MultipartBuilder builder = new MultipartBuilder().builder.setType(MultipartBody.FORM);
+             builder.addFormDataPart("case_assignment_id", assignmentID);
+           builder.addFormDataPart("flag", mode);
 
-            for (int i = 0; i < triggerListId.size(); i++) {
+           for (int i = 0; i < triggerListId.size(); i++) {
                 String triggID = triggerListId.get(i);
 
-                builder.addFormDataPart("case_trigger_id", triggID);
+               builder.addFormDataPart("case_trigger_id", triggID);
             }
 
             for (int i = 0; i < triggeranswer.size(); i++) {
                 String trigans = triggeranswer.get(i);
-                builder.addFormDataPart("trigger_answer", trigans);
+              builder.addFormDataPart("trigger_answer", trigans);
             }
+
 
             for (int i = 0; i < triggerlist.size(); i++) {
                 file = new File(triggerlist.get(i));
+                RequestBody fbody = RequestBody.create(MediaType.parse("multipart/form-data"),file);
+                builder.addFormDataPart("file", file.getName(), fbody);
+                            }
+            RequestBody pa = builder.build();
+            Call<com.squareup.okhttp.ResponseBody> call =  insuranceAPI.uploadMultiFile(pa);
+           call.enqueue(new retrofit.Callback<com.squareup.okhttp.ResponseBody>() {
+               @Override
+               public void onResponse(retrofit.Response<com.squareup.okhttp.ResponseBody> response, retrofit.Retrofit retrofit) {
+                   if (progressDialog != null) {
+                       progressDialog.dismiss();
+                   }
+                   com.squareup.okhttp.ResponseBody res = response.body();
+               }
 
-/*
+               @Override
+               public void onFailure(Throwable t) {
+                   if (progressDialog != null) {
+                       progressDialog.dismiss();
+                   }
+                   String err = t.getMessage() == null ? "" : t.getMessage();
+                   Log.e("RETROFIT", err);
+               }
+           });
 
-                okhttp3.RequestBody requestFile =
-                        okhttp3.RequestBody.create(
-                                MediaType.parse("multipart/form-data"),
-                                file
-                        );
-
-                MultipartBody.Part body =
-                        MultipartBody.Part.createFormData("picture", file.getName(), requestFile);
-*/
-
-
-                fbody = MultipartBody.Part.createFormData("file", file.getName());
-                // builder.addFormDataPart("file", file.getName(), okhttp3.RequestBody.create(okhttp3.MediaType.parse("multipart/form-data"), file));
-
-            }
-            MultipartBody bui = builder.build();
-            Call<ResponseBody> call = insuranceAPI.uploadMultiFile(assignmentID, mode, triggerListId, triggeranswer);
-
-            call.enqueue(new retrofit.Callback<ResponseBody>() {
-                @Override
-                public void onResponse(retrofit.Response<ResponseBody> response, retrofit.Retrofit retrofit) {
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
-                    ResponseBody res = response.body();
-                    Toast.makeText(DynamicActivity.this, "Audio_file", Toast.LENGTH_SHORT).show();
-
-
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
-                    String err = t.getMessage() == null ? "" : t.getMessage();
-                    Log.e("RETROFIT", err);
-                    // Toast.makeText(HospitalBlockActivity.this, "Audio_file Failed: " + t, Toast.LENGTH_SHORT).show();
-                }
-            });
 
         }
 

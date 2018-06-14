@@ -42,11 +42,9 @@ import static com.insurance.insuranceapp.Datamodel.UserAccountInfo.getAll;
 
 public class PendingCasesActivity extends AppCompatActivity {
     private ListView listView;
-    private Button btn;
     private PendingCasesAdapter pendingcaseAdapter;
     private List<PendingCaseListInfo> pendingInfoList;
     public static final int RequestPermissionCode = 1;
-    MediaPlayer mediaPlayer ;
     ProgressDialog progressDialog;
     InsApp api;
     InsuranceAPI insuranceAPI;
@@ -60,7 +58,7 @@ public class PendingCasesActivity extends AppCompatActivity {
         setTitle("Pending Cases");
         userAccountInfoList  = getAll();
         listView = findViewById(R.id.lab_list);
-        btn = findViewById(R.id.btn_media);
+
         getpendinglist();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

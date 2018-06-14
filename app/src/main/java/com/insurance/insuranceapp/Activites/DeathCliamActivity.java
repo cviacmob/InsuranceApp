@@ -250,7 +250,7 @@ public class DeathCliamActivity extends AppCompatActivity implements
         file9.setOnClickListener((View.OnClickListener) this);
         file10 = (TextView)findViewById(R.id.file10);
         file10.setOnClickListener((View.OnClickListener) this);
-        file11 = (TextView)findViewById(R.id.file11);
+        file11 = (TextView)findViewById(R.id.file_11);
         file11.setOnClickListener((View.OnClickListener) this);
         file12 = (TextView)findViewById(R.id.file12);
         file12.setOnClickListener((View.OnClickListener) this);

@@ -12,6 +12,7 @@ import com.squareup.okhttp.ResponseBody;
 
 import java.util.List;
 
+
 import okhttp3.MultipartBody;
 import retrofit.Call;
 import retrofit.http.Body;
@@ -63,14 +64,9 @@ public interface InsuranceAPI {
                                                 @Field("file") List<String> file);
 
 
-    @Multipart
-    @POST("/insapi/index.php/triggers")
-    Call<ResponseBody> uploadMultiFile(@Part("case_assignment_id") String assignment_id,
-                                       @Part("flag") String flag,
-                                       @Part("case_trigger_id") List<String> case_trigger_id,
-                                       @Part("trigger_answer") List<String> trigger_answer
-                                     );
 
+    @POST("/insapi/index.php/triggers")
+    Call<ResponseBody> uploadMultiFile(@Body RequestBody file);
 
     @FormUrlEncoded
     @POST("/insapi/index.php/cases")
@@ -80,14 +76,16 @@ public interface InsuranceAPI {
     @Multipart
     @POST("/insapi/index.php/triggers")
     Call<ResponseBody> uploadMultipleFilesDynamic(
-            @Part("case_assignment_id") String assignment_id,
-            @Part("flag") String flag,
-            @Part("case_trigger_id") List<String> case_trigger_id,
-            @Part("trigger_answer") List<String> trigger_answer,
-            @Part MultipartBody file);
+
+            @Part("case_assignment_id") RequestBody assignment_id,
+            @Part("flag") RequestBody flag,
+            @Part("case_trigger_id") RequestBody case_trigger_id,
+            @Part("trigger_answer") RequestBody trigger_answer,
+            @Part MultipartBody.Part[] image);
 
     @POST("insapi/audioupload.php/")
     Call<ResponseBody> sendAudio(@Body RequestBody body);
+
            /* (@Query("consultant_id") String consultant_id,
                                  @Query("case_type") String case_type,
                                  @Query("assign_status") String assign_status,

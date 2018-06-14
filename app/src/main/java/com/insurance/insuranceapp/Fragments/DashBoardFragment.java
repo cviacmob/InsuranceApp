@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +67,9 @@ public class DashBoardFragment extends Fragment {
     private List temp1;
     private List temp2;
     private List temp3;
+    private TableLayout tableLayout;
+    private TableRow row1,row2,row3,row4;
+    private TextView text1,text2,text3,text4;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,23 +77,29 @@ public class DashBoardFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_fragments, container, false);
         setHasOptionsMenu(true);
         domainurl = Prefs.getString("domainurl", "");
-        query = (TextView) view.findViewById(R.id.query);
-        save = (TextView)view.findViewById(R.id.save);
-        completed = (TextView) view.findViewById(R.id.completed);
-        pending = (TextView) view.findViewById(R.id.pending);
+
         total_reserved = (TextView) view.findViewById(R.id.tx_totalreserved);
         total_confirmed = (TextView) view.findViewById(R.id.tx_totalconfirmed);
+        tableLayout = (TableLayout)view.findViewById(R.id.tableLayout);
+        row1 = (TableRow) tableLayout.getChildAt(0);
+        row2 = (TableRow) tableLayout.getChildAt(1);
+        row3 = (TableRow) tableLayout.getChildAt(2);
+        row4 = (TableRow) tableLayout.getChildAt(3);
 
+        text1 =(TextView)row1.getChildAt(1);
+        text2 =(TextView)row2.getChildAt(1);
+        text3 =(TextView)row3.getChildAt(1);
+        text4 =(TextView)row4.getChildAt(1);
         userAccountInfoList = getAll();
         getpayments();
         for (UserAccountInfo user : userAccountInfoList) {
-            save.setText(user.getSaved()!=null?user.getSaved():"0");
-            completed.setText(user.getSubmitted()!=null?user.getSubmitted():"0");
-            pending.setText(user.getPending()!=null?user.getPending():"0");
+            text3.setText(user.getSaved()!=null?user.getSaved():"0");
+            text4.setText(user.getSubmitted()!=null?user.getSubmitted():"0");
+            text1.setText(user.getPending()!=null?user.getPending():"0");
             if(user.getRaise_query()!=null) {
-                query.setText(user.getRaise_query());
+                text2.setText(user.getRaise_query());
             }else if(user.getApprove_raise_query()!=null ) {
-                query.setText(user.getApprove_raise_query());
+                text2.setText(user.getApprove_raise_query());
             }
         }
 
@@ -176,7 +187,7 @@ public class DashBoardFragment extends Fragment {
                     progressDialog.dismiss();
                 }
 
-               // Toast.makeText(getContext(), "Network Issue" + t, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Network Issue" + t, Toast.LENGTH_SHORT).show();
 
             }
         });

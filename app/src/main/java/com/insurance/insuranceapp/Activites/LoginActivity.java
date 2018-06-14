@@ -62,8 +62,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                  username = uname.getText().toString();
                 password = pass.getText().toString();
-                username = "rateesh.ayuhas@gmail.com";
-                password = "TN201806002";
+                username = "chola.ayu@gmail.com";
+                password = "AP201806001";
                 if (!isValidEmail(username)){
                     uname.setError("Enter Valid Email");
                     return;
