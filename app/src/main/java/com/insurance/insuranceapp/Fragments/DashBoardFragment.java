@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -81,7 +82,7 @@ public class DashBoardFragment extends Fragment {
         total_reserved = (TextView) view.findViewById(R.id.tx_totalreserved);
         total_confirmed = (TextView) view.findViewById(R.id.tx_totalconfirmed);
         tableLayout = (TableLayout)view.findViewById(R.id.tableLayout);
-        row1 = (TableRow) tableLayout.getChildAt(0);
+        row1 = (TableRow)   tableLayout.getChildAt(0);
         row2 = (TableRow) tableLayout.getChildAt(1);
         row3 = (TableRow) tableLayout.getChildAt(2);
         row4 = (TableRow) tableLayout.getChildAt(3);

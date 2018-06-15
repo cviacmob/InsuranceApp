@@ -111,7 +111,7 @@ public class DeathCliamActivity extends AppCompatActivity implements
     private TextView title23,file23,filename23;
     private TextView title24,file24,filename24;
     private TextView title25,file25,filename25;
-    private TextView title26,file26,filename26;
+
     private TextView title31,file31,filename31;
     private EditText ed_triggerfinding;
     private EditText ed_comments;
@@ -151,12 +151,12 @@ public class DeathCliamActivity extends AppCompatActivity implements
     private String string23= "Hospital records";
     private String string24= "RC Book of the vehicle";
     private String string25= "Others";
-    private String string26 = "Evidence for Trigger";
+
     private String string31 = "Conveyance Amount(₹)";
     private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
     private Button submit;
     private String submitted_date ="",triggerfinding = "",comments ="",Convanceamt = "",temp ="";
-    private TextInputLayout textInputLayout;
+
     private List<PendingInfo> pendingInfoList;
     private RelativeLayout relativeLayout;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -166,13 +166,17 @@ public class DeathCliamActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_death_cliam);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Death Claim Block");
-        ed_triggerfinding = (EditText)findViewById(R.id.ed_triggers);
+        pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        if(pendingInfo!=null){
+            setTitle(pendingInfo.getClaim_no() +" "+"Death Claim Block");
+        }
+
+
         ed_comments = (EditText)findViewById(R.id.ed_comments);
-        ed_date = (EditText)findViewById(R.id.edit_date);
+
         ed_convance = (EditText)findViewById(R.id.ed_convence);
-        textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
-        calendar = (ImageView)findViewById(R.id.ig_calender);
+
+
         submit = (Button)findViewById(R.id.bt_submit);
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
@@ -224,8 +228,7 @@ public class DeathCliamActivity extends AppCompatActivity implements
         title24.setText(string24);
         title25 = (TextView)findViewById(R.id.title25);
         title25.setText(string25);
-        title26 = (TextView)findViewById(R.id.title26);
-        title26.setText(string26);
+
         title31 = (TextView)findViewById(R.id.title31);
         title31.setText(string31);
         backbutton = (Button)findViewById(R.id.bt_back);
@@ -280,8 +283,7 @@ public class DeathCliamActivity extends AppCompatActivity implements
         file24.setOnClickListener((View.OnClickListener) this);
         file25 = (TextView)findViewById(R.id.file25);
         file25.setOnClickListener((View.OnClickListener) this);
-        file26 = (TextView)findViewById(R.id.file26);
-        file26.setOnClickListener((View.OnClickListener) this);
+
         file31 = (TextView)findViewById(R.id.file31);
         file31.setOnClickListener((View.OnClickListener) this);
 
@@ -316,17 +318,14 @@ public class DeathCliamActivity extends AppCompatActivity implements
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               submitted_date =  ed_date.getText().toString();
-               if(submitted_date!=null && !submitted_date.isEmpty())
-               {
+
+
                    comments = ed_comments.getText().toString();
                    triggerfinding = ed_triggerfinding.getText().toString();
                    Convanceamt = ed_convance.getText().toString();
-               }else{
-                   textInputLayout.setError("Cannot be empty");
-               }
+
                 mediaRecorder.stop();
-                sendAudio();
+               // sendAudio();
             }
         });
         calendar.setOnClickListener(new View.OnClickListener() {

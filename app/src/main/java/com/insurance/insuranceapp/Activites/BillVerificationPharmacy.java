@@ -95,7 +95,7 @@ public class BillVerificationPharmacy extends AppCompatActivity implements
     private TextView title7,file7,filename7;
     private TextView title8,file8,filename8;
     private TextView title9,file9,filename9;
-    private TextView title10,file10,filename10;
+
     private TextView title31,file31,filename31;
 
     private EditText ed_totalamt;
@@ -128,7 +128,7 @@ public class BillVerificationPharmacy extends AppCompatActivity implements
     private String string7 = "Pharmacy Snaps";
     private String string8 = "<font color='#000000'>Bill Confirmation Letter </font>" + "<font color='#FF0000'>*</font>";
     private String string9 = "Others";
-    private String string10= "Evidence for Trigger";
+
     private String string31 = "Conveyance File(s)";
     private String gender = "";
     private Button backbutton;
@@ -140,7 +140,11 @@ public class BillVerificationPharmacy extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill_verification_pharmacy);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Bill Verification Pharmacy");
+        pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        if(pendingInfo!=null){
+            setTitle(pendingInfo.getClaim_no() +" "+"Bill Verification Pharmacy");
+        }
+
         radiogrp = (RadioGroup) findViewById(R.id.radiogroup);
         ed_totalamt = (EditText)findViewById(R.id.ed_totalamt);
         ed_triggerfinding = (EditText)findViewById(R.id.ed_triggers);
@@ -172,8 +176,7 @@ public class BillVerificationPharmacy extends AppCompatActivity implements
         title8.setText(Html.fromHtml(string8));
         title9 = (TextView)findViewById(R.id.title9);
         title9.setText((string9));
-        title10 = (TextView)findViewById(R.id.title18);
-        title10.setText((string10));
+
         title31 = (TextView)findViewById(R.id.title31);
         title31.setText(string31);
 
@@ -195,8 +198,7 @@ public class BillVerificationPharmacy extends AppCompatActivity implements
         file8.setOnClickListener((View.OnClickListener) this);
         file9 = (TextView)findViewById(R.id.file9);
         file9.setOnClickListener((View.OnClickListener) this);
-        file10 = (TextView)findViewById(R.id.file18);
-        file10.setOnClickListener((View.OnClickListener) this);
+
         file31 = (TextView)findViewById(R.id.file31);
         file31.setOnClickListener((View.OnClickListener) this);
         backbutton = (Button)findViewById(R.id.bt_back);

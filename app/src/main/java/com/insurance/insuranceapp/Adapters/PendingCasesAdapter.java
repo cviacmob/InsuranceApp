@@ -41,7 +41,7 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
     public static class ViewHolder {
         public TableLayout tableLayout;
         public TableRow row1,row2,row3,row4,row5,row6,row7,row8,row9,row10,row11;
-        public TextView claim_number,patientname,blockname,case_assignment_id,policy_no,insurance_compy,case_id,Assigned_to,case_assigned_on,status,case_type_id;
+        public TextView claim_number,patientname,hospitalName,TAT,part;
 
 
     }
@@ -67,26 +67,16 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
             holder.row3 = (TableRow) holder.tableLayout.getChildAt(2);
             holder.row4 = (TableRow) holder.tableLayout.getChildAt(3);
             holder.row5 = (TableRow) holder.tableLayout.getChildAt(4);
-            holder.row6 = (TableRow) holder.tableLayout.getChildAt(5);
-            holder.row7 = (TableRow) holder.tableLayout.getChildAt(6);
-            holder.row8 = (TableRow) holder.tableLayout.getChildAt(7);
-            holder.row9 = (TableRow) holder.tableLayout.getChildAt(8);
-            holder.row10 = (TableRow) holder.tableLayout.getChildAt(9);
-            holder.row11 = (TableRow) holder.tableLayout.getChildAt(10);
+
 
 
 
             holder.claim_number =(TextView)holder.row1.getChildAt(1);
             holder.patientname =(TextView)holder.row2.getChildAt(1);
-            holder.blockname =(TextView)holder.row3.getChildAt(1);
-            holder.case_type_id =(TextView)holder.row4.getChildAt(1);
-            holder.case_assignment_id =(TextView)holder.row5.getChildAt(1);
-            holder.policy_no =(TextView)holder.row6.getChildAt(1);
-            holder.insurance_compy =(TextView)holder.row7.getChildAt(1);
-            holder.case_id =(TextView)holder.row8.getChildAt(1);
-            holder.Assigned_to =(TextView)holder.row9.getChildAt(1);
-            holder.case_assigned_on =(TextView)holder.row10.getChildAt(1);
-            holder.status =(TextView)holder.row11.getChildAt(1);
+            holder.hospitalName =(TextView)holder.row3.getChildAt(1);
+            holder.TAT =(TextView)holder.row4.getChildAt(1);
+            holder.part =(TextView)holder.row5.getChildAt(1);
+
 
 
             vw.setTag(holder);
@@ -97,21 +87,45 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
 
         holder.claim_number.setText(all.getClaim_no());
         holder.patientname.setText(all.getPatient_name());
-        holder.blockname.setText(all.getCase_type());
-        holder.case_type_id.setText(all.getCase_type_id());
-        holder.case_assignment_id.setText(all.getCase_assignment_id());
-        holder.policy_no.setText(all.getPolicy_number());
-        holder.insurance_compy.setText(all.getCompany_name());
-        holder.case_id.setText(all.getCase_id());
-        holder.Assigned_to.setText(all.getCase_assigned_on());
-        holder.case_assigned_on.setText(all.getCase_assigned_on());
-        holder.status.setText(all.getAssign_status());
+        holder.hospitalName.setText(all.getHospital_name());
+        holder.TAT.setText(all.getCase_type_id());
+        holder.part.setText(getPartName(all.getCase_assignment_id()));
+
 
 
 
         return vw;
 
 
+    }
+
+    private String getPartName(String in){
+        String partName = in;
+        if(in.equalsIgnoreCase("1")){
+            partName= "Hospital Part";
+        }else if(in.equalsIgnoreCase("2")){
+            partName= "Patient Part";
+        }else if(in.equalsIgnoreCase("3")){
+            partName= "SME";
+        }else if(in.equalsIgnoreCase("4")){
+            partName= "DeathCliam";
+        }else if(in.equalsIgnoreCase("5")){
+            partName= "Disability";
+        }else if(in.equalsIgnoreCase("6")){
+            partName= "PersonalAccident";
+        }else if(in.equalsIgnoreCase("7")){
+            partName= "BillVerificationHospital";
+        }else if(in.equalsIgnoreCase("8")){
+            partName= "BillVerificationPharmacy";
+        }else if(in.equalsIgnoreCase("9")){
+            partName= "DocumentsVerification";
+        }else if(in.equalsIgnoreCase("10")){
+            partName= "Cashless";
+        }else if(in.equalsIgnoreCase("11")){
+            partName= "IntimationCase";
+        }
+
+        return partName;
     }
 }
 

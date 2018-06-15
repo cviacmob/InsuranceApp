@@ -76,39 +76,49 @@ public class PendingCasesActivity extends AppCompatActivity {
                             startActivity(in);
                         } else if(Block_name.equalsIgnoreCase("2")){
                             Intent in = new Intent(PendingCasesActivity.this, PatientBlockActivity.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         } else if(Block_name.equalsIgnoreCase("3")){
                             Intent in = new Intent(PendingCasesActivity.this, SMEActivity.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         }
                         else if(Block_name.equalsIgnoreCase("4")){
                             Intent in = new Intent(PendingCasesActivity.this, DeathCliamActivity.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         }else if(Block_name.equalsIgnoreCase("5")){
                             Intent in = new Intent(PendingCasesActivity.this, DisabilityActivity.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         }else if(Block_name.equalsIgnoreCase("6")){
                             Intent in = new Intent(PendingCasesActivity.this, PersonalAccidentActivity.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         }
                         else if(Block_name.equalsIgnoreCase("7")){
                             Intent in = new Intent(PendingCasesActivity.this, BillVerificationHospital.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         }
                         else if(Block_name.equalsIgnoreCase("8")){
                             Intent in = new Intent(PendingCasesActivity.this, BillVerificationPharmacy.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         }
                         else if(Block_name.equalsIgnoreCase("9")){
                             Intent in = new Intent(PendingCasesActivity.this, DocumentsVerification.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         }
                         else if(Block_name.equalsIgnoreCase("10")){
                             Intent in = new Intent(PendingCasesActivity.this, Cashless.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         }
                         else if(Block_name.equalsIgnoreCase("11")){
                             Intent in = new Intent(PendingCasesActivity.this, IntimationCase.class);
+                            in.putExtra("data",pendingInfo);
                             startActivity(in);
                         }
                     }else if(Block_type.equalsIgnoreCase("dynamic")){
@@ -117,25 +127,7 @@ public class PendingCasesActivity extends AppCompatActivity {
                         startActivity(in); //this for activity starting
                     }
 
-                    /*random = new Random();
-                    if(checkPermission()) {
-                        AudioSavePathInDevice = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + CreateRandomAudioFileName(5) + "AudioRecording.3gp";
-                        MediaRecorderReady();
-                        try {
-                            mediaRecorder.prepare();
-                            mediaRecorder.start();
-                        } catch (IllegalStateException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                        Toast.makeText(PendingCasesActivity.this, "Recording started", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        requestPermission();
-                    }*/
+
                 }
             }
         });

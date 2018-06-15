@@ -87,7 +87,7 @@ public class DocumentsVerification extends AppCompatActivity implements
     private TextView title8,file8,filename8;
     private TextView title9,file9,filename9;
     private TextView title10,file10,filename10;
-    private TextView title11,file11,filename11;
+
     private TextView title31,file31,filename31;
 
     MediaRecorder mediaRecorder ;
@@ -103,10 +103,10 @@ public class DocumentsVerification extends AppCompatActivity implements
     private EditText ed_totalamt;
     private EditText ed_ifany;
     private EditText any_Reason;
-    private EditText ed_triggerfinding;
+
     private EditText ed_comments;
-    private EditText ed_date,ed_convance;
-    private ImageView calendar;
+    private EditText ed_convance;
+
     private DatePickerDialog datePickerDialog;
     final Calendar c = Calendar.getInstance();
     int mYear = c.get(Calendar.YEAR); // current year
@@ -130,7 +130,7 @@ public class DocumentsVerification extends AppCompatActivity implements
     private String string8 = "Case Sheet";
     private String string9 = "Hospital Snaps";
     private String string10 = "Others";
-    private String string11= "Evidence for Trigger";
+
     private String string31 = "Conveyance File(s)";
     private Button backbutton;
 
@@ -141,16 +141,22 @@ public class DocumentsVerification extends AppCompatActivity implements
         setContentView(R.layout.activity_documents_verification);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Documents Verification");
+
+        pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        if(pendingInfo!=null){
+            setTitle(pendingInfo.getClaim_no() +" "+"Documents Verification");
+        }
+
+
 
         ed_totalamt = (EditText)findViewById(R.id.ed_totalamt);
-        ed_triggerfinding = (EditText)findViewById(R.id.ed_triggers);
+
         ed_comments = (EditText)findViewById(R.id.ed_comments);
-        ed_date = (EditText)findViewById(R.id.edit_date);
+
         ed_convance = (EditText)findViewById(R.id.ed_convence);
 
-        textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
-        calendar = (ImageView)findViewById(R.id.ig_calender);
+
+
         submit = (Button)findViewById(R.id.bt_submit);
         ed_ifany = (EditText) findViewById(R.id.ed_ifany);
         any_Reason = (EditText) findViewById(R.id.ed_ifany_Reason);
@@ -174,8 +180,7 @@ public class DocumentsVerification extends AppCompatActivity implements
         title9.setText((string9));
         title10 = (TextView)findViewById(R.id.title10);
         title10.setText((string10));
-        title11 = (TextView)findViewById(R.id.title11);
-        title11.setText((string11));
+
         title31 = (TextView)findViewById(R.id.title31);
         title31.setText(string31);
 
@@ -199,8 +204,7 @@ public class DocumentsVerification extends AppCompatActivity implements
         file9.setOnClickListener((View.OnClickListener) this);
         file10 = (TextView)findViewById(R.id.file10);
         file10.setOnClickListener((View.OnClickListener) this);
-        file11 = (TextView)findViewById(R.id.file11);
-        file11.setOnClickListener((View.OnClickListener) this);
+
         file31 = (TextView)findViewById(R.id.file31);
         file31.setOnClickListener((View.OnClickListener) this);
 
@@ -236,26 +240,17 @@ public class DocumentsVerification extends AppCompatActivity implements
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitted_date =  ed_date.getText().toString();
-                if(submitted_date!=null && !submitted_date.isEmpty())
-                {
-                    comments = ed_comments.getText().toString();
-                    triggerfinding = ed_triggerfinding.getText().toString();
-                    Convanceamt = ed_convance.getText().toString();
-                }else{
-                    textInputLayout.setError("Cannot be empty");
-                }
-                mediaRecorder.stop();
-                sendAudio();
-            }
-        });
-        calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datepicker();
 
+
+                    comments = ed_comments.getText().toString();
+
+                    Convanceamt = ed_convance.getText().toString();
+
+                mediaRecorder.stop();
+               // sendAudio();
             }
         });
+
 
         createEditTextView();
     }
@@ -434,25 +429,7 @@ public class DocumentsVerification extends AppCompatActivity implements
 
         return pendingInfoList;
     }
-    public void datepicker(){
-        datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // set day of month , month and year value in the edit text
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                        temp = sdf.format(calendar.getTime());
-                        ed_date.setText(temp);
-
-
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);

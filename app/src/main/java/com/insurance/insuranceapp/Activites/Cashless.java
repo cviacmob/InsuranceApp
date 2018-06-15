@@ -91,11 +91,11 @@ public class Cashless extends AppCompatActivity  implements
     private TextView title12,file12,filename12;
     private TextView title13,file13,filename13;
     private TextView title14,file14,filename14;
-    private TextView title15,file15,filename15;
+
     private TextView title31,file31,filename31;
-    private EditText ed_triggerfinding;
+
     private EditText ed_comments;
-    private EditText ed_date,ed_convance;
+    private EditText ed_convance;
     private ImageView calendar;
     private DatePickerDialog datePickerDialog;
     final Calendar c = Calendar.getInstance();
@@ -119,7 +119,7 @@ public class Cashless extends AppCompatActivity  implements
     private String string12= "Narration letter";
     private String string13= "Others";
     private String string14= "Medical Records Bill";
-    private String string15= "Evidence for Trigger";
+
     private String string31 = "Conveyance File(s)";
     private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
     private Button submit;
@@ -134,13 +134,17 @@ public class Cashless extends AppCompatActivity  implements
         setContentView(R.layout.activity_cashless);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Cashless Block");
-        ed_triggerfinding = (EditText)findViewById(R.id.ed_triggers);
+        pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        if(pendingInfo!=null){
+            setTitle(pendingInfo.getClaim_no() +" "+"Cashless Block");
+        }
+
+
         ed_comments = (EditText)findViewById(R.id.ed_comments);
-        ed_date = (EditText)findViewById(R.id.edit_date);
+
         ed_convance = (EditText)findViewById(R.id.ed_convence);
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
-        calendar = (ImageView)findViewById(R.id.ig_calender);
+
         submit = (Button)findViewById(R.id.bt_submit);
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
@@ -170,8 +174,7 @@ public class Cashless extends AppCompatActivity  implements
         title13.setText((string13));
         title14 = (TextView)findViewById(R.id.title14);
         title14.setText((string14));
-        title15 = (TextView)findViewById(R.id.title15);
-        title15.setText((string15));
+
         title31 = (TextView)findViewById(R.id.title31);
         title31.setText((string31));
 
@@ -204,8 +207,7 @@ public class Cashless extends AppCompatActivity  implements
         file13.setOnClickListener((View.OnClickListener) this);
         file14 = (TextView)findViewById(R.id.file14);
         file14.setOnClickListener((View.OnClickListener) this);
-        file15 = (TextView)findViewById(R.id.file15);
-        file15.setOnClickListener((View.OnClickListener) this);
+
         file31 = (TextView)findViewById(R.id.file31);
         file31.setOnClickListener((View.OnClickListener) this);
         backbutton = (Button)findViewById(R.id.bt_back);
@@ -220,11 +222,11 @@ public class Cashless extends AppCompatActivity  implements
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitted_date =  ed_date.getText().toString();
+
                 if(submitted_date!=null && !submitted_date.isEmpty())
                 {
                     comments = ed_comments.getText().toString();
-                    triggerfinding = ed_triggerfinding.getText().toString();
+
                     Convanceamt = ed_convance.getText().toString();
                 }else{
                     textInputLayout.setError("Cannot be empty");
@@ -232,13 +234,7 @@ public class Cashless extends AppCompatActivity  implements
 
             }
         });
-        calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datepicker();
 
-            }
-        });
     }
 
 
@@ -324,25 +320,7 @@ public class Cashless extends AppCompatActivity  implements
 
         return pendingInfoList;
     }
-    public void datepicker(){
-        datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // set day of month , month and year value in the edit text
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                        temp = sdf.format(calendar.getTime());
-                        ed_date.setText(temp);
-
-
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);

@@ -443,58 +443,7 @@
                     android:text="Doctor Questionnaire *" />
 
             </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:id="@+id/real9"
-                android:layout_below="@+id/real8"
-                android:padding="5dp"
 
-                >
-                <TextView
-                    android:id="@+id/file9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/title9"
-                    android:text="Choose File"
-                    android:layout_marginTop="3dp"
-                    android:padding="3dp"
-                    android:fontFamily="@font/verdana"
-                    android:textColor="@color/Black"
-                    android:textSize="16dp"
-                    android:background="@drawable/rounded_border_edittext"/>
-
-                <TextView
-                    android:id="@+id/filename9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/file9"
-                    android:layout_alignBottom="@+id/file9"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginStart="11dp"
-                    android:textSize="12dp"
-                    android:layout_toEndOf="@+id/file9"
-                    android:layout_toRightOf="@+id/file9"
-                    android:fontFamily="@font/verdana"
-                    android:text="No file chosen  File Should be pdf/doc Format"
-                    android:textColor="@color/Black" />
-
-                <TextView
-                    android:id="@+id/title9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/verdana"
-                    android:textSize="13dp"
-                    android:paddingTop="2dp"
-                    android:textColor="@color/Black"
-                    android:text="Doctor Questionnaire *" />
-
-            </RelativeLayout>
 
 
             <LinearLayout
@@ -503,7 +452,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_alignParentBottom="true"
-                android:layout_below="@+id/real9"
+                android:layout_below="@+id/real8"
                 android:orientation="vertical" >
 
                 <include android:id="@+id/news_title"

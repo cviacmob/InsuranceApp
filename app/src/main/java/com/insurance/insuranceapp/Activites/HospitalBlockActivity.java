@@ -116,7 +116,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     private String string11= "Hospital Snaps";
     private String string12= "Others";
     private String string13= "Medical Records Bill (if any)";
-    private String string14= "Evidence for Trigger";
+
     private String string19= "Conveyance File(s)";
     private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
     private ListView triggerlist;
@@ -128,12 +128,9 @@ public class HospitalBlockActivity extends AppCompatActivity implements
     private RelativeLayout relativeLayout;
     private EditText ed_comments,ed_date,ed_convoy,ed_mrd;
     private String Comments = "",Submitted_date = "",temp = "",conveyance = "",MRD = "";
-    private ImageView calendar;
+
     private DatePickerDialog datePickerDialog;
-    final Calendar c = Calendar.getInstance();
-    int mYear = c.get(Calendar.YEAR); // current year
-    int mMonth = c.get(Calendar.MONTH); // current month
-    int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+
     private TextInputLayout textInputLayout;
     private Button button;
     private PendingCaseListInfo pendingInfo;
@@ -148,11 +145,15 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_hospital_block);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Hospital Part Block");
+
         pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        if(pendingInfo!=null){
+            setTitle(pendingInfo.getClaim_no() +" "+"Hospital Part Block");
+        }
+
         userAccountInfoList = getAll();
         textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
-        calendar = (ImageView)findViewById(R.id.ig_calender);
+
         ed_convoy = (EditText)findViewById(R.id.famildoc);
         ed_mrd = (EditText)findViewById(R.id.famildoc1);
         save = (Button)findViewById(R.id.care_save);
@@ -186,14 +187,13 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         title12.setText(Html.fromHtml(string12));
         title13 = (TextView)findViewById(R.id.title13);
         title13.setText(Html.fromHtml(string13));
-        title14 = (TextView)findViewById(R.id.title14);
-        title14.setText(Html.fromHtml(string14));
+
         title19 = (TextView)findViewById(R.id.title19);
         title19.setText(Html.fromHtml(string19));
 
         filename1 = (TextView)findViewById(R.id.filename1);
         ed_comments = (EditText)findViewById(R.id.ed_family);
-        ed_date = (EditText)findViewById(R.id.edit_consult);
+
         file1 = (TextView)findViewById(R.id.file_1);
         file1.setOnClickListener((View.OnClickListener) this);
         file2 = (TextView)findViewById(R.id.file2);
@@ -220,8 +220,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         file12.setOnClickListener((View.OnClickListener) this);
         file13 = (TextView)findViewById(R.id.file13);
         file13.setOnClickListener((View.OnClickListener) this);
-        file14 = (TextView)findViewById(R.id.file14);
-        file14.setOnClickListener((View.OnClickListener) this);
+
         file19 = (TextView)findViewById(R.id.file19);
         file19.setOnClickListener((View.OnClickListener) this);
 
@@ -248,13 +247,7 @@ public class HospitalBlockActivity extends AppCompatActivity implements
             requestPermission();
         }
 
-        calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datepicker();
 
-            }
-        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -435,25 +428,6 @@ public class HospitalBlockActivity extends AppCompatActivity implements
         }
     }
 
-    public void datepicker(){
-        datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // set day of month , month and year value in the edit text
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                         temp = sdf.format(calendar.getTime());
-                        ed_date.setText(temp);
-
-
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     protected void createEditTextView() {

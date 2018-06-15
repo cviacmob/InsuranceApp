@@ -92,7 +92,7 @@ public class SMEActivity extends AppCompatActivity implements
     private TextView title6,file6,filename6;
     private TextView title7,file7,filename7;
     private TextView title8,file8,filename8;
-    private TextView title9,file9,filename9;
+
     private TextView title31,file31,filename31;
 
     private String string1= "<font color='#000000'>SME Form </font>" + "<font color='#FF0000'>*</font>";
@@ -103,7 +103,7 @@ public class SMEActivity extends AppCompatActivity implements
     private String string6 = "<font color='#000000'>HR Letter </font>" + "<font color='#FF0000'>*</font>";
     private String string7 = "Company registration Certificate";
     private String string8 = "Others";
-    private String string9 = "Evidence for Trigger";
+
     private String string31 = "Conveyance File(s)";
 
     private Button submit;
@@ -111,15 +111,11 @@ public class SMEActivity extends AppCompatActivity implements
     private TextInputLayout textInputLayout;
     private List<PendingInfo> pendingInfoList;
     private RelativeLayout relativeLayout;
-    private EditText ed_triggerfinding;
+
     private EditText ed_comments;
-    private EditText ed_date,ed_convance;
-    private ImageView calendar;
-    private DatePickerDialog datePickerDialog;
-    final Calendar c = Calendar.getInstance();
-    int mYear = c.get(Calendar.YEAR); // current year
-    int mMonth = c.get(Calendar.MONTH); // current month
-    int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+    private EditText ed_convance;
+
+
     private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
     private Button backbutton;
 
@@ -129,7 +125,11 @@ public class SMEActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sme);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("SME");
+        pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        if(pendingInfo!=null){
+            setTitle(pendingInfo.getClaim_no() +" "+"SME");
+        }
+
         createEditTextView();
     }
 
@@ -157,16 +157,14 @@ public class SMEActivity extends AppCompatActivity implements
         title7.setText(string7);
         title8 = (TextView)findViewById(R.id.title8);
         title8.setText(string8);
-        title9 = (TextView)findViewById(R.id.title9);
-        title9.setText(string9);
+
         title31 = (TextView)findViewById(R.id.title31);
         title31.setText(string31);
-        ed_triggerfinding = (EditText)findViewById(R.id.ed_triggers);
+
         ed_comments = (EditText)findViewById(R.id.ed_comments);
-        ed_date = (EditText)findViewById(R.id.edit_date);
+
         ed_convance = (EditText)findViewById(R.id.ed_convence);
-        textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
-        calendar = (ImageView)findViewById(R.id.ig_calender);
+
         submit = (Button)findViewById(R.id.bt_submit);
         backbutton = (Button)findViewById(R.id.bt_back);
         file1 = (TextView)findViewById(R.id.file1);
@@ -185,8 +183,7 @@ public class SMEActivity extends AppCompatActivity implements
         file7.setOnClickListener((View.OnClickListener) this);
         file8 = (TextView)findViewById(R.id.file8);
         file8.setOnClickListener((View.OnClickListener) this);
-        file9 = (TextView)findViewById(R.id.file9);
-        file9.setOnClickListener((View.OnClickListener) this);
+
         file31 = (TextView)findViewById(R.id.file31);
         file31.setOnClickListener((View.OnClickListener) this);
 
@@ -222,26 +219,16 @@ public class SMEActivity extends AppCompatActivity implements
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitted_date =  ed_date.getText().toString();
-                if(submitted_date!=null && !submitted_date.isEmpty())
-                {
-                    comments = ed_comments.getText().toString();
-                    triggerfinding = ed_triggerfinding.getText().toString();
-                    Convanceamt = ed_convance.getText().toString();
-                }else{
-                    textInputLayout.setError("Cannot be empty");
-                }
-                mediaRecorder.stop();
-                sendAudio();
-            }
-        });
-        calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datepicker();
 
+                    comments = ed_comments.getText().toString();
+
+                    Convanceamt = ed_convance.getText().toString();
+
+                mediaRecorder.stop();
+                //sendAudio();
             }
         });
+
 
 
 
@@ -390,25 +377,7 @@ public class SMEActivity extends AppCompatActivity implements
         });
     }
 
-    public void datepicker(){
-        datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // set day of month , month and year value in the edit text
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                        temp = sdf.format(calendar.getTime());
-                        ed_date.setText(temp);
-
-
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-    }
     private List<PendingInfo> getList(){
 
         pendingInfoList = new ArrayList<>();

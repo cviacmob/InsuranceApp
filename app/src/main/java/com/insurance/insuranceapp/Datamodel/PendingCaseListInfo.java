@@ -18,6 +18,15 @@ public class PendingCaseListInfo implements Serializable {
     private String claim_no;
     private String policy_number;
     private String company_name;
+    private String hospital_name;
+
+    public String getHospital_name() {
+        return hospital_name;
+    }
+
+    public void setHospital_name(String hospital_name) {
+        this.hospital_name = hospital_name;
+    }
 
     public String getCase_id() {
         return case_id;

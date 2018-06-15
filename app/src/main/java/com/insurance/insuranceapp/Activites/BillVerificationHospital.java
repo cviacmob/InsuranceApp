@@ -140,7 +140,6 @@ public class BillVerificationHospital extends AppCompatActivity implements
     private String string11= "<font color='#000000'>Case Sheet </font>" + "<font color='#FF0000'>*</font>";
     private String string12= "<font color='#000000'>Hospital Snaps </font>" + "<font color='#FF0000'>*</font>";
     private String string13= "<font color='#000000'>Others  </font>" + "<font color='#FF0000'>*</font>";
-    private String string18= "Evidence for Trigger";
     private String string31 = "Conveyance File(s)";
     private String gender = "";
     private Button backbutton;
@@ -152,10 +151,14 @@ public class BillVerificationHospital extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill_verification_hospital);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Bill Verification Hospital");
+        pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        if(pendingInfo!=null){
+            setTitle(pendingInfo.getClaim_no() +" "+"Bill Verification Hospital");
+        }
+
         radiogrp = (RadioGroup) findViewById(R.id.radiogroup);
         ed_totalamt = (EditText)findViewById(R.id.ed_totalamt);
-        ed_triggerfinding = (EditText)findViewById(R.id.ed_triggers);
+
         ed_comments = (EditText)findViewById(R.id.ed_comments);
         ed_date = (EditText)findViewById(R.id.edit_date);
         ed_convance = (EditText)findViewById(R.id.ed_convence);
@@ -191,8 +194,7 @@ public class BillVerificationHospital extends AppCompatActivity implements
         title12.setText(Html.fromHtml(string12));
         title13 = (TextView)findViewById(R.id.title13);
         title13.setText(Html.fromHtml(string13));
-        title18 = (TextView)findViewById(R.id.title18);
-        title18.setText((string18));
+
         title31 = (TextView)findViewById(R.id.title31);
         title31.setText(string31);
 
@@ -223,8 +225,7 @@ public class BillVerificationHospital extends AppCompatActivity implements
         file12.setOnClickListener((View.OnClickListener) this);
         file13 = (TextView)findViewById(R.id.file13);
         file13.setOnClickListener((View.OnClickListener) this);
-        file18 = (TextView)findViewById(R.id.file18);
-        file18.setOnClickListener((View.OnClickListener) this);
+
         file31 = (TextView)findViewById(R.id.file31);
         file31.setOnClickListener((View.OnClickListener) this);
 
@@ -266,7 +267,6 @@ public class BillVerificationHospital extends AppCompatActivity implements
                 if(submitted_date!=null && !submitted_date.isEmpty())
                 {
                     comments = ed_comments.getText().toString();
-                    triggerfinding = ed_triggerfinding.getText().toString();
                     Convanceamt = ed_convance.getText().toString();
                 }else{
                     textInputLayout.setError("Cannot be empty");

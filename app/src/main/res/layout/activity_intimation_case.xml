@@ -879,50 +879,7 @@
                     android:textSize="12sp" />
 
             </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:id="@+id/real29"
-                android:layout_below="@+id/real28"
-                android:padding="5dp"
 
-                >
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_edit_consult"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:theme="@style/TextLabel"
-
-                    >
-
-                    <EditText
-                        android:id="@+id/edit_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/verdana"
-                        android:hint="Submitted Date *"
-                        android:textColor="@color/Black"
-                        android:textColorHint="@color/red"
-                        android:textSize="12sp"
-                        />
-                </android.support.design.widget.TextInputLayout>
-
-                <ImageView
-                    android:id="@+id/ig_calender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_gravity="right"
-                    android:layout_weight="0.1"
-                    android:layout_toEndOf="@+id/input_edit_consult"
-                    android:layout_toRightOf="@+id/input_edit_consult"
-                    app:srcCompat="@drawable/calender" />
-
-
-            </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -930,7 +887,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:id="@+id/real30"
-                android:layout_below="@+id/real29"
+                android:layout_below="@+id/real28"
                 android:padding="5dp"
 
                 >

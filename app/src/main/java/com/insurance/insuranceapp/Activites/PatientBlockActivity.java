@@ -83,7 +83,6 @@ public class PatientBlockActivity extends AppCompatActivity implements
     private TextView title6,file6,filename6;
     private TextView title7,file7,filename7;
     private TextView title8,file8,filename8;
-    private TextView title9,file9,filename9;
     private TextView title19,file19,filename19;
     private Button backbutton;
     MediaRecorder mediaRecorder ;
@@ -103,19 +102,11 @@ public class PatientBlockActivity extends AppCompatActivity implements
     private String string6 = "Patient Authorization";
     private String string7 = "Query Reply";
     private String string8 = "Others";
-    private String string9 = "Evidence for Trigger";
     private String string19 = "Conveyance File(s)";
-
     private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
-    private EditText ed_trigger_finding,ed_comments,ed_date,ed_convance;
-    private String triggers = "",comments ="",date = "",convance = "",temp ="";
-    private ImageView calendar;
-    private DatePickerDialog datePickerDialog;
-    final Calendar c = Calendar.getInstance();
-    int mYear = c.get(Calendar.YEAR); // current year
-    int mMonth = c.get(Calendar.MONTH); // current month
-    int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
-    private TextInputLayout textInputLayout;
+    private EditText ed_comments,ed_convance;
+    private String comments ="",convance = "",temp ="";
+
     private Button submit;
     private List<PendingInfo> pendingInfoList;
     private RelativeLayout relativeLayout;
@@ -125,14 +116,18 @@ public class PatientBlockActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_block);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("Patient Part");
+        pendingInfo = (PendingCaseListInfo) getIntent().getSerializableExtra("data");
+        if(pendingInfo!=null){
+            setTitle(pendingInfo.getClaim_no() +" "+"Patient Part");
+        }
+
         createEditTextView();
-        ed_trigger_finding =(EditText)findViewById(R.id.ed_triggerfinding);
-        textInputLayout = (TextInputLayout)findViewById(R.id.input_edit_consult);
+
+
         ed_comments = (EditText)findViewById(R.id.ed_comments);
-        ed_date =(EditText)findViewById(R.id.edit_date);
+
         ed_convance = (EditText)findViewById(R.id.ed_convence);
-        calendar = (ImageView)findViewById(R.id.ig_calender);
+
         title1 = (TextView)findViewById(R.id.title1);
         title1.setText(Html.fromHtml(string1));
         title2 = (TextView)findViewById(R.id.title2);
@@ -149,8 +144,7 @@ public class PatientBlockActivity extends AppCompatActivity implements
         title7.setText(Html.fromHtml(string7));
         title8 = (TextView)findViewById(R.id.title8);
         title8.setText(Html.fromHtml(string8));
-        title9 = (TextView)findViewById(R.id.title9);
-        title9.setText(Html.fromHtml(string9));
+
         title19 = (TextView)findViewById(R.id.title19);
         title19.setText((string19));
         submit = (Button)findViewById(R.id.bt_submit);
@@ -173,8 +167,7 @@ public class PatientBlockActivity extends AppCompatActivity implements
         file7.setOnClickListener((View.OnClickListener) this);
         file8 = (TextView)findViewById(R.id.file8);
         file8.setOnClickListener((View.OnClickListener) this);
-        file9 = (TextView)findViewById(R.id.file9);
-        file9.setOnClickListener((View.OnClickListener) this);
+
         file19 = (TextView)findViewById(R.id.file19);
         file19.setOnClickListener((View.OnClickListener) this);
 
@@ -201,26 +194,17 @@ public class PatientBlockActivity extends AppCompatActivity implements
         }
 
 
-        calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datepicker();
-            }
-        });
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               date= ed_date.getText().toString();
-                if(date!=null&& !date.isEmpty()){
-                    triggers = ed_trigger_finding.getText().toString();
+
+
                     convance = ed_convance.getText().toString();
                     comments = ed_comments.getText().toString();
-                }
-                else{
-                    textInputLayout.setError("Cannot be empty");
-                }
+
                 mediaRecorder.stop();
-                sendAudio();
+              //  sendAudio();
             }
         });
 
@@ -249,6 +233,7 @@ public class PatientBlockActivity extends AppCompatActivity implements
     private void requestPermission() {
         ActivityCompat.requestPermissions(PatientBlockActivity.this, new String[]{WRITE_EXTERNAL_STORAGE, RECORD_AUDIO}, RequestPermissionCode);
     }
+
 
     private void sendAudio(){
         String consultID = "";
@@ -405,25 +390,7 @@ public class PatientBlockActivity extends AppCompatActivity implements
 
         return pendingInfoList;
     }
-    public void datepicker(){
-        datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // set day of month , month and year value in the edit text
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                        temp = sdf.format(calendar.getTime());
-                        ed_date.setText(temp);
-
-
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
