@@ -52,9 +52,7 @@ import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
 import com.insurance.insuranceapp.Utilities.InsApp;
-import com.insurance.insuranceapp.Utilities.RecorderService;
-import com.insurance.materialfilepicker.ui.FilePickerActivity;
-import com.insurance.materialfilepicker.widget.MaterialFilePicker;
+
 
 
 
@@ -102,7 +100,7 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
     private EditText[] ed;
     private int count = 0;
     private TextView filename;
-    private List<String> triggerlist;
+    private List<File> triggerlist;
     private List<String> triggerListId;
 
     private TextView[] filenameholder;
@@ -128,7 +126,7 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
     private TextView title3, file3, filename3;
     private TextView title4, file4, filename4;
     private TextView title8, file8, filename8;
-    private TextView title9, file9, filename9;
+
     private TextView title31, file31, filename31;
     InsApp api;
     private String triggerID = "";
@@ -140,23 +138,19 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
     private String string4 = "<font color='#000000'>Treating doctor Questionnaire  </font>" + "<font color='#FF0000'>*</font>";
     private String assignmentID = "";
     private String string8 = "Others";
-    private String string9 = "Evidence for Trigger";
+
     private String string31 = "Conveyance File(s)";
     private String triggerreply = "<font color='#000000'>Trigger Reply </font>" + "<font color='#FF0000'>*</font>";
     private Button submit;
-    private String submitted_date = "", triggerfinding = "", comments = "", Convanceamt = "", temp = "";
-    private TextInputLayout textInputLayout;
+    private String  comments = "", Convanceamt = "", temp = "";
+
     private List<PendingInfo> pendingInfoList;
     private RelativeLayout relativeLayout;
-    private EditText ed_triggerfinding;
+
     private EditText ed_comments;
-    private EditText ed_date, ed_convance;
-    private ImageView calendar;
-    private DatePickerDialog datePickerDialog;
-    final Calendar c = Calendar.getInstance();
-    int mYear = c.get(Calendar.YEAR); // current year
-    int mMonth = c.get(Calendar.MONTH); // current month
-    int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+    private EditText  ed_convance;
+
+
     private Button backbutton;
     List<EditText> allEds = new ArrayList<EditText>();
     private String mode = "";
@@ -193,7 +187,7 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
         filename3 = (TextView) findViewById(R.id.filename3);
         filename4 = (TextView) findViewById(R.id.filename4);
         filename8 = (TextView) findViewById(R.id.filename8);
-        filename9 = (TextView) findViewById(R.id.filename9);
+
         filename31 = (TextView) findViewById(R.id.filename31);
 
         file1 = (TextView) findViewById(R.id.file1);
@@ -206,17 +200,16 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
         file4.setOnClickListener((View.OnClickListener) this);
         file8 = (TextView) findViewById(R.id.file8);
         file8.setOnClickListener((View.OnClickListener) this);
-        file9 = (TextView) findViewById(R.id.file9);
-        file9.setOnClickListener((View.OnClickListener) this);
+
+
         file31 = (TextView) findViewById(R.id.file31);
         file31.setOnClickListener((View.OnClickListener) this);
 
-        ed_triggerfinding = (EditText) findViewById(R.id.ed_triggers);
+
         ed_comments = (EditText) findViewById(R.id.ed_comments);
-        ed_date = (EditText) findViewById(R.id.edit_date);
+
         ed_convance = (EditText) findViewById(R.id.ed_convence);
-        textInputLayout = (TextInputLayout) findViewById(R.id.input_edit_consult);
-        calendar = (ImageView) findViewById(R.id.ig_calender);
+
         submit = (Button) findViewById(R.id.bt_submit);
 
         submit.setOnClickListener(new View.OnClickListener() {
@@ -244,13 +237,7 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
                 // sendAudio();
             }
         });
-        calendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datepicker();
 
-            }
-        });
         backbutton = (Button) findViewById(R.id.bt_back);
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,8 +261,7 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
 
         title8 = (TextView) findViewById(R.id.title8);
         title8.setText(string8);
-        title9 = (TextView) findViewById(R.id.title9);
-        title9.setText(string9);
+
         title31 = (TextView) findViewById(R.id.title31);
         title31.setText(string31);
     }
@@ -287,25 +273,6 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
     }
 
 
-    public void datepicker() {
-        datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // set day of month , month and year value in the edit text
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-                        temp = sdf.format(calendar.getTime());
-                        ed_date.setText(temp);
-
-
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-    }
 
 
     @Override
@@ -477,9 +444,9 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
 
 
             for (int i = 0; i < triggerlist.size(); i++) {
-                file = new File(triggerlist.get(i));
-                RequestBody fbody = RequestBody.create(MediaType.parse("multipart/form-data"),file);
-                builder.addFormDataPart("file", file.getName(), fbody);
+               // file = new File(triggerlist.get(i));
+                RequestBody fbody = RequestBody.create(MediaType.parse("multipart/form-data"),triggerlist.get(i));
+                builder.addFormDataPart("file", i+"", fbody);
                             }
             RequestBody pa = builder.build();
             Call<com.squareup.okhttp.ResponseBody> call =  insuranceAPI.uploadMultiFile(pa);
@@ -733,45 +700,10 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
     }
 
     private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library", "Choose from Files",
-                "Cancel"};
-
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DynamicActivity.this);
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    dialog.dismiss();
-                    cameraIntent();
-                } else if (items[item].equals("Choose from Library")) {
-                    userChoosenTask = "Choose from Library";
-                    dialog.dismiss();
-                    galleryIntent();
-
-                } else if (items[item].equals("Choose from Files")) {
-                    checkPermissionsAndOpenFilePicker();
-                }
-                if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
-    private void galleryIntent() {
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) &&
-                (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            // Start the Intent
-            startActivityForResult(galleryIntent, SELECT_FILE);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_EXTERNAL_STORAGE);
+        cameraIntent();
         }
-    }
+
+
 
     private void cameraIntent() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -813,14 +745,7 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
                 startActivityForResult(galleryIntent, SELECT_FILE);
             }
             break;
-            case PERMISSIONS_REQUEST_CODE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openFilePicker();
-                } else {
-                    showError();
-                }
-            }
+
 
         }
     }
@@ -829,45 +754,10 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SELECT_FILE)
-                onSelectFromGalleryResult(data);
-            else if (requestCode == REQUEST_CAMERA)
+           if (requestCode == REQUEST_CAMERA)
                 onCaptureImageResult(data);
         }
-        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
-            String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
 
-            if (path != null) {
-                Log.d("Path: ", path);
-
-                String upload = path.substring(path.lastIndexOf('/') + 1);
-//                String[] trimmed = path.split(dir);
-//                String sdcardPath = trimmed[0];
-
-                if (count == 1) {
-
-                    filename1.setText(upload);
-                } else if (count == 2) {
-                    filename2.setText(upload);
-                } else if (count == 3) {
-                    filename3.setText(upload);
-                } else if (count == 4) {
-                    filename4.setText(upload);
-                } else if (count == 8) {
-                    filename8.setText(upload);
-                } else if (count == 9) {
-                    filename9.setText(upload);
-                } else if (count == 31) {
-                    filename31.setText(upload);
-                } else if (count == count) {
-                    triggerlist.add(path);
-                    triggerListId.add(triggerID);
-                    filenameholder[count - 100].setText(path);
-                }
-                // upload = uploadfile(dir);
-                //Toast.makeText(this, "Picked file: " + sdcardPath, Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     private void onCaptureImageResult(Intent data) {
@@ -902,13 +792,11 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
             filename4.setText(upload);
         } else if (count == 8) {
             filename8.setText(upload);
-        } else if (count == 9) {
-            filename9.setText(upload);
         } else if (count == 31) {
             filename31.setText(upload);
         } else if (count == count) {
             triggerListId.add(triggerID);
-            triggerlist.add(destination.getPath());
+            triggerlist.add(destination);
             filenameholder[count - 100].setText(destination.getPath());
         }
         /*Picasso.with(this).load(path).resize(350, 350).transform(new CircleTransform())
@@ -916,80 +804,9 @@ public class DynamicActivity extends AppCompatActivity implements SurfaceHolder.
         //ivImage.setImageBitmap(thumbnail);
     }
 
-    private void onSelectFromGalleryResult(Intent data) {
-        Bitmap bm = null;
-        if (data != null) {
-            try {
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-                // Get the cursor
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                // Move to first row
-                cursor.moveToFirst();
 
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String targetPath = cursor.getString(columnIndex);
-                cursor.close();
 
-                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, "image", null);
-
-                String upload = pendingInfo.getClaim_no() + "_" + pendingInfo.getCase_assignment_id() + "_" + targetPath.substring(targetPath.lastIndexOf('/') + 1);
-
-                if (count == 1) {
-                    filename1.setText(upload);
-                } else if (count == 2) {
-                    filename2.setText(upload);
-                } else if (count == 3) {
-                    filename3.setText(upload);
-                } else if (count == 4) {
-                    filename4.setText(upload);
-                } else if (count == 8) {
-                    filename8.setText(upload);
-                } else if (count == 9) {
-                    filename9.setText(upload);
-                } else if (count == 31) {
-                    filename31.setText(upload);
-                } else if (count == count) {
-                    Triggers ss = new Triggers();
-                    triggerListId.add(triggerID);
-                    triggerlist.add(targetPath);
-                    filenameholder[count - 100].setText(targetPath);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void checkPermissionsAndOpenFilePicker() {
-        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
-
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                showError();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSIONS_REQUEST_CODE);
-            }
-        } else {
-            openFilePicker();
-        }
-    }
-
-    private void showError() {
-        Toast.makeText(this, "Allow external storage reading", Toast.LENGTH_SHORT).show();
-    }
-
-    private void openFilePicker() {
-        new MaterialFilePicker()
-                .withActivity(this)
-                .withRequestCode(FILE_PICKER_REQUEST_CODE)
-                .withHiddenFiles(true)
-                .withTitle("Select a file")
-                .start();
-    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {

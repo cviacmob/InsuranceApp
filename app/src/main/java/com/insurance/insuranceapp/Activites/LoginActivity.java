@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                  username = uname.getText().toString();
                 password = pass.getText().toString();
-                username = "vijila@velsun.in";
+                username = "reliance.ayu@gmail.com";
                 password = "AP201806001";
                 if (!isValidEmail(username)){
                     uname.setError("Enter Valid Email");
@@ -162,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
 
-                    Toast.makeText(LoginActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(LoginActivity.this, "Network Issue" + t, Toast.LENGTH_SHORT).show();
 
                 }
             });

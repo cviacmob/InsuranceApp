@@ -25,7 +25,7 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
 
     private List<PendingCaseListInfo> pendingInfoList;
 
-
+    private String temp = "";
     private int lastPostion = -1;
 
     Context mContext;
@@ -89,7 +89,13 @@ public class PendingCasesAdapter extends ArrayAdapter<PendingCaseListInfo> {
         holder.patientname.setText(all.getPatient_name());
         holder.hospitalName.setText(all.getHospital_name());
         holder.TAT.setText(all.getCase_type_id());
-        holder.part.setText(getPartName(all.getCase_assignment_id()));
+        temp = all.getCase_type();
+        if(temp!=null && temp.equalsIgnoreCase("default")){
+            holder.part.setText(getPartName(all.getCase_type_id()));
+        }else {
+            holder.part.setText(getPartName("Others"));
+        }
+
 
 
 

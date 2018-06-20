@@ -10,6 +10,7 @@ import com.insurance.insuranceapp.Datamodel.TriggersInfo;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -61,7 +62,7 @@ public interface InsuranceAPI {
                                                 @Field("flag") String flag,
                                                 @Field("case_trigger_id") List<String> case_trigger_id,
                                                 @Field("trigger_answer") List<String> trigger_answer,
-                                                @Field("file") List<String> file);
+                                                @Field("file") List<File> file);
 
 
 

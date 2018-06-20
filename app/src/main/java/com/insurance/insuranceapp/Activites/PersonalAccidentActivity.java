@@ -43,8 +43,7 @@ import com.insurance.insuranceapp.Datamodel.PendingInfo;
 import com.insurance.insuranceapp.Datamodel.UserAccountInfo;
 import com.insurance.insuranceapp.R;
 import com.insurance.insuranceapp.RestAPI.InsuranceAPI;
-import com.insurance.materialfilepicker.ui.FilePickerActivity;
-import com.insurance.materialfilepicker.widget.MaterialFilePicker;
+
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
@@ -621,44 +620,12 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
         }
     }
     private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library","Choose from Files",
-                "Cancel"};
 
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(PersonalAccidentActivity.this);
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
-                    userChoosenTask = "Take Photo";
-                    dialog.dismiss();
-                    cameraIntent();
-                } else if (items[item].equals("Choose from Library")) {
-                    userChoosenTask = "Choose from Library";
-                    dialog.dismiss();
-                    galleryIntent();
 
-                }
-                else if(items[item].equals("Choose from Files")){
-                    checkPermissionsAndOpenFilePicker();
-                } if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
+        cameraIntent();
+
     }
-    private void galleryIntent() {
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) &&
-                (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            // Start the Intent
-            startActivityForResult(galleryIntent, SELECT_FILE);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSION_EXTERNAL_STORAGE);
-        }
-    }
+
     private void cameraIntent() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -698,14 +665,7 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
                 startActivityForResult(galleryIntent, SELECT_FILE);
             }
             break;
-            case PERMISSIONS_REQUEST_CODE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openFilePicker();
-                } else {
-                    showError();
-                }
-            }
+
 
         }
     }
@@ -715,35 +675,11 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
 
         if (resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == SELECT_FILE)
-                onSelectFromGalleryResult(data);
-            else if (requestCode == REQUEST_CAMERA)
+            if (requestCode == REQUEST_CAMERA)
                 onCaptureImageResult(data);
         }
 
-        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
-            String path = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
-            if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
-                String filepath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
 
-                if (path != null) {
-                    Log.d("Path: ", path);
-
-                    String upload = path.substring(path.lastIndexOf('/') + 1);
-//                String[] trimmed = path.split(dir);
-//                String sdcardPath = trimmed[0];
-                    if(filename1!=null && upload!=null){
-                        filename1.setText(upload);
-                    }
-
-                    // upload = uploadfile(dir);
-
-
-                    //Toast.makeText(this, "Picked file: " + sdcardPath, Toast.LENGTH_LONG).show();
-                }
-            }
-
-        }
     }
 
     private void onCaptureImageResult(Intent data) {
@@ -769,62 +705,5 @@ public class PersonalAccidentActivity extends AppCompatActivity implements
                 .centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(ivImage);*/
         //ivImage.setImageBitmap(thumbnail);
 
-    }
-
-    private void onSelectFromGalleryResult(Intent data) {
-        Bitmap bm = null;
-        if (data != null) {
-            try {
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                // Get the cursor
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                // Move to first row
-                cursor.moveToFirst();
-
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String targetPath = cursor.getString(columnIndex);
-                cursor.close();
-
-                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, "", null);
-               /* Picasso.with(this).load(path).resize(350, 350).transform(new CircleTransform())
-                        .centerCrop().memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).into(ivImage);*/
-
-                //ivImage.setImageBitmap(bm);
-                // uploadProfileImage(targetPath);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    private void checkPermissionsAndOpenFilePicker() {
-        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
-
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                showError();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{permission}, PERMISSIONS_REQUEST_CODE);
-            }
-        } else {
-            openFilePicker();
-        }
-    }
-    private void showError() {
-        Toast.makeText(this, "Allow external storage reading", Toast.LENGTH_SHORT).show();
-    }
-
-
-    private void openFilePicker() {
-        new MaterialFilePicker()
-                .withActivity(this)
-                .withRequestCode(FILE_PICKER_REQUEST_CODE)
-                .withHiddenFiles(true)
-                .withTitle("Select a file")
-                .start();
     }
 }
